@@ -22,6 +22,7 @@ public final class Preferences {
 	public static Time delayTime;
 	public static boolean clearDelay;
 	public static boolean resetStarting;
+	public static int defaultFrequency;
 	public static void setDefault() {
 		reminderAdvanceTime = new Time(0, 30);
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -30,6 +31,7 @@ public final class Preferences {
 		delayTime = new Time(0, 30);
 		clearDelay = true;
 		resetStarting = true;
+		defaultFrequency = 1;
 	}
 	public static void save(Context context) {
 		SharedPreferences.Editor editor =
@@ -42,6 +44,7 @@ public final class Preferences {
 		editor.putInt("delayMinutes", delayTime.minutes());
 		editor.putBoolean("clearDelay", clearDelay);
 		editor.putBoolean("resetStarting", resetStarting);
+		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
 		editor.apply();
 	}
 	public static void load(Context context) {
@@ -58,6 +61,13 @@ public final class Preferences {
 			delayTime = new Time(preferences.getInt("delayMinutes", 30));
 			clearDelay = preferences.getBoolean("clearDelay", true);
 			resetStarting = preferences.getBoolean("resetStarting", true);
+			String defaultFrequencyString = preferences.getString("defaultFrequency", "1");
+			try {
+				defaultFrequency = Integer.valueOf(defaultFrequencyString);
+			} catch (NumberFormatException e) {
+				defaultFrequency = 1;
+			}
+			if (defaultFrequency <= 0) defaultFrequency = 1;
 		} else setDefault();
 	}
 }

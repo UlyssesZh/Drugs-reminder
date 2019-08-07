@@ -36,15 +36,23 @@
 			android:key="resetStarting"
 			android:title="@string/config_reset_starting_preference_title"
 			android:summary="@string/config_reset_starting_preference_summary" />
+		<EditTextPreference
+			android:key="defaultFrequency"
+			android:title="@string/config_default_frequency_preference_title"
+			android:summary="@string/config_default_frequency_preference_summary"
+			android:dialogLayout="@layout/config_default_frequency_layout" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/others_preference_category_title">
+		<Preference
+			android:key="resetSettings"
+			android:title="@string/other_reset_preference_title"
+			android:summary="@string/other_reset_preference_summary" />
 		<Preference
 			android:key="about"
 			android:title="@string/other_about_preference_title"
 			android:summary="@string/other_about_preference_summary" />
 		<Preference
-			android:key="source"
 			android:title="@string/other_source_preference_title"
 			android:summary="@string/other_source_preference_summary">
 			<intent

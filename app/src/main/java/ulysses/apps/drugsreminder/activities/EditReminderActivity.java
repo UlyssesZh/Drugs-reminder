@@ -105,14 +105,15 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 				}
 				alert(new ImprovedSimpleAdapter(this, addDrugItems,
 						R.layout.drug_item, new String[]{"name", "image"},
-						new int[]{R.id.drug_name, R.id.drug_image}), (dialog, which) -> {
-					int addDrugID = addDrugIDs.get(which);
+						new int[]{R.id.drug_name, R.id.drug_image}), (dialogInterface, i) -> {
+					int addDrugID = addDrugIDs.get(i);
 					drugIDs.add(addDrugID);
 					addDrugListItem(ElementsLibrary.findDrugByID(addDrugID), "");
 					refreshDrugList();
 				});
 			}
 		});
+		editRepeatPeriod.setText(String.valueOf(Preferences.defaultFrequency));
 		if (!pickStartingTime())
 			findViewById(R.id.edit_reminder_starting_day_row).setVisibility(View.GONE);
 	}
@@ -168,9 +169,9 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 			try {
 				repeatPeriod = Integer.decode(editRepeatPeriod.getText().toString());
 			} catch (NumberFormatException e) {
-				repeatPeriod = 1;
+				repeatPeriod = Preferences.defaultFrequency;
 			}
-			if (repeatPeriod == 0) repeatPeriod = 1;
+			if (repeatPeriod <= 0) repeatPeriod = Preferences.defaultFrequency;
 			long createdTime;
 			if (pickStartingTime()) {
 				Calendar calendar = Calendar.getInstance();

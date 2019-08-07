@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ListAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,19 +38,20 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 			if (isNotCreating(ID)) {
 				List<Integer> involvingReminderIDs = getElement(ID).getInvolvingReminderIDs();
 				if (involvingReminderIDs.isEmpty())
-					alert(R.string.delete_hint, (dialog, which) -> {
+					alert(R.string.delete_hint, (dialogInterface, i) -> {
 						deleteElement(ID);
 						finish();
 					});
 				else
-					alert(R.string.involved_hint, (dialog1, which1) -> {
-						for (int reminderID : involvingReminderIDs)
-							ElementsLibrary.deleteReminder(reminderID);
-						deleteElement(ID);
-						finish();
-					});
+					alert(R.string.involved_hint,
+							(dialogInterface1, i1) -> {
+								for (int reminderID : involvingReminderIDs)
+									ElementsLibrary.deleteReminder(reminderID);
+								deleteElement(ID);
+								finish();
+							});
 			} else
-				alert(R.string.delete_hint, (dialog, which) -> finish());
+				alert(R.string.delete_hint, (dialogInterface, i) -> finish());
 		});
 	}
 	protected abstract int layoutFile();
@@ -59,21 +61,21 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 	protected abstract boolean saveChanges(int ID);
 	protected void alert(int stringID) {
 		alertBuilder.setMessage(stringID);
-		alertBuilder.setPositiveButton(R.string.positive_text, (dialog, which) -> {});
+		alertBuilder.setPositiveButton(R.string.positive_text, (dialogInterface, i) -> {});
 		alertBuilder.create();
 		alertBuilder.show();
 	}
 	protected void alert(int stringID, DialogInterface.OnClickListener positiveListener) {
 		alertBuilder.setMessage(stringID);
 		alertBuilder.setPositiveButton(R.string.positive_text, positiveListener);
-		alertBuilder.setNegativeButton(R.string.negative_text, (dialog, which) -> {});
+		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
 		alertBuilder.create();
 		alertBuilder.show();
 	}
 	protected void alert(ListAdapter adapter, DialogInterface.OnClickListener listener) {
 		alertBuilder.setMessage(null);
 		alertBuilder.setAdapter(adapter, listener);
-		alertBuilder.setNegativeButton(R.string.negative_text, (dialog, which) -> {});
+		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
 		alertBuilder.create();
 		alertBuilder.show();
 	}
@@ -86,7 +88,7 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 		return true;
 	}
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		if (item.getItemId() == R.id.action_save && saveChanges(ID)) {
 			finish();
 			return true;

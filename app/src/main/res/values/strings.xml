@@ -85,4 +85,9 @@
 	<string name="config_reset_starting_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will re-caculate its starting day after re-enabled. If you have chosen to pick the starting day by yourself in the above settings, this setting does not matter.</string>
 	<string name="other_source_preference_title">View source / feedback</string>
 	<string name="other_source_preference_summary">The app is an open-source project created for study purpose, so be free to view its source on the GitHub page. You can also send feedbacks by reporting issues on it.</string>
+	<string name="config_default_frequency_preference_title">The default period of a reminder</string>
+	<string name="config_default_frequency_preference_summary">You can set the frequency for each reminder you created. You can set the default value of it. Remember, if you set it to n, the actual frequency is \'every n day(s)\'.</string>
+	<string name="other_reset_preference_title">Reset all settings to default</string>
+	<string name="other_reset_preference_summary">You can reset all settings you modified above by applying this.</string>
+	<string name="comfirm_reset_settings_hint">Be sure to reset all the settings.</string>
 </resources>

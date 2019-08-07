@@ -1,6 +1,7 @@
 package ulysses.apps.drugsreminder.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.AboutActivity;
@@ -36,6 +39,23 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 		findPreference("about").setOnPreferenceClickListener(preference -> {
 			Intent intent = new Intent(getContext(), AboutActivity.class);
 			startActivity(intent);
+			return true;
+		});
+		findPreference("resetSettings").setOnPreferenceClickListener(preference -> {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+			builder.setMessage(R.string.comfirm_reset_settings_hint);
+			builder.setPositiveButton(R.string.positive_text, (dialogInterface, i) -> {
+				Preferences.setDefault();
+				Preferences.save(getContext());
+				((SwitchPreferenceCompat) findPreference("vibration"))
+						.setChecked(Preferences.vibration);
+				((SwitchPreferenceCompat) findPreference("clearDelay"))
+						.setChecked(Preferences.clearDelay);
+				((SwitchPreferenceCompat) findPreference("resetStarting"))
+						.setChecked(Preferences.resetStarting);
+			});
+			builder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
+			builder.create().show();
 			return true;
 		});
 	}
