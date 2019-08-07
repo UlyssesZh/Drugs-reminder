@@ -62,22 +62,19 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 	protected void alert(int stringID) {
 		alertBuilder.setMessage(stringID);
 		alertBuilder.setPositiveButton(R.string.positive_text, (dialogInterface, i) -> {});
-		alertBuilder.create();
-		alertBuilder.show();
+		alertBuilder.create().show();
 	}
 	protected void alert(int stringID, DialogInterface.OnClickListener positiveListener) {
 		alertBuilder.setMessage(stringID);
 		alertBuilder.setPositiveButton(R.string.positive_text, positiveListener);
 		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
-		alertBuilder.create();
-		alertBuilder.show();
+		alertBuilder.create().show();
 	}
 	protected void alert(ListAdapter adapter, DialogInterface.OnClickListener listener) {
 		alertBuilder.setMessage(null);
 		alertBuilder.setAdapter(adapter, listener);
 		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
-		alertBuilder.create();
-		alertBuilder.show();
+		alertBuilder.create().show();
 	}
 	protected abstract boolean isNotCreating(int ID);
 	protected abstract T getElement(int ID);
