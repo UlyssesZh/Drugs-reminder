@@ -32,25 +32,39 @@ public final class AlarmsLibrary {
 						(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 				List<PendingIntent> alarmIntentsList = alarmIntents.get(reminderID);
 				long intervalMillis = 86400000 * reminder.getRepeatPeriod();
-				long currentMillis = System.currentTimeMillis();
-				for (long millis : reminder.alarmTimeMillis()) {
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTimeInMillis(millis);
-					Log.i("AlarmsLibrary", "setupAlarms: millis is " + calendar.toString());
-					long triggerAtMillis = millis;
-					if (currentMillis > triggerAtMillis)
-						triggerAtMillis +=
-								((currentMillis - triggerAtMillis) / intervalMillis + 1) *
-										intervalMillis;
-					calendar.setTimeInMillis(triggerAtMillis);
-					Log.i("AlarmsLibrary", "setupAlarms: triggerAtMillis is " + calendar.toString());
+				List<Long> triggerAtMillis = triggerAtMillis(reminder.alarmTimeMillis(),
+						reminder.isDelayed(), intervalMillis);
+				for (long millis : triggerAtMillis) {
 					PendingIntent alarmIntent = generateAlarmIntent(context, reminder);
 					alarmIntentsList.add(alarmIntent);
-					alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis,
+					alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis,
 							intervalMillis, alarmIntent);
 				}
 			}
 		}
+	}
+	private static List<Long> triggerAtMillis(@NotNull List<Long> alarmTimeMillis, boolean delayed,
+	                                          long intervalMillis) {
+		List<Long> result = new ArrayList<Long>(alarmTimeMillis.size());
+		long currentMillis = System.currentTimeMillis();
+		for (long millis : alarmTimeMillis) {
+			if (currentMillis > millis)
+				millis += ((currentMillis - millis) / intervalMillis + 1) * intervalMillis;
+			result.add(millis);
+		}
+		if (delayed) {
+			long min = Long.MAX_VALUE;
+			int index = 0;
+			for (int i = 0; i < result.size(); i++) {
+				long millis = result.get(i);
+				if (millis < min) {
+					min = millis;
+					index = i;
+				}
+			}
+			result.set(index, min + Preferences.delayTime.millis());
+		}
+		return result;
 	}
 	private static void clearAlarmIntents(Context context, int reminderID) {
 		List<PendingIntent> alarmIntentsList = alarmIntents.get(reminderID);

@@ -28,6 +28,7 @@ public class Reminder implements Element {
 	protected boolean enabled;
 	protected int repeatPeriod;
 	protected long createdTime;
+	protected boolean delayed;
 	public Reminder(int ID, List<Integer> mealIDs, boolean before, Time relativeTime,
 	                List<Integer> drugIDs, List<String> usageDosages,  int repeatPeriod,
 	                long createdTime) {
@@ -40,6 +41,7 @@ public class Reminder implements Element {
 		this.repeatPeriod = repeatPeriod;
 		this.createdTime = createdTime;
 		enabled = true;
+		delayed = false;
 	}
 	@Override
 	public int getID() {
@@ -80,6 +82,10 @@ public class Reminder implements Element {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		if (Preferences.clearDelay) setDelayed(false);
+		if (Preferences.resetStarting &&
+				    !Preferences.startingTimeType.equals(Preferences.STARTING_TIME_TYPE_PICK))
+			setCreatedTime(System.currentTimeMillis());
 	}
 	public int getRepeatPeriod() {
 		return repeatPeriod;
@@ -93,16 +99,24 @@ public class Reminder implements Element {
 	public void setCreatedTime(long createdTime) {
 		this.createdTime = createdTime;
 	}
+	public boolean isDelayed() {
+		return delayed;
+	}
+	public void setDelayed(boolean delayed) {
+		this.delayed = delayed;
+	}
 	public String timeString(Resources resources) {
 		return Reminder.timeString(mealIDs, relativeTime, before, resources);
 	}
 	/** @return how much time it will pass before the next alarm comes.*/
+	@NotNull
 	private Time nextTime() {
 		return nextTime(Time.now());
 	}
 	/** @param now the time which would be regarded as 'now'.
 	 * @return the same as {@link #nextTime()}, except that it regard 'now' as the param you gave
 	 * it.*/
+	@NotNull
 	private Time nextTime(Time now) {
 		List<Time> remindTimes = new ArrayList<Time>(mealIDs.size());
 		if (before)
@@ -128,27 +142,24 @@ public class Reminder implements Element {
 		currentDayCalendar.setTimeInMillis(currentTimeMillis);
 		setDayToBeginning(startingDayCalendar);
 		setDayToBeginning(currentDayCalendar);
-		int result = 0;
 		long startingDayMillis = startingDayCalendar.getTimeInMillis();
 		long currentDayMillis = currentDayCalendar.getTimeInMillis();
 		Time now = new Time(currentTimeMillis);
 		boolean overDay = Time.sumOverOneDay(now, nextTime(now));
 		switch (Long.compare(currentDayMillis, startingDayMillis)) {
 			case 1:
-				result = (int) ((currentTimeMillis - startingDayMillis) / 86400000) % repeatPeriod;
+				int result = (int) ((currentTimeMillis - startingDayMillis) / 86400000) % repeatPeriod;
 				if (result < 0) result += repeatPeriod;
 				result = repeatPeriod - result;
 				if (result == repeatPeriod || result == 1 && !overDay) result = 0;
-				break;
+				return result;
 			case -1:
 				result = (int) ((startingDayMillis - currentTimeMillis) / 86400000);
 				if (result == 1 && !overDay) result = 0;
-				break;
-			case 0:
-				result = overDay ? repeatPeriod : 0;
-				break;
+				return result;
+			default:
+				return overDay ? repeatPeriod : 0;
 		}
-		return result;
 	}
 	/** @return how many days will pass before the next alarm time. */
 	private int pendingDaysNumber() {
@@ -178,11 +189,11 @@ public class Reminder implements Element {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(createdTime);
 		if (Preferences.startingTimeType.equals(Preferences.STARTING_TIME_TYPE_NEXT)) return calendar;
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		setDayToBeginning(calendar);
 		return calendar;
 	}
-	private void setDayToBeginning(@NotNull Calendar calendar) {
+	private static void setDayToBeginning(@NotNull Calendar calendar) {
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
