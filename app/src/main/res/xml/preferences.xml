@@ -29,23 +29,27 @@
 			android:summary="@string/config_delay_preference_summary"
 			android:key="delayMinutes" />
 		<SwitchPreferenceCompat
-			android:key="clear_delay"
+			android:key="clearDelay"
 			android:title="@string/config_clear_delay_preference_title"
 			android:summary="@string/config_clear_delay_preference_summary" />
 		<SwitchPreferenceCompat
-			android:key="reset_starting"
+			android:key="resetStarting"
 			android:title="@string/config_reset_starting_preference_title"
-			android_summary="@string/config_reset_starting_preference_summary" />
+			android:summary="@string/config_reset_starting_preference_summary" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/others_preference_category_title">
 		<Preference
 			android:key="about"
-			android:title="@string/about_preference_title"
-			android:summary="@string/about_preference_summary" />
+			android:title="@string/other_about_preference_title"
+			android:summary="@string/other_about_preference_summary" />
 		<Preference
 			android:key="source"
 			android:title="@string/other_source_preference_title"
-			android:summary="@string/other_source_preference_summary" />
+			android:summary="@string/other_source_preference_summary">
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="https://github.com/UlyssesZh/Drugs-reminder"/>
+		</Preference>
 	</PreferenceCategory>
 </androidx.preference.PreferenceScreen>
