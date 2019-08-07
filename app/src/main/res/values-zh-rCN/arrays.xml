@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array
+		name="reminder_starting_day_preference_entries">
+		<item>提醒设置的触发时间第一次到来的日子</item>
+		<item>提醒被创建的日子</item>
+		<item>用户在创建/编辑提醒时指定的日子</item>
+	</string-array>
+	<string-array
+		name="reminder_starting_day_preference_values">
+		<item>next</item>
+		<item>that</item>
+		<item>pick</item>
+	</string-array>
+</resources>

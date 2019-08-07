@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="ulysses.apps.drugsreminder">
+	<uses-permission
+		android:name="android.permission.VIBRATE" />
+	<application
+		android:allowBackup="true"
+		android:fullBackupContent="@xml/my_backup_rules"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+		<receiver
+			android:name=".receivers.AlarmReceiver"
+			android:process=":remote" />
+		<activity
+			android:name=".activities.MainActivity"
+			android:label="@string/app_name"
+			android:theme="@style/AppTheme.NoActionBar">
+			<intent-filter>
+				<action
+					android:name="android.intent.action.MAIN" />
+				<action
+					android:name="android.intent.action.VIEW" />
+				<category
+					android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activities.EditMealActivity"
+			android:parentActivityName=".activities.MainActivity"
+			android:theme="@style/AppTheme.NoActionBar">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.MainActivity" />
+		</activity>
+		<activity
+			android:name=".activities.EditDrugActivity"
+			android:parentActivityName=".activities.MainActivity"
+			android:theme="@style/AppTheme.NoActionBar">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.MainActivity" />
+		</activity>
+		<activity
+			android:name=".activities.EditReminderActivity"
+			android:parentActivityName=".activities.MainActivity"
+			android:theme="@style/AppTheme.NoActionBar">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.MainActivity" />
+		</activity>
+		<activity
+			android:name=".activities.AlarmActivity"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:process=":remote">
+			<intent-filter>
+				<action
+					android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activities.AboutActivity"
+			android:theme="@style/AppTheme.NoActionBar" />
+	</application>
+</manifest>

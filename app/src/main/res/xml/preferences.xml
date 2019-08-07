@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="@string/reminder_preference_category_title">
+		<ulysses.apps.drugsreminder.preferences.DurationPreference
+			android:title="@string/reminder_advance_time_preference_title"
+			android:summary="@string/reminder_advance_time_preference_summary"
+			android:key="advanceTimeMinutes" />
+		<Preference
+			android:key="ringtoneUri"
+			android:summary="@string/reminder_ringtone_preference_summary"
+			android:title="@string/reminder_ringtone_preference_title" />
+		<SwitchPreferenceCompat
+			android:key="vibration"
+			android:title="@string/reminder_vibration_preference_title"
+			android:summary="@string/reminder_vibration_preference_summary" />
+		<ListPreference
+			android:key="startingTimeType"
+			android:title="@string/reminder_starting_day_preference_title"
+			android:summary="@string/reminder_starting_day_preference_summary"
+			android:entries="@array/reminder_starting_day_preference_entries"
+			android:entryValues="@array/reminder_starting_day_preference_values" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/config_preference_category_title">
+		<ulysses.apps.drugsreminder.preferences.DurationPreference
+			android:title="@string/config_delay_preference_title"
+			android:summary="@string/config_delay_preference_summary"
+			android:key="delayMinutes" />
+		<SwitchPreferenceCompat
+			android:key="clear_delay"
+			android:title="@string/config_clear_delay_preference_title"
+			android:summary="@string/config_clear_delay_preference_summary" />
+		<SwitchPreferenceCompat
+			android:key="reset_starting"
+			android:title="@string/config_reset_starting_preference_title"
+			android_summary="@string/config_reset_starting_preference_summary" />
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/others_preference_category_title">
+		<Preference
+			android:key="about"
+			android:title="@string/about_preference_title"
+			android:summary="@string/about_preference_summary" />
+		<Preference
+			android:key="source"
+			android:title="@string/other_source_preference_title"
+			android:summary="@string/other_source_preference_summary" />
+	</PreferenceCategory>
+</androidx.preference.PreferenceScreen>

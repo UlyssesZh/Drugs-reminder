@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array
+		name="reminder_starting_day_preference_entries">
+		<item>The day when the set time of the reminder came for the first time</item>
+		<item>The day when the reminder was created</item>
+		<item>The day which the user picked when creating / editing the reminder</item>
+	</string-array>
+	<string-array
+		name="reminder_starting_day_preference_values">
+		<item>next</item>
+		<item>that</item>
+		<item>pick</item>
+	</string-array>
+</resources>

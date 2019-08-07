@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	tools:context=".activities.EditReminderActivity"
+	android:orientation="vertical">
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/edit_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:title="@string/edit_reminder" />
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		<TableLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:stretchColumns="1">
+			<TableRow>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/drugs" />
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+					<ulysses.apps.drugsreminder.views.ScrollDisabledListView
+						android:id="@+id/edit_reminder_drugs"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
+					<Button
+						android:id="@+id/edit_reminder_add_drug"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/add_a_drug" />
+				</LinearLayout>
+			</TableRow>
+			<TableRow>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/time" />
+				<TextView
+					android:id="@+id/edit_reminder_time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin" />
+			</TableRow>
+			<TimePicker
+				android:id="@+id/edit_reminder_relative_time"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:timePickerMode="spinner"
+				android:paddingStart="@dimen/activity_horizontal_margin"
+				android:paddingTop="@dimen/activity_vertical_margin"
+				android:paddingEnd="@dimen/activity_horizontal_margin"
+				android:paddingBottom="@dimen/activity_vertical_margin" />
+			<TableRow>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/before_or_after" />
+				<RadioGroup
+					android:id="@+id/edit_reminder_before_after"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+					<RadioButton
+						android:id="@+id/edit_reminder_before"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingStart="@dimen/activity_horizontal_margin"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingEnd="@dimen/activity_horizontal_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:text="@string/before" />
+					<RadioButton
+						android:id="@+id/edit_reminder_after"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingStart="@dimen/activity_horizontal_margin"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingEnd="@dimen/activity_horizontal_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:text="@string/after" />
+				</RadioGroup>
+			</TableRow>
+			<TableRow>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/meals" />
+				<FrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+					<TextView android:id="@+id/edit_reminder_meals_empty"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:paddingStart="@dimen/activity_horizontal_margin"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingEnd="@dimen/activity_horizontal_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:text="@string/empty_hint" />
+					<LinearLayout
+						android:id="@+id/edit_reminder_meals_checkboxes"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:orientation="vertical">
+					</LinearLayout>
+				</FrameLayout>
+			</TableRow>
+			<TableRow>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/frequency" />
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingStart="@dimen/activity_horizontal_margin"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:text="@string/every" />
+					<EditText
+						android:id="@+id/edit_reminder_frequency"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:maxLength="2"
+						android:inputType="number" />
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingEnd="@dimen/activity_horizontal_margin"
+						android:paddingTop="@dimen/activity_vertical_margin"
+						android:paddingBottom="@dimen/activity_vertical_margin"
+						android:text="@string/days" />
+				</LinearLayout>
+			</TableRow>
+			<LinearLayout
+				android:id="@+id/edit_reminder_starting_day_row"
+				android:orientation="vertical">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin"
+					android:text="@string/starting_day" />
+				<DatePicker
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/edit_reminder_starting_day"
+					android:paddingStart="@dimen/activity_horizontal_margin"
+					android:paddingTop="@dimen/activity_vertical_margin"
+					android:paddingEnd="@dimen/activity_horizontal_margin"
+					android:paddingBottom="@dimen/activity_vertical_margin" />
+			</LinearLayout>
+			<Button
+				android:id="@+id/edit_delete"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/delete_reminder" />
+		</TableLayout>
+	</ScrollView>
+</LinearLayout>
