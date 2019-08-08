@@ -3,6 +3,7 @@ package ulysses.apps.drugsreminder.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.elements.Drug;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
+import ulysses.apps.drugsreminder.util.BitmapCoder;
 
 public class EditDrugActivity extends EditElementActivity<Drug> {
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -47,10 +49,24 @@ public class EditDrugActivity extends EditElementActivity<Drug> {
 		});
 	}
 	@Override
+	protected void loadViews() {}
+	@Override
+	protected void loadViews(Bundle savedInstanceState) {
+		editName.setText(savedInstanceState.getString("name"));
+		bitmap = BitmapCoder.decode(savedInstanceState.getString("bitmap"));
+		if (bitmap != null) imageView.setImageBitmap(bitmap);
+	}
+	@Override
 	protected void loadViews(Drug drug) {
 		editName.setText(drug.getName());
 		bitmap = drug.getBitmap();
 		if (bitmap != null) imageView.setImageBitmap(bitmap);
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("name", editName.getText().toString());
+		outState.putString("bitmap", BitmapCoder.code(bitmap));
 	}
 	@Override
 	protected void deleteElement(int ID) {

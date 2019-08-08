@@ -30,7 +30,12 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 		alertBuilder = new AlertDialog.Builder(this);
 		ID = getIntent().getIntExtra("ID", 0);
 		setupViews();
-		if (isNotCreating(ID)) loadViews(getElement(ID));
+		if (savedInstanceState != null)
+			loadViews(savedInstanceState);
+		else if (isNotCreating(ID))
+			loadViews(getElement(ID));
+		else
+			loadViews();
 		setSupportActionBar(editToolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		editToolbar.setNavigationOnClickListener(view -> finish());
@@ -56,7 +61,9 @@ public abstract class EditElementActivity<T extends Element> extends AppCompatAc
 	}
 	protected abstract int layoutFile();
 	protected abstract void setupViews();
+	protected abstract void loadViews();
 	protected abstract void loadViews(T element);
+	protected abstract void loadViews(Bundle savedInstanceState);
 	protected abstract void deleteElement(int ID);
 	protected abstract boolean saveChanges(int ID);
 	protected void alert(int stringID) {

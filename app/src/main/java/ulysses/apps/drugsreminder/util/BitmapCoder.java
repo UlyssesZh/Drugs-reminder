@@ -18,9 +18,10 @@ public final class BitmapCoder {
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
 	}
+	@Contract("null -> null")
 	@Nullable
-	public static Bitmap decode(@NotNull String code) {
-		if (code.isEmpty()) return null;
+	public static Bitmap decode(String code) {
+		if (code == null || code.isEmpty()) return null;
 		byte[] bytes = Base64.decode(code, Base64.DEFAULT);
 		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 	}
