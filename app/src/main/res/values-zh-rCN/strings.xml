@@ -86,7 +86,7 @@
     <string name="other_source_preference_title">查看源代码/反馈</string>
     <string name="other_source_preference_summary">此应用是为学习目的而创建的开源项目，所以您可以在GitHub页面上查看它的源文件。您也能通过报告问题的方式发送反馈。</string>
 	<string name="config_default_frequency_preference_title">提醒的默认周期的天数</string>
-    <string name="config_default_frequency_preference_summary">您可以为每一个提醒设置触发的频率。您可以在此设置其默认值。注意，如果您将它设为n，则实际频率为“每n天”。</string>
+    <string name="config_default_frequency_preference_summary">您可以为每一个提醒设置触发的频率。您可以在此设置其默认值。</string>
     <string name="other_reset_preference_title">将所有设置重置为默认值</string>
     <string name="other_reset_preference_summary">您可以在此重置您之前进行的所有设置。</string>
     <string name="comfirm_reset_settings_hint">确定重置所有设置。</string>
