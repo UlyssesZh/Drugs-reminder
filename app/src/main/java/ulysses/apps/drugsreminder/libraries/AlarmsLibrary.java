@@ -5,8 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.util.SparseArray;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import ulysses.apps.drugsreminder.BuildConfig;
 import ulysses.apps.drugsreminder.elements.Drug;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.preferences.Preferences;
@@ -21,8 +22,7 @@ import ulysses.apps.drugsreminder.receivers.AlarmReceiver;
 import ulysses.apps.drugsreminder.util.BitmapCoder;
 
 public final class AlarmsLibrary {
-	private static SparseArray<List<PendingIntent>> alarmIntents =
-			new SparseArray<List<PendingIntent>>();
+	private static SparseArray<List<PendingIntent>> alarmIntents = new SparseArray<List<PendingIntent>>();
 	public static void setupAlarms(@NotNull Context context, int reminderID) {
 		clearAlarmIntents(context, reminderID);
 		if (!ElementsLibrary.doesNotHaveReminder(reminderID)) {
@@ -34,6 +34,19 @@ public final class AlarmsLibrary {
 				long intervalMillis = 86400000 * reminder.getRepeatPeriod();
 				List<Long> triggerAtMillis = triggerAtMillis(reminder.alarmTimeMillis(),
 						reminder.isDelayed(), intervalMillis);
+				if (BuildConfig.DEBUG)
+					for (long millis : triggerAtMillis) {
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTimeInMillis(millis);
+						String text = String.format("Creating alarm at %04d-%02d-%02d %02d:%02d:%02d",
+								calendar.get(Calendar.YEAR),
+								calendar.get(Calendar.MONTH) + 1,
+								calendar.get(Calendar.DAY_OF_MONTH),
+								calendar.get(Calendar.HOUR_OF_DAY),
+								calendar.get(Calendar.MINUTE),
+								calendar.get(Calendar.SECOND));
+						Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+					}
 				for (long millis : triggerAtMillis) {
 					PendingIntent alarmIntent = generateAlarmIntent(context, reminder);
 					alarmIntentsList.add(alarmIntent);
@@ -48,7 +61,7 @@ public final class AlarmsLibrary {
 		List<Long> result = new ArrayList<Long>(alarmTimeMillis.size());
 		long currentMillis = System.currentTimeMillis();
 		for (long millis : alarmTimeMillis) {
-			if (currentMillis > millis)
+			if (currentMillis > millis + 60000)
 				millis += ((currentMillis - millis) / intervalMillis + 1) * intervalMillis;
 			result.add(millis);
 		}
@@ -97,9 +110,10 @@ public final class AlarmsLibrary {
 			drugNames.add(drug.getName());
 			drugBitmaps.add(BitmapCoder.code(drug.getBitmap()));
 		}
-		intent.putExtra("drugNames", drugNames.toArray());
-		intent.putExtra("drugBitmaps", drugBitmaps.toArray());
-		intent.putExtra("usageDosages", reminder.getUsageDosages().toArray());
+		String[] anArray = new String[0];
+		intent.putExtra("drugNames", drugNames.toArray(anArray));
+		intent.putExtra("drugBitmaps", drugBitmaps.toArray(anArray));
+		intent.putExtra("usageDosages", reminder.getUsageDosages().toArray(anArray));
 		intent.putExtra("vibration", Preferences.vibration);
 		Uri ringtoneUri = Preferences.ringtoneUri;
 		intent.putExtra("ringtoneUri", ringtoneUri == null ? "" : ringtoneUri.toString());
