@@ -25,12 +25,12 @@ public class DurationPreference extends Preference {
 	@Override
 	protected void onClick() {
 		super.onClick();
-		Time advanceTime = Preferences.reminderAdvanceTime;
+		Time time = new Time(getPersistedInt(30));
 		new TimePickerDialog(getContext(), R.style.AppTheme_TimePickerWithSpinner,
 				(view, hourOfDay, minute) -> {
 					Time newTime = new Time(hourOfDay, minute);
-					if (callChangeListener(newTime)) persistInt(hourOfDay * 60 + minute);
-				}, advanceTime.getHour(), advanceTime.getMinute(),
+					if (callChangeListener(newTime)) persistInt(newTime.minutes());
+				}, time.getHour(), time.getMinute(),
 				true).show();
 	}
 }
