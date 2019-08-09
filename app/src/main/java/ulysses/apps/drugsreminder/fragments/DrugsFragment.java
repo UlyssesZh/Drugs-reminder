@@ -41,7 +41,7 @@ public class DrugsFragment extends ElementsFragment<Drug> {
         return ElementsLibrary.doesNotHaveDrug(ID);
     }
     @Override
-    protected Class editActivityClass() {
+    protected Class<EditDrugActivity> editActivityClass() {
         return EditDrugActivity.class;
     }
     @Override

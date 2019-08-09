@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import ulysses.apps.drugsreminder.R;
+import ulysses.apps.drugsreminder.activities.EditElementActivity;
 import ulysses.apps.drugsreminder.elements.Element;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
 
@@ -69,6 +70,6 @@ public abstract class ElementsFragment<T extends Element> extends Fragment {
     protected abstract int[] toStrings();
     protected abstract Object findContentFromStringIndex(T element, int stringIndex);
     protected abstract boolean doesNotHave(int ID);
-    protected abstract Class editActivityClass();
+    protected abstract Class<? extends EditElementActivity<T>> editActivityClass();
     protected abstract T getElement(int ID);
 }

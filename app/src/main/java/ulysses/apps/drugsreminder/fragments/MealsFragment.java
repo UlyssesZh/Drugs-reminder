@@ -41,7 +41,7 @@ public class MealsFragment extends ElementsFragment<Meal> {
         return ElementsLibrary.doesNotHaveMeal(ID);
     }
     @Override
-    protected Class editActivityClass() {
+    protected Class<EditMealActivity> editActivityClass() {
         return EditMealActivity.class;
     }
     @Override

@@ -104,7 +104,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 		return ElementsLibrary.doesNotHaveReminder(ID);
 	}
 	@Override
-	protected Class editActivityClass() {
+	protected Class<EditReminderActivity> editActivityClass() {
 		return EditReminderActivity.class;
 	}
 	@Override
