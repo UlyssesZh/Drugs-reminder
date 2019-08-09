@@ -146,20 +146,22 @@ public class Reminder implements Element {
 		long currentDayMillis = currentDayCalendar.getTimeInMillis();
 		Time now = new Time(currentTimeMillis);
 		boolean overDay = Time.sumOverOneDay(now, nextTime(now));
+		int result;
 		switch (Long.compare(currentDayMillis, startingDayMillis)) {
 			case 1:
-				int result = (int) ((currentTimeMillis - startingDayMillis) / 86400000) % repeatPeriod;
-				if (result < 0) result += repeatPeriod;
+				result = (int) ((currentTimeMillis - startingDayMillis) / 86400000) % repeatPeriod;
 				result = repeatPeriod - result;
-				if (result == repeatPeriod || result == 1 && !overDay) result = 0;
-				return result;
+				if (result == repeatPeriod && !overDay) result = 0;
+				break;
 			case -1:
 				result = (int) ((startingDayMillis - currentTimeMillis) / 86400000);
-				if (result == 1 && !overDay) result = 0;
-				return result;
+				break;
 			default:
-				return overDay ? repeatPeriod : 0;
+				result = overDay ? repeatPeriod : 0;
+				break;
 		}
+		if (result == 1 && overDay) result = 0;
+		return result;
 	}
 	/** @return how many days will pass before the next alarm time. */
 	private int pendingDaysNumber() {
