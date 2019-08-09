@@ -90,4 +90,9 @@
 	<string name="other_reset_preference_title">Reset all settings to default</string>
 	<string name="other_reset_preference_summary">You can reset all settings you modified above by applying this.</string>
 	<string name="comfirm_reset_settings_hint">Be sure to reset all the settings.</string>
+	<string name="notification_channel_name" translatable="false">channelForDrugsReminder</string>
+	<string name="notification_channel_description" translatable="false">channelForDrugsReminder</string>
+	<string name="notification_content_title">You will take drugs soon.</string>
+	<string name="notification_content_text">Wish you good health and happy life.</string>
+	<string name="delay">Delay</string>
 </resources>

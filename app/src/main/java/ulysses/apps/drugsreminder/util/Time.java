@@ -112,8 +112,11 @@ public class Time implements Serializable, Comparable<Time> {
 	public int minutes() {
 		return hour * 60 + minute;
 	}
+	public boolean isZero() {
+		return hour == 0 && minute == 0;
+	}
 	@Override
-	public int compareTo(Time o) {
+	public int compareTo(@NonNull Time o) {
 		if (hour != o.hour) return hour > o.hour ? 1 : -1;
 		return Integer.compare(minute, o.minute);
 	}

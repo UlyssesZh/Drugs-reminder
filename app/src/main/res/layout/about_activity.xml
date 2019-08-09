@@ -11,8 +11,7 @@
 		android:id="@+id/about_toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:title="@string/other_about_preference_title"
-		app:navigationIcon="@drawable/ic_arrow_back_black_24dp"/>
+		app:title="@string/other_about_preference_title" />
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

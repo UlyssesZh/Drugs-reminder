@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,17 +23,24 @@ import java.util.Map;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
-import ulysses.apps.drugsreminder.util.BitmapCoder;
+import ulysses.apps.drugsreminder.elements.Drug;
+import ulysses.apps.drugsreminder.elements.Reminder;
+import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
+import ulysses.apps.drugsreminder.preferences.Preferences;
 
 public class AlarmActivity extends AppCompatActivity {
 	MediaPlayer mediaPlayer;
 	Thread vibratingThread;
-	Intent intent;
+	Reminder reminder;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alarm_activity);
-		intent = getIntent();
+		Intent intent = getIntent();
+		reminder = ElementsLibrary.findReminderByID(
+				intent.getIntExtra("reminderID", 0));
+		if (intent.getBooleanExtra("clearDelay", false))
+			reminder.setDelayed(false);
 		setupAudio();
 		setupVibration();
 		setupViews();
@@ -39,48 +49,49 @@ public class AlarmActivity extends AppCompatActivity {
 		AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();
 		attributesBuilder.setUsage(AudioAttributes.USAGE_ALARM);
 		attributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
-		mediaPlayer = MediaPlayer.create(this,
-				Uri.parse(intent.getStringExtra("ringtoneUri")), null,
-				attributesBuilder.build(),
-				((AudioManager) getSystemService(AUDIO_SERVICE)).generateAudioSessionId());
+		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		if (audioManager == null) return;
+		mediaPlayer = MediaPlayer.create(this, Preferences.ringtoneUri, null,
+				attributesBuilder.build(), audioManager.generateAudioSessionId());
 		mediaPlayer.setLooping(true);
 		mediaPlayer.start();
 	}
 	private void setupVibration() {
 		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		if (vibrator == null) return;
 		vibratingThread = new Thread(() -> {
-			Object lock = new Object();
 			while (true) {
 				vibrator.vibrate(625);
 				try {
-					synchronized (lock) {
-						lock.wait(1250);
+					synchronized (vibrator) {
+						vibrator.wait(1250);
 					}
 				} catch (InterruptedException e) {
 					break;
 				}
 			}
 		});
-		if (intent.getBooleanExtra("vibration", true)) vibratingThread.start();
+		if (Preferences.vibration) vibratingThread.start();
 	}
 	private void setupViews() {
 		Toolbar toolbar = findViewById(R.id.alarm_toolbar);
 		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		toolbar.setNavigationOnClickListener(view -> {
 			mediaPlayer.stop();
 			if (vibratingThread.isAlive()) vibratingThread.interrupt();
 			finish();
 		});
-		int listSize = intent.getIntExtra("drugsNumber", 0);
-		String[] drugNames = intent.getStringArrayExtra("drugNames");
-		String[] drugBitmaps = intent.getStringArrayExtra("drugBitmaps");
-		String[] usageDosages = intent.getStringArrayExtra("usageDosages");
+		List<Integer> drugIDs = reminder.getDrugIDs();
+		List<String> usageDosages = reminder.getUsageDosages();
+		int listSize = drugIDs.size();
 		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>(listSize);
 		for (int i = 0; i < listSize; i++) {
 			Map<String, Object> listItem = new HashMap<String, Object>();
-			listItem.put("name", drugNames[i]);
-			listItem.put("bitmap", BitmapCoder.decode(drugBitmaps[i]));
-			listItem.put("usageDosages", usageDosages[i]);
+			Drug drug = ElementsLibrary.findDrugByID(drugIDs.get(i));
+			listItem.put("name", drug.getName());
+			listItem.put("bitmap", drug.getBitmap());
+			listItem.put("usageDosages", usageDosages.get(i));
 			listItems.add(listItem);
 		}
 		((ListView) findViewById(R.id.alarm_drugs_list)).setAdapter(new ImprovedSimpleAdapter(

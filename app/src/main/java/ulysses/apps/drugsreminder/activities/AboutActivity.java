@@ -15,6 +15,7 @@ public class AboutActivity extends AppCompatActivity {
 		setContentView(R.layout.about_activity);
 		Toolbar toolbar = findViewById(R.id.about_toolbar);
 		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		toolbar.setNavigationOnClickListener(view -> finish());
 	}
 }

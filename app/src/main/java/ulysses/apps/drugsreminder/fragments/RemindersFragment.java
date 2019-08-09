@@ -1,5 +1,6 @@
 package ulysses.apps.drugsreminder.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +29,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 			@Override
 			public void handleMessage(Message message) {
 				super.handleMessage(message);
-				if (message.what == MESSAGE_WHAT)
+				if (getContext() != null && message.what == MESSAGE_WHAT)
 					try {
 						refresh();
 					} catch (IllegalStateException e) {
@@ -82,15 +83,17 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 				return getString(R.string.reminder_next_time_format,
 						reminder.nextTimeString(getResources()));
 			case 3:
-				List list = new ArrayList(2);
+				List<Object> list = new ArrayList<Object>(2);
 				list.add(reminder.isEnabled());
 				list.add((CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
 					reminder.setEnabled(isChecked);
+					Context context = getContext();
+					if (context == null) return;
 					SharedPreferences.Editor editor =
-							((MainActivity) getActivity()).elementsPreferences.edit();
+							context.getSharedPreferences("elements", Context.MODE_PRIVATE).edit();
 					editor.putBoolean("reminder" + reminder.getID() + "enabled", isChecked);
 					editor.apply();
-					AlarmsLibrary.setupAlarms(getContext(), reminder.getID());
+					AlarmsLibrary.setupAlarms(context, reminder.getID());
 				});
 				return list;
 		}

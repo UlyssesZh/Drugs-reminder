@@ -11,8 +11,7 @@
 		android:id="@+id/alarm_toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:title="@string/alarm_title"
-		app:navigationIcon="@drawable/ic_arrow_back_black_24dp"/>
+		app:title="@string/alarm_title" />
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

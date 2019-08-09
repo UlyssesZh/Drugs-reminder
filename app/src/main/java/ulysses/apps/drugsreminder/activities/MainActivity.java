@@ -14,19 +14,13 @@ import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.adapters.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
-	public SharedPreferences elementsPreferences;
-	public SharedPreferences settingsPreferences;
-	private SharedPreferences.OnSharedPreferenceChangeListener settingsPreferencesListener;
+	private SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
-		elementsPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-		PreferenceManager.setDefaultValues(this, "settings",
-				MODE_PRIVATE, R.xml.preferences, true);
-		settingsPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		settingsPreferencesListener = (sharedPreferences, key) -> Preferences.load(this);
-		ElementsLibrary.loadElements(elementsPreferences);
+		preferencesListener = (sharedPreferences, key) -> Preferences.load(this);
+		ElementsLibrary.loadElements(this);
 		Preferences.load(this);
 		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this,
 				getSupportFragmentManager());
@@ -38,17 +32,19 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		saveAll();
-		settingsPreferences.registerOnSharedPreferenceChangeListener(settingsPreferencesListener);
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.registerOnSharedPreferenceChangeListener(preferencesListener);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		saveAll();
-		settingsPreferences.unregisterOnSharedPreferenceChangeListener(settingsPreferencesListener);
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.unregisterOnSharedPreferenceChangeListener(preferencesListener);
 	}
 	private void saveAll() {
-		ElementsLibrary.saveElements(elementsPreferences);
+		ElementsLibrary.saveElements(this);
 		Preferences.save(this);
 		AlarmsLibrary.setupAllAlarms(this);
 	}

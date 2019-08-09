@@ -1,6 +1,9 @@
 package ulysses.apps.drugsreminder.libraries;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -169,6 +172,7 @@ public final class ElementsLibrary {
 			editor.putInt(head + "repeatPeriod", reminder.getRepeatPeriod());
 			editor.putLong(head + "createdTime", reminder.getCreatedTime());
 			editor.putBoolean(head + "enabled", reminder.isEnabled());
+			editor.putBoolean(head + "delayed", reminder.isDelayed());
 		}
 	}
 	public static void saveReminders(@NotNull SharedPreferences.Editor editor) {
@@ -176,8 +180,9 @@ public final class ElementsLibrary {
 		for (int ID = 0; !reminderIDOutOfBound(ID); ID++)
 			saveReminder(ID, editor);
 	}
-	public static void saveElements(@NotNull SharedPreferences preferences) {
-		SharedPreferences.Editor editor = preferences.edit();
+	public static void saveElements(Context context) {
+		SharedPreferences.Editor editor =
+				context.getSharedPreferences("elements", Context.MODE_PRIVATE).edit();
 		saveReminders(editor);
 		saveDrugs(editor);
 		saveMeals(editor);
@@ -224,6 +229,7 @@ public final class ElementsLibrary {
 					preferences.getLong(head + "createdTime",
 							System.currentTimeMillis()));
 			reminder.setEnabled(preferences.getBoolean(head + "enabled", true));
+			reminder.setDelayed(preferences.getBoolean(head + "delayed", false));
 			addReminder(reminder);
 		} else deleteReminder(ID);
 	}
@@ -232,7 +238,9 @@ public final class ElementsLibrary {
 		for (int ID = 0; !reminderIDOutOfBound(ID); ID++)
 			loadReminder(ID, preferences);
 	}
-	public static void loadElements(@NotNull SharedPreferences preferences) {
+	public static void loadElements(@NotNull Context context) {
+		SharedPreferences preferences = context.getSharedPreferences("elements",
+				Context.MODE_PRIVATE);
 		loadReminders(preferences);
 		loadDrugs(preferences);
 		loadMeals(preferences);
