@@ -1,20 +1,17 @@
 package ulysses.apps.drugsreminder.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.CompoundButton;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import ulysses.apps.drugsreminder.activities.EditReminderActivity;
-import ulysses.apps.drugsreminder.activities.MainActivity;
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
@@ -83,19 +80,14 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 				return getString(R.string.reminder_next_time_format,
 						reminder.nextTimeString(getResources()));
 			case 3:
-				List<Object> list = new ArrayList<Object>(2);
-				list.add(reminder.isEnabled());
-				list.add((CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
-					reminder.setEnabled(isChecked);
-					Context context = getContext();
-					if (context == null) return;
-					SharedPreferences.Editor editor =
-							context.getSharedPreferences("elements", Context.MODE_PRIVATE).edit();
-					editor.putBoolean("reminder" + reminder.getID() + "enabled", isChecked);
-					editor.apply();
-					AlarmsLibrary.setupAlarms(context, reminder.getID());
-				});
-				return list;
+				return new Object[] {reminder.isEnabled(),
+						(CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
+							reminder.setEnabled(isChecked);
+							Context context = getContext();
+							if (context == null) return;
+							ElementsLibrary.saveElements(context);
+							AlarmsLibrary.setupAlarms(context, reminder.getID());
+						}};
 		}
 		return null;
 	}

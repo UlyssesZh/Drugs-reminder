@@ -3,8 +3,6 @@ package ulysses.apps.drugsreminder.libraries;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.preference.PreferenceManager;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +14,6 @@ import java.util.Set;
 import ulysses.apps.drugsreminder.elements.Drug;
 import ulysses.apps.drugsreminder.elements.Meal;
 import ulysses.apps.drugsreminder.elements.Reminder;
-import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.util.BitmapCoder;
 import ulysses.apps.drugsreminder.util.Time;
 
@@ -121,7 +118,7 @@ public final class ElementsLibrary {
 	private static void extendReminders(int maxID) {
 		while (reminderIDOutOfBound(maxID)) reminders.add(null);
 	}
-	public static void saveMeal(int ID, @NotNull SharedPreferences.Editor editor) {
+	private static void saveMeal(int ID, @NotNull SharedPreferences.Editor editor) {
 		String head = "meal" + ID;
 		if (doesNotHaveMeal(ID))
 			editor.putBoolean(head + "exists", false);
@@ -134,12 +131,12 @@ public final class ElementsLibrary {
 			editor.putInt(head + "minute", time.getMinute());
 		}
 	}
-	public static void saveMeals(@NotNull SharedPreferences.Editor editor) {
+	private static void saveMeals(@NotNull SharedPreferences.Editor editor) {
 		editor.putInt("mealsNumber", mealsNumber());
 		for (int ID = 0; !mealIDOutOfBound(ID); ID++)
 			saveMeal(ID, editor);
 	}
-	public static void saveDrug(int ID, @NotNull SharedPreferences.Editor editor) {
+	private static void saveDrug(int ID, @NotNull SharedPreferences.Editor editor) {
 		String head = "drug" + ID;
 		if (doesNotHaveDrug(ID))
 			editor.putBoolean(head + "exists", false);
@@ -150,12 +147,12 @@ public final class ElementsLibrary {
 			editor.putString(head + "bitmap", BitmapCoder.code(drug.getBitmap()));
 		}
 	}
-	public static void saveDrugs(@NotNull SharedPreferences.Editor editor) {
+	private static void saveDrugs(@NotNull SharedPreferences.Editor editor) {
 		editor.putInt("drugsNumber", drugsNumber());
 		for (int ID = 0; !drugIDOutOfBound(ID); ID++)
 			saveDrug(ID, editor);
 	}
-	public static void saveReminder(int ID, @NotNull SharedPreferences.Editor editor) {
+	private static void saveReminder(int ID, @NotNull SharedPreferences.Editor editor) {
 		String head = "reminder" + ID;
 		if (doesNotHaveReminder(ID))
 			editor.putBoolean(head + "exists", false);
@@ -175,12 +172,12 @@ public final class ElementsLibrary {
 			editor.putBoolean(head + "delayed", reminder.isDelayed());
 		}
 	}
-	public static void saveReminders(@NotNull SharedPreferences.Editor editor) {
+	private static void saveReminders(@NotNull SharedPreferences.Editor editor) {
 		editor.putInt("remindersNumber", remindersNumber());
 		for (int ID = 0; !reminderIDOutOfBound(ID); ID++)
 			saveReminder(ID, editor);
 	}
-	public static void saveElements(Context context) {
+	public static void saveElements(@NotNull Context context) {
 		SharedPreferences.Editor editor =
 				context.getSharedPreferences("elements", Context.MODE_PRIVATE).edit();
 		saveReminders(editor);
@@ -188,7 +185,7 @@ public final class ElementsLibrary {
 		saveMeals(editor);
 		editor.apply();
 	}
-	public static void loadMeal(int ID, @NotNull SharedPreferences preferences) {
+	private static void loadMeal(int ID, @NotNull SharedPreferences preferences) {
 		String head = "meal" + ID;
 		if (preferences.getBoolean(head + "exists", false))
 			addMeal(new Meal(ID, preferences.getString(head + "name", ""),
@@ -196,24 +193,24 @@ public final class ElementsLibrary {
 							preferences.getInt(head + "minute", 0))));
 		else deleteMeal(ID);
 	}
-	public static void loadMeals(@NotNull SharedPreferences preferences) {
+	private static void loadMeals(@NotNull SharedPreferences preferences) {
 		extendMeals(preferences.getInt("mealsNumber", 0) - 1);
 		for (int ID = 0; !mealIDOutOfBound(ID); ID++)
 			loadMeal(ID, preferences);
 	}
-	public static void loadDrug(int ID, @NotNull SharedPreferences preferences) {
+	private static void loadDrug(int ID, @NotNull SharedPreferences preferences) {
 		String head = "drug" + ID;
 		if (preferences.getBoolean(head + "exists", false))
 			addDrug(new Drug(ID, preferences.getString(head + "name", ""),
 					BitmapCoder.decode(preferences.getString(head + "bitmap", ""))));
 		else deleteDrug(ID);
 	}
-	public static void loadDrugs(@NotNull SharedPreferences preferences) {
+	private static void loadDrugs(@NotNull SharedPreferences preferences) {
 		extendDrugs(preferences.getInt("drugsNumber", 0) - 1);
 		for (int ID = 0; !drugIDOutOfBound(ID); ID++)
 			loadDrug(ID, preferences);
 	}
-	public static void loadReminder(int ID, @NotNull SharedPreferences preferences) {
+	private static void loadReminder(int ID, @NotNull SharedPreferences preferences) {
 		String head = "reminder" + ID;
 		if (preferences.getBoolean(head + "exists", false)) {
 			Reminder reminder = new Reminder(ID, decodeStringSet(preferences.getStringSet(
@@ -233,7 +230,7 @@ public final class ElementsLibrary {
 			addReminder(reminder);
 		} else deleteReminder(ID);
 	}
-	public static void loadReminders(@NotNull SharedPreferences preferences) {
+	private static void loadReminders(@NotNull SharedPreferences preferences) {
 		extendReminders(preferences.getInt("remindersNumber", 0) - 1);
 		for (int ID = 0; !reminderIDOutOfBound(ID); ID++)
 			loadReminder(ID, preferences);
