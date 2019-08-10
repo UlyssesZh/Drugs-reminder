@@ -1,6 +1,5 @@
 package ulysses.apps.drugsreminder.services;
 
-import android.app.AlertDialog;
 import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,7 +10,6 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import ulysses.apps.drugsreminder.BuildConfig;
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.receivers.DelayingReceiver;
 
@@ -27,17 +25,14 @@ public class NotificationService extends IntentService {
 		builder.setSmallIcon(R.drawable.ic_launcher_foreground);
 		builder.setContentTitle(getString(R.string.notification_content_title));
 		builder.setContentText(getString(R.string.notification_content_text));
-		Intent intent1 = new Intent(this, DelayingReceiver.class);
-		intent1.putExtras(intent);
+		Intent delayIntent = new Intent(this, DelayingReceiver.class);
+		delayIntent.putExtras(intent);
 		builder.addAction(R.drawable.ic_arrow_back_black_24dp, getString(R.string.delay),
-				PendingIntent.getBroadcast(this, 0x0520, intent1,
+				PendingIntent.getBroadcast(this, 0x0520, delayIntent,
 						PendingIntent.FLAG_UPDATE_CURRENT));
-		NotificationManagerCompat.from(this).notify(0x0520, builder.build());
-		if (BuildConfig.DEBUG) {
-			AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-			builder1.setMessage("Hoo! The notification has sent!");
-			builder1.create().show();
-		}
+		// send a notification whose id is the reminder's ID
+		NotificationManagerCompat.from(this).notify(
+				intent.getIntExtra("reminderID", 0), builder.build());
 	}
 	private void createNotificationChannel() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.util.Log;
 import android.widget.ListView;
@@ -37,8 +38,9 @@ public class AlarmActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alarm_activity);
 		Intent intent = getIntent();
-		reminder = ElementsLibrary.findReminderByID(
-				intent.getIntExtra("reminderID", 0));
+		int reminderID = intent.getIntExtra("reminderID", 0);
+		reminder = ElementsLibrary.findReminderByID(reminderID);
+		NotificationManagerCompat.from(this).cancel(reminderID);
 		if (intent.getBooleanExtra("clearDelay", false))
 			reminder.setDelayed(false);
 		setupAudio();

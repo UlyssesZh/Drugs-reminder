@@ -9,10 +9,10 @@ import ulysses.apps.drugsreminder.activities.AlarmActivity;
 public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent intent1 = new Intent(context, AlarmActivity.class);
-		intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent1.setAction(Intent.ACTION_MAIN);
-		intent1.putExtras(intent);
-		context.startActivity(intent1);
+		Intent alarmIntent = new Intent(context, AlarmActivity.class);
+		alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		alarmIntent.setAction(Intent.ACTION_MAIN);
+		alarmIntent.putExtras(intent);
+		context.startActivity(alarmIntent);
 	}
 }

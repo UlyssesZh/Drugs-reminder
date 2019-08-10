@@ -8,9 +8,9 @@ import android.content.Intent;
 public abstract class ReceiverForService extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent intent1 = new Intent(context, targetServiceClass());
-		intent1.putExtras(intent);
-		context.startService(intent1);
+		Intent serviceIntent = new Intent(context, targetServiceClass());
+		serviceIntent.putExtras(intent);
+		context.startService(serviceIntent);
 	}
 	protected abstract Class<? extends Service> targetServiceClass();
 }
