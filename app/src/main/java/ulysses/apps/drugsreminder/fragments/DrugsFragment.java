@@ -11,24 +11,24 @@ public class DrugsFragment extends ElementsFragment<Drug> {
         return ElementsLibrary.drugsNumber();
     }
     @Override
-    protected int layoutFile() {
+    protected int layoutId() {
         return R.layout.drugs_fragment;
     }
     @Override
-    protected int dataLayoutFile() {
+    protected int listItemLayoutId() {
         return R.layout.drug_item;
     }
     @Override
-    protected String[] fromStrings() {
+    protected String[] from() {
         return new String[]{"name", "image"};
     }
     @Override
-    protected int[] toStrings() {
+    protected int[] to() {
         return new int[]{R.id.drug_name, R.id.drug_image};
     }
     @Override
-    protected Object findContentFromStringIndex(Drug drug, int stringIndex) {
-        switch (stringIndex) {
+    protected Object findContentFromIndex(Drug drug, int index) {
+        switch (index) {
             case 0:
                 return drug.getName();
             case 1:

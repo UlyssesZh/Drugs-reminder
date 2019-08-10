@@ -17,16 +17,17 @@ import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 
 public class ImprovedSimpleAdapter extends SimpleAdapter {
-	private List<? extends Map<String, ?>> map;
+	private List<? extends Map<String, ?>> dataList;
 	private String[] from;
-	private int layout;
+	private int layoutId;
 	private int[] to;
 	private Context context;
 	private LayoutInflater mInflater;
-	public ImprovedSimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+	public ImprovedSimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource,
+	                             String[] from, int[] to) {
 		super(context, data, resource, from, to);
-		layout = resource;
-		map = data;
+		layoutId = resource;
+		dataList = data;
 		this.from = from;
 		this.to = to;
 		this.context = context;
@@ -34,7 +35,7 @@ public class ImprovedSimpleAdapter extends SimpleAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		return this.createViewFromResource(position, convertView, parent, layout);
+		return this.createViewFromResource(position, convertView, parent, layoutId);
 	}
 	private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource) {
 		View v;
@@ -46,7 +47,7 @@ public class ImprovedSimpleAdapter extends SimpleAdapter {
 		return v;
 	}
 	private void bindView(int position, View view) {
-		Map dataSet = map.get(position);
+		Map dataSet = dataList.get(position);
 		if (dataSet == null) return;
 		ViewBinder binder = super.getViewBinder();
 		int count = to.length;

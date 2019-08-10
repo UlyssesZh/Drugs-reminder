@@ -21,55 +21,71 @@ import ulysses.apps.drugsreminder.elements.Element;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
 
 public abstract class ElementsFragment<T extends Element> extends Fragment {
-    private List<Integer> IDs;
-    private ListView listView;
-    private TextView textView;
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(layoutFile(), container, false);
-        Intent intent = new Intent(getActivity(), editActivityClass());
-        textView = root.findViewById(R.id.empty_text);
-        listView = root.findViewById(R.id.elements_list);
-        refresh();
-        listView.setOnItemClickListener(((parent, view, position, id) -> {
-            intent.putExtra("ID", IDs.get(position));
-            startActivity(intent);
-        }));
-        root.findViewById(R.id.add_button).setOnClickListener(view -> {
-            intent.putExtra("ID", listSize());
-            startActivity(intent);
-        });
-        return root;
-    }
-    public void refresh() {
-        textView.setVisibility(isEmpty() ? View.VISIBLE : View.INVISIBLE);
-        IDs = new ArrayList<Integer>();
-        List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
-        for (int ID = 0; ID < listSize(); ID++) {
-            if (doesNotHave(ID)) continue;
-            int stringsNumber = fromStrings().length;
-            Map<String, Object> listItem = new HashMap<String, Object>(stringsNumber);
-            for(int i = 0; i < stringsNumber; i++)
-                listItem.put(fromStrings()[i], findContentFromStringIndex(getElement(ID), i));
-            listItems.add(listItem);
-            IDs.add(ID);
-        }
-        listView.setAdapter(new ImprovedSimpleAdapter(getActivity(), listItems, dataLayoutFile(),
-                fromStrings(), toStrings()));
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
-    }
-    protected abstract int listSize();
-    protected abstract boolean isEmpty();
-    protected abstract int layoutFile();
-    protected abstract int dataLayoutFile();
-    protected abstract String[] fromStrings();
-    protected abstract int[] toStrings();
-    protected abstract Object findContentFromStringIndex(T element, int stringIndex);
-    protected abstract boolean doesNotHave(int ID);
-    protected abstract Class<? extends EditElementActivity<T>> editActivityClass();
-    protected abstract T getElement(int ID);
+	private List<Integer> IDs;
+	private ListView elementsList;
+	private TextView emptyText;
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
+		View root = inflater.inflate(layoutId(), container, false);
+		emptyText = root.findViewById(R.id.empty_text);
+		elementsList = root.findViewById(R.id.elements_list);
+		refresh();
+		elementsList.setOnItemClickListener(
+				(parent, view, position, id) -> startEditActivity(IDs.get(position)));
+		root.findViewById(R.id.add_button).setOnClickListener(
+				view -> startEditActivity(listSize()));
+		return root;
+	}
+	public void refresh() {
+		emptyText.setVisibility(isEmpty() ? View.VISIBLE : View.INVISIBLE);
+		IDs = new ArrayList<Integer>();
+		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
+		for (int ID = 0; ID < listSize(); ID++) {
+			if (doesNotHave(ID)) continue;
+			int stringsNumber = from().length;
+			Map<String, Object> listItem = new HashMap<String, Object>(stringsNumber);
+			for(int i = 0; i < stringsNumber; i++)
+				listItem.put(from()[i], findContentFromIndex(getElement(ID), i));
+			listItems.add(listItem);
+			IDs.add(ID);
+		}
+		elementsList.setAdapter(new ImprovedSimpleAdapter(getActivity(), listItems,
+				listItemLayoutId(), from(), to()));
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		refresh();
+	}
+	private void startEditActivity(int ID) {
+		Intent intent = new Intent(getActivity(), editActivityClass());
+		intent.putExtra("ID", ID);
+		startActivity(intent);
+	}
+	/** @return how many elements there totally are.*/
+	protected abstract int listSize();
+	/** @return whether there are no elements in the list. Used to decide whether to show
+	 * {@link #emptyText}.*/
+	protected abstract boolean isEmpty();
+	/** @return the layout file resource id. Used to inflate the fragment's root.*/
+	protected abstract int layoutId();
+	/** @return the layout file resource id for items in {@link #elementsList}.*/
+	protected abstract int listItemLayoutId();
+	/** @return an arbitrary list of String.*/
+	protected abstract String[] from();
+	/** @return a list of views' id which has been defined in the file designated in
+	 * {@link #listItemLayoutId()}. The length of it should be the same as that of
+	 * #{@link #from()}.*/
+	protected abstract int[] to();
+	/** @return a list of objects that describes the contents of the views designated in
+	 * {@link #to()}.*/
+	protected abstract Object findContentFromIndex(T element, int index);
+	/** @return whether there is not an element of the provided ID.*/
+	protected abstract boolean doesNotHave(int ID);
+	/** @return the class of the activity that will be launched when the user tries to edit / create
+	 * an element.*/
+	protected abstract Class<? extends EditElementActivity<T>> editActivityClass();
+	/** @return get the element of the provided ID.*/
+	protected abstract T getElement(int ID);
 }

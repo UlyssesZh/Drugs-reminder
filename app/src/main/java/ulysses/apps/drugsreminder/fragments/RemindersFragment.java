@@ -46,25 +46,25 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 		return ElementsLibrary.remindersNumber();
 	}
 	@Override
-	protected int layoutFile() {
+	protected int layoutId() {
 		return R.layout.reminders_fragment;
 	}
 	@Override
-	protected int dataLayoutFile() {
+	protected int listItemLayoutId() {
 		return R.layout.reminder_item;
 	}
 	@Override
-	protected String[] fromStrings() {
+	protected String[] from() {
 		return new String[]{"drugs", "time", "next_time", "enabled"};
 	}
 	@Override
-	protected int[] toStrings() {
+	protected int[] to() {
 		return new int[]{R.id.reminder_drugs, R.id.reminder_time, R.id.reminder_next_time,
 				R.id.reminder_switch};
 	}
 	@Override
-	protected Object findContentFromStringIndex(Reminder reminder, int stringIndex) {
-		switch (stringIndex) {
+	protected Object findContentFromIndex(Reminder reminder, int index) {
+		switch (index) {
 			case 0:
 				StringBuilder drugsStringBuilder = new StringBuilder();
 				List<Integer> drugIDs = reminder.getDrugIDs();

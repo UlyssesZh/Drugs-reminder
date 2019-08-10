@@ -11,24 +11,24 @@ public class MealsFragment extends ElementsFragment<Meal> {
         return ElementsLibrary.mealsNumber();
     }
     @Override
-    protected int layoutFile() {
+    protected int layoutId() {
         return R.layout.meals_fragment;
     }
     @Override
-    protected int dataLayoutFile() {
+    protected int listItemLayoutId() {
         return R.layout.meal_item;
     }
     @Override
-    protected String[] fromStrings() {
+    protected String[] from() {
         return new String[]{"name", "time"};
     }
     @Override
-    protected int[] toStrings() {
+    protected int[] to() {
         return new int[]{R.id.meal_name, R.id.meal_time};
     }
     @Override
-    protected Object findContentFromStringIndex(Meal meal, int stringIndex) {
-        switch (stringIndex) {
+    protected Object findContentFromIndex(Meal meal, int index) {
+        switch (index) {
             case 0:
                 return meal.getName();
             case 1:
