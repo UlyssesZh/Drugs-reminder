@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
@@ -20,27 +21,28 @@ public class NotificationService extends IntentService {
 	}
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		createNotificationChannel();
+		createNotificationChannel(this);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
 		builder.setSmallIcon(R.drawable.ic_launcher_foreground);
 		builder.setContentTitle(getString(R.string.notification_content_title));
 		builder.setContentText(getString(R.string.notification_content_text));
+		builder.setPriority(NotificationCompat.PRIORITY_MAX);
 		Intent delayIntent = new Intent(this, DelayingReceiver.class);
 		delayIntent.putExtras(intent);
-		builder.addAction(R.drawable.ic_arrow_back_black_24dp, getString(R.string.delay),
+		builder.addAction(R.drawable.ic_launcher_foreground, getString(R.string.delay),
 				PendingIntent.getBroadcast(this, 0x0520, delayIntent,
 						PendingIntent.FLAG_UPDATE_CURRENT));
 		// send a notification whose id is the reminder's ID
 		NotificationManagerCompat.from(this).notify(
 				intent.getIntExtra("reminderID", 0), builder.build());
 	}
-	private void createNotificationChannel() {
+	public static void createNotificationChannel(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-					getString(R.string.notification_channel_name),
+					context.getString(R.string.notification_channel_name),
 					NotificationManager.IMPORTANCE_DEFAULT);
-			channel.setDescription(getString(R.string.notification_channel_description));
-			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			channel.setDescription(context.getString(R.string.notification_channel_description));
+			NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
 			if (notificationManager != null) notificationManager.createNotificationChannel(channel);
 		}
 	}

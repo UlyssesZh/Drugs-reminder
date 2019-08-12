@@ -12,6 +12,8 @@ import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.adapters.SectionsPagerAdapter;
+import ulysses.apps.drugsreminder.services.NotificationService;
+import ulysses.apps.drugsreminder.util.BackgroundThread;
 
 public class MainActivity extends AppCompatActivity {
 	private SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
+		NotificationService.createNotificationChannel(this);
+		BackgroundThread.init();
 		preferencesListener = (sharedPreferences, key) -> Preferences.load(this);
 		ElementsLibrary.loadElements(this);
 		Preferences.load(this);
