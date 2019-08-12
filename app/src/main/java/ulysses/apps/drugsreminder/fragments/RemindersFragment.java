@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.CompoundButton;
 
+import androidx.annotation.NonNull;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
@@ -22,18 +24,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message message) {
-				super.handleMessage(message);
-				if (getContext() != null && message.what == MESSAGE_WHAT)
-					try {
-						refresh();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					}
-			}
-		};
+		Handler handler = new Refresher(this);
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -86,7 +77,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 							Context context = getContext();
 							if (context == null) return;
 							ElementsLibrary.saveElements(context);
-							AlarmsLibrary.setupAlarms(context, reminder.getID());
+							AlarmsLibrary.setupAlarmsInAlarmManager(context, reminder.getID());
 						}};
 		}
 		return null;
@@ -106,5 +97,21 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 	@Override
 	protected Reminder getElement(int ID) {
 		return ElementsLibrary.findReminderByID(ID);
+	}
+	private static class Refresher extends Handler {
+		ElementsFragment<Reminder> fragment;
+		private Refresher(ElementsFragment<Reminder> fragment) {
+			this.fragment = fragment;
+		}
+		@Override
+		public void handleMessage(@NonNull Message message) {
+			super.handleMessage(message);
+			if (fragment.getContext() != null && message.what == MESSAGE_WHAT)
+				try {
+					fragment.refresh();
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 }
