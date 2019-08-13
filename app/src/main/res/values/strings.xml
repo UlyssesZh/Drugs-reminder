@@ -95,4 +95,6 @@
 	<string name="notification_content_title">You will take drugs soon.</string>
 	<string name="notification_content_text">Wish you good health and happy life.</string>
 	<string name="delay">Delay</string>
+	<string name="reminder_system_service_preference_title">Use system alarms service</string>
+	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
 </resources>

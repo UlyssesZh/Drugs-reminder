@@ -93,4 +93,6 @@
 	<string name="notification_content_title">您就要吃药了。</string>
     <string name="notification_content_text">祝您身体健康、生活愉快。</string>
     <string name="delay">推迟</string>
+	<string name="reminder_system_service_preference_title">使用系统闹钟服务</string>
+    <string name="reminder_system_service_preference_summary">是否使用Android系统提供的闹钟服务。它能在应用被关闭时让提醒响铃，但它在某些设备上很不稳定。</string>
 </resources>

@@ -1,21 +1,18 @@
 package ulysses.apps.drugsreminder.elements;
 
-import android.content.Context;
 import android.content.res.Resources;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.TimeZone;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
+import ulysses.apps.drugsreminder.util.CalendarUtils;
 import ulysses.apps.drugsreminder.util.Time;
 
 public class Reminder implements Element {
@@ -140,8 +137,8 @@ public class Reminder implements Element {
 			startingDayCalendar.add(Calendar.DAY_OF_MONTH, 1);
 		Calendar currentDayCalendar = Calendar.getInstance();
 		currentDayCalendar.setTimeInMillis(currentTimeMillis);
-		setDayToBeginning(startingDayCalendar);
-		setDayToBeginning(currentDayCalendar);
+		CalendarUtils.setToBeginning(startingDayCalendar, Calendar.DAY_OF_MONTH);
+		CalendarUtils.setToBeginning(currentDayCalendar, Calendar.DAY_OF_MONTH);
 		long startingDayMillis = startingDayCalendar.getTimeInMillis();
 		long currentDayMillis = currentDayCalendar.getTimeInMillis();
 		Time now = new Time(currentTimeMillis);
@@ -191,14 +188,8 @@ public class Reminder implements Element {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(createdTime);
 		if (Preferences.startingTimeType.equals(Preferences.STARTING_TIME_TYPE_NEXT)) return calendar;
-		setDayToBeginning(calendar);
+		CalendarUtils.setToBeginning(calendar, Calendar.DAY_OF_MONTH);
 		return calendar;
-	}
-	private static void setDayToBeginning(@NotNull Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
 	}
 	/** @return the String representing how soon the next alarm time is coming. When it is greater
 	 * than one day, it is represented in the format of %dd, and %dh%dm otherwise. */

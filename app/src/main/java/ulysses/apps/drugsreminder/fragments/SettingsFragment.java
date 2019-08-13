@@ -2,6 +2,7 @@ package ulysses.apps.drugsreminder.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -10,11 +11,11 @@ import android.os.Bundle;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.SwitchPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.AboutActivity;
+import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -34,6 +35,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
 			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, preference.getTitle());
 			startActivityForResult(intent, RINGTONE_REQUEST_CODE);
+			return true;
+		});
+		findPreference("systemService").setOnPreferenceChangeListener((preference, newValue) -> {
+			Preferences.systemService = (boolean) newValue;
+			Context context = getContext();
+			if (context != null) AlarmsLibrary.setupAllAlarms(context);
 			return true;
 		});
 		findPreference("about").setOnPreferenceClickListener(preference -> {

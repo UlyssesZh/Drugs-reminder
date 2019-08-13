@@ -23,6 +23,7 @@ public final class Preferences {
 	public static boolean clearDelay;
 	public static boolean resetStarting;
 	public static int defaultFrequency;
+	public static boolean systemService;
 	public static void setDefault() {
 		reminderAdvanceTime = new Time(0, 30);
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -32,6 +33,7 @@ public final class Preferences {
 		clearDelay = true;
 		resetStarting = true;
 		defaultFrequency = 1;
+		systemService = false;
 	}
 	public static void save(Context context) {
 		SharedPreferences.Editor editor =
@@ -45,6 +47,7 @@ public final class Preferences {
 		editor.putBoolean("clearDelay", clearDelay);
 		editor.putBoolean("resetStarting", resetStarting);
 		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
+		editor.putBoolean("systemService", systemService);
 		editor.apply();
 	}
 	public static void load(Context context) {
@@ -68,6 +71,7 @@ public final class Preferences {
 				defaultFrequency = 1;
 			}
 			if (defaultFrequency <= 0) defaultFrequency = 1;
+			systemService = preferences.getBoolean("systemService", false);
 		} else setDefault();
 	}
 }

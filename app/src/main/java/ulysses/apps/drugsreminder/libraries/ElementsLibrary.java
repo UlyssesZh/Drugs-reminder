@@ -3,6 +3,8 @@ package ulysses.apps.drugsreminder.libraries;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -236,8 +238,7 @@ public final class ElementsLibrary {
 			loadReminder(ID, preferences);
 	}
 	public static void loadElements(@NotNull Context context) {
-		SharedPreferences preferences = context.getSharedPreferences("elements",
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		loadReminders(preferences);
 		loadDrugs(preferences);
 		loadMeals(preferences);

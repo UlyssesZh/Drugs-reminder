@@ -21,6 +21,10 @@
 			android:summary="@string/reminder_starting_day_preference_summary"
 			android:entries="@array/reminder_starting_day_preference_entries"
 			android:entryValues="@array/reminder_starting_day_preference_values" />
+		<SwitchPreferenceCompat
+			android:key="systemService"
+			android:title="@string/reminder_system_service_preference_title"
+			android:summary="@string/reminder_system_service_preference_summary" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/config_preference_category_title">
