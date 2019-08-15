@@ -6,7 +6,8 @@
 	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	tools:context=".activities.AlarmActivity"
-	android:orientation="vertical">
+	android:orientation="vertical"
+	>
 	<androidx.appcompat.widget.Toolbar
 		android:id="@+id/alarm_toolbar"
 		android:layout_width="match_parent"

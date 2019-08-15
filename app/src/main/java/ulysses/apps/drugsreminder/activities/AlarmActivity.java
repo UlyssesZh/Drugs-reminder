@@ -1,12 +1,19 @@
 package ulysses.apps.drugsreminder.activities;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PowerManager;
 import android.os.Vibrator;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
@@ -30,22 +40,42 @@ import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 
 public class AlarmActivity extends AppCompatActivity {
-	MediaPlayer mediaPlayer;
-	Thread vibratingThread;
-	Reminder reminder;
+	private static int MESSAGE_WHAT = 0x0520;
+	private MediaPlayer mediaPlayer;
+	private Thread vibratingThread;
+	private Reminder reminder;
+	private Timer timer;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.alarm_activity);
+		wakeUp();
 		Intent intent = getIntent();
-		int reminderID = intent.getIntExtra("reminderID", 0);
-		reminder = ElementsLibrary.findReminderByID(reminderID);
-		NotificationManagerCompat.from(this).cancel(reminderID);
+		reminder = ElementsLibrary.findReminderByID(intent.getIntExtra("reminderID", 0));
 		if (intent.getBooleanExtra("clearDelay", false))
 			reminder.setDelayed(false);
 		setupAudio();
 		setupVibration();
 		setupViews();
+		Handler handler = new AlarmStopper(this);
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				handler.sendEmptyMessage(MESSAGE_WHAT);
+			}
+		}, 60000);
+	}
+	private void wakeUp() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+			setTurnScreenOn(true);
+			setShowWhenLocked(true);
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		} else {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+					                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+					                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+					                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+		}
 	}
 	private void setupAudio() {
 		AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();
@@ -76,12 +106,12 @@ public class AlarmActivity extends AppCompatActivity {
 		if (Preferences.vibration) vibratingThread.start();
 	}
 	private void setupViews() {
+		setContentView(R.layout.alarm_activity);
 		Toolbar toolbar = findViewById(R.id.alarm_toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		toolbar.setNavigationOnClickListener(view -> {
-			mediaPlayer.stop();
-			if (vibratingThread.isAlive()) vibratingThread.interrupt();
+			shut();
 			finish();
 		});
 		List<Integer> drugIDs = reminder.getDrugIDs();
@@ -103,8 +133,27 @@ public class AlarmActivity extends AppCompatActivity {
 	}
 	@Override
 	public void onBackPressed() {
-		if (mediaPlayer != null) mediaPlayer.stop();
-		if (vibratingThread != null && vibratingThread.isAlive()) vibratingThread.interrupt();
+		shut();
 		super.onBackPressed();
+	}
+	private void shut() {
+		if (timer != null) timer.cancel();
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+			mediaPlayer.release();
+		}
+		if (vibratingThread != null && vibratingThread.isAlive()) vibratingThread.interrupt();
+	}
+	private static class AlarmStopper extends Handler {
+		private AlarmActivity alarmActivity;
+		private AlarmStopper(AlarmActivity alarmActivity) {
+			this.alarmActivity = alarmActivity;
+		}
+		@Override
+		public void handleMessage(@NonNull Message message) {
+			super.handleMessage(message);
+			if (message.what == MESSAGE_WHAT)
+				alarmActivity.shut();
+		}
 	}
 }

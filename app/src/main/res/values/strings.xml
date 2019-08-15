@@ -90,11 +90,11 @@
 	<string name="other_reset_preference_title">Reset all settings to default</string>
 	<string name="other_reset_preference_summary">You can reset all settings you modified above by applying this.</string>
 	<string name="comfirm_reset_settings_hint">Be sure to reset all the settings.</string>
-	<string name="notification_channel_name" translatable="false">channelForDrugsReminder</string>
-	<string name="notification_channel_description" translatable="false">channelForDrugsReminder</string>
-	<string name="notification_content_title">You will take drugs soon.</string>
-	<string name="notification_content_text">Wish you good health and happy life.</string>
-	<string name="delay">Delay</string>
+	<string name="notification_channel_name">Reminding in advance</string>
+	<string name="notification_channel_description">The notification channel for reminding in advance to alarming.</string>
+	<string name="notification_content_title_format">You will take drugs in %s.</string>
+	<string name="notification_content_text_format">You will soon need to take %s.</string>
+	<string name="delay_format">Delay for %s</string>
 	<string name="reminder_system_service_preference_title">Use system alarms service</string>
 	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
 </resources>

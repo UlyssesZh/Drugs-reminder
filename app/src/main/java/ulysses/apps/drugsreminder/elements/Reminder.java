@@ -216,6 +216,15 @@ public class Reminder implements Element {
 				resources.getString(before ? R.string.before : R.string.after),
 				mealNamesBuilder.toString());
 	}
+	public String drugsString(Resources resources) {
+		StringBuilder builder = new StringBuilder();
+		int iMax = drugIDs.size() - 1;
+		for (int i = 0; i <= iMax; i++) {
+			builder.append(ElementsLibrary.findDrugByID(drugIDs.get(i)).getName());
+			if (i != iMax) builder.append(resources.getString(R.string.comma));
+		}
+		return builder.toString();
+	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
 		return new ArrayList<Integer>(0);

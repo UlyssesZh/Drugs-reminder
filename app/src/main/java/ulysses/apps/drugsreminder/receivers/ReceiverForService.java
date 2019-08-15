@@ -9,6 +9,7 @@ public abstract class ReceiverForService extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Intent serviceIntent = new Intent(context, targetServiceClass());
+		serviceIntent.setFlags(Intent.FLAG_FROM_BACKGROUND);
 		serviceIntent.putExtras(intent);
 		context.startService(serviceIntent);
 	}

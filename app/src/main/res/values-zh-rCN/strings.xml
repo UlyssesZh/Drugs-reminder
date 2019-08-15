@@ -90,9 +90,11 @@
     <string name="other_reset_preference_title">将所有设置重置为默认值</string>
     <string name="other_reset_preference_summary">您可以在此重置您之前进行的所有设置。</string>
     <string name="comfirm_reset_settings_hint">确定重置所有设置。</string>
-	<string name="notification_content_title">您就要吃药了。</string>
-    <string name="notification_content_text">祝您身体健康、生活愉快。</string>
-    <string name="delay">推迟</string>
+	<string name="notification_content_title_format">您还有%s就要吃药了。</string>
+    <string name="notification_content_text_format">您将要服用%s。</string>
+    <string name="delay_format">推迟%s</string>
 	<string name="reminder_system_service_preference_title">使用系统闹钟服务</string>
     <string name="reminder_system_service_preference_summary">是否使用Android系统提供的闹钟服务。它能在应用被关闭时让提醒响铃，但它在某些设备上很不稳定。</string>
+	<string name="notification_channel_name">提前提醒</string>
+    <string name="notification_channel_description">在提醒响铃之前提醒的通知</string>
 </resources>

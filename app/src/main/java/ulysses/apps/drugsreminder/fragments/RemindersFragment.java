@@ -57,14 +57,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 	protected Object findContentFromIndex(Reminder reminder, int index) {
 		switch (index) {
 			case 0:
-				StringBuilder drugsStringBuilder = new StringBuilder();
-				List<Integer> drugIDs = reminder.getDrugIDs();
-				int iMax = drugIDs.size() - 1;
-				for (int i = 0; i <= iMax; i++) {
-					drugsStringBuilder.append(ElementsLibrary.findDrugByID(drugIDs.get(i)).getName());
-					if (i != iMax) drugsStringBuilder.append(getString(R.string.comma));
-				}
-				return drugsStringBuilder.toString();
+				return reminder.drugsString(getResources());
 			case 1:
 				return reminder.timeString(getResources());
 			case 2:
