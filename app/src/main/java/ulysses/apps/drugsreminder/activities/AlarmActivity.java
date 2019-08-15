@@ -1,6 +1,5 @@
 package ulysses.apps.drugsreminder.activities;
 
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -10,20 +9,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.os.Vibrator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationManagerCompat;
 
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,12 +52,13 @@ public class AlarmActivity extends AppCompatActivity {
 		setupViews();
 		Handler handler = new AlarmStopper(this);
 		timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				handler.sendEmptyMessage(MESSAGE_WHAT);
-			}
-		}, 60000);
+		if (!Preferences.autoCloseTime.isZero())
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					handler.sendEmptyMessage(MESSAGE_WHAT);
+				}
+			}, Preferences.autoCloseTime.millis());
 	}
 	private void wakeUp() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

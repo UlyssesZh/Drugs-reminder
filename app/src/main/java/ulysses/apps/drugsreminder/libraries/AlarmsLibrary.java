@@ -29,9 +29,9 @@ public final class AlarmsLibrary {
 	 *                 does not like the context, aka
 	 *                 {@link OnAlarmsClearFinishedListener#onAlarmsClearFinished()} returns false.
 	 * @param alarmSetter the alarm setter used for scheduling.*/
-	private static void setupAlarmsWithSetters(@NotNull Context context, int reminderID,
-	                                           @NotNull OnAlarmsClearFinishedListener listener,
-	                                           AlarmSetter alarmSetter) {
+	private static void setupAlarmsWithSetter(@NotNull Context context, int reminderID,
+	                                          @NotNull OnAlarmsClearFinishedListener listener,
+	                                          AlarmSetter alarmSetter) {
 		clearAlarms(context, reminderID);
 		if (!listener.onAlarmsClearFinished() || ElementsLibrary.doesNotHaveReminder(reminderID))
 			return;
@@ -80,7 +80,7 @@ public final class AlarmsLibrary {
 	 * @param reminderID specifying the reminder whose alarms will be setRepeating up.*/
 	private static void setupAlarmsInAlarmManager(@NotNull Context context, int reminderID) {
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		setupAlarmsWithSetters(context, reminderID, () -> alarmManager != null, new AlarmSetter() {
+		setupAlarmsWithSetter(context, reminderID, () -> alarmManager != null, new AlarmSetter() {
 			@Override
 			public void setRepeating(long triggerAtMillis, long intervalMillis,
 			                         PendingIntent pendingIntent, String tag) {
@@ -99,7 +99,7 @@ public final class AlarmsLibrary {
 	 * @param reminderID specifying the reminder whose alarms will be setRepeating up.*/
 	private static void setupAlarmsInBackgroundThread(Context context, int reminderID) {
 		String head = "reminder" + reminderID;
-		setupAlarmsWithSetters(context, reminderID, () -> true, new AlarmSetter() {
+		setupAlarmsWithSetter(context, reminderID, () -> true, new AlarmSetter() {
 			@Override
 			public void setRepeating(long triggerAtMillis, long intervalMillis,
 			                         PendingIntent pendingIntent, String tag) {
@@ -145,9 +145,9 @@ public final class AlarmsLibrary {
 	/** Add the min time by intervalMillis, and return the min time plus the delayed time.
 	 * @param triggerAtMillis WILL be modified after invoking the method.
 	 * @param intervalMillis will be added to the min value in triggerAtMillis.
-	 * @return an array whose [0] is the min value in triggerAtMillis plus
-	 *         {@link Preferences#delayTime} in millis, and whose [1] is the index of the min value
-	 *         in triggerAtMillis.*/
+	 * @return an array whose [0] is the min values in triggerAtMillis plus
+	 *         {@link Preferences#delayTime} in millis, and whose [1] is the indices of the min
+	 *         values in triggerAtMillis.*/
 	@Contract("_, _, _ -> new")
 	@NotNull
 	private static long[][] delayedInfo(@NotNull List<Long> triggerAtMillis, long intervalMillis,

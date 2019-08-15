@@ -7,8 +7,6 @@ import android.net.Uri;
 
 import androidx.preference.PreferenceManager;
 
-import org.jetbrains.annotations.NotNull;
-
 import ulysses.apps.drugsreminder.util.Time;
 
 public final class Preferences {
@@ -24,6 +22,7 @@ public final class Preferences {
 	public static boolean resetStarting;
 	public static int defaultFrequency;
 	public static boolean systemService;
+	public static Time autoCloseTime;
 	public static void setDefault() {
 		reminderAdvanceTime = new Time(0, 30);
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -34,6 +33,7 @@ public final class Preferences {
 		resetStarting = true;
 		defaultFrequency = 1;
 		systemService = false;
+		autoCloseTime = new Time(0, 5);
 	}
 	public static void save(Context context) {
 		SharedPreferences.Editor editor =
@@ -48,6 +48,7 @@ public final class Preferences {
 		editor.putBoolean("resetStarting", resetStarting);
 		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
 		editor.putBoolean("systemService", systemService);
+		editor.putInt("autoCloseTimeMinutes", autoCloseTime.minutes());
 		editor.apply();
 	}
 	public static void load(Context context) {
@@ -72,6 +73,7 @@ public final class Preferences {
 			}
 			if (defaultFrequency <= 0) defaultFrequency = 1;
 			systemService = preferences.getBoolean("systemService", false);
+			autoCloseTime = new Time(preferences.getInt("autoCloseTimeMinutes", 5));
 		} else setDefault();
 	}
 }

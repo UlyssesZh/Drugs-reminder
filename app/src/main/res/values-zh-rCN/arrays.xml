@@ -12,4 +12,13 @@
 		<item>that</item>
 		<item>pick</item>
 	</string-array>
+	<string-array
+		name="q_and_a_entries">
+		<item><![CDATA[Q：为什么应用在后台时提醒不会触发？
+A：如果您没有开启“使用系统闹钟服务”，则需要授予APP从后台启动的权限才能正常使用。]]></item>
+		<item><![CDATA[Q：为什么应用在被关闭后提醒不会触发？
+A：如果您想要让提醒在应用的生命周期之外仍然有效，则需要开启“使用系统闹钟服务”。]]></item>
+		<item><![CDATA[Q：为什么提醒的触发没有规律？
+A：在某些设备上系统闹钟服务非常不稳定。您可以关闭“使用系统闹钟服务”。]]></item>
+	</string-array>
 </resources>

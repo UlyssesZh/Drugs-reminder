@@ -2,6 +2,9 @@ package ulysses.apps.drugsreminder.util;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.util.ArraySet;
+
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /** It is a class that encapsulates a thread in which a series of tasks will run one by one, and it
  * waits for a while, and the series of tasks runs again, and the loop goes on. It is ensured that
@@ -89,8 +93,11 @@ public class BackgroundThread {
 	public static void clearTasks() {
 		tasks.clear();
 	}
+	/** Clear the tasks of which the keys match the regexp.*/
 	public static void clearTasks(String regexp) {
-		for (String key : tasks.keySet()) if (key.matches(regexp)) removeTask(key);
+		Set<String> needRemoving = new ArraySet<String>();
+		for (String key : tasks.keySet()) if (key.matches(regexp)) needRemoving.add(key);
+		for (String key : needRemoving) removeTask(key);
 	}
 	/** Equivalent to {@link PendingIntent#send()} except that it will catch the
 	 * {@link android.app.PendingIntent.CanceledException}.*/

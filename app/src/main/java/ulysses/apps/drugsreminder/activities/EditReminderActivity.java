@@ -165,14 +165,14 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 	}
 	@Override
 	protected boolean saveChanges(int ID) {
-		if (editBeforeAfter.getCheckedRadioButtonId() == -1) {
+		if (drugListItems == null || drugListItems.isEmpty()) {
+			alert(R.string.drugs_empty_hint);
+			return false;
+		} else if (editBeforeAfter.getCheckedRadioButtonId() == -1) {
 			alert(R.string.before_after_empty_hint);
 			return false;
 		} else if (checkedMealIDs.isEmpty()) {
 			alert(R.string.meals_empty_hint);
-			return false;
-		} else if (drugListItems == null || drugListItems.isEmpty()) {
-			alert(R.string.drugs_empty_hint);
 			return false;
 		} else {
 			int repeatPeriod;

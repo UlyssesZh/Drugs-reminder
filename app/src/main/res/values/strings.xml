@@ -65,7 +65,7 @@
 	<string name="other_about_preference_title">About</string>
 	<string name="reminder_starting_day_preference_title">The algorithm used to determine the date of the first alarm</string>
 	<string name="reminder_starting_day_preference_summary">You can choose one of the three available types of algorithms.</string>
-	<string name="other_about_preference_summary">Infomation about the app, the developer, etc.</string>
+	<string name="other_about_preference_summary">Information about the app, the developer, etc.</string>
 	<string name="version_name" translatable="false">0.9</string>
 	<string name="author">Author:</string>
 	<string name="ulysses">Ulysses Zhan</string>
@@ -75,7 +75,7 @@
 	<string name="qq">QQ:</string>
 	<string name="wechat_content">youqiu_</string>
 	<string name="qq_content">2938747508</string>
-	<string name="about_info">The app is an open-source project created for study purpose.</string>
+	<string name="about_info">The app is an open-source project.</string>
 	<string name="config_preference_category_title">Configuration settings</string>
 	<string name="config_delay_preference_title">Delaying amount of time</string>
 	<string name="config_delay_preference_summary">If you enable the pre-alarm notifications, you can delay the next alarm temporarily. You can set how much time it can be delayed for.</string>
@@ -84,7 +84,7 @@
 	<string name="config_reset_starting_preference_title">The reminder will restart after re-enabled</string>
 	<string name="config_reset_starting_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will re-caculate its starting day after re-enabled. If you have chosen to pick the starting day by yourself in the above settings, this setting does not matter.</string>
 	<string name="other_source_preference_title">View source / feedback</string>
-	<string name="other_source_preference_summary">The app is an open-source project created for study purpose, so be free to view its source on the GitHub page. You can also send feedbacks by reporting issues on it.</string>
+	<string name="other_source_preference_summary">The app is an open-source project, so be free to view its source on the GitHub page. You can also send feedbacks by reporting issues on it.</string>
 	<string name="config_default_frequency_preference_title">The default period of a reminder</string>
 	<string name="config_default_frequency_preference_summary">You can set the frequency for each reminder you created. You can set the default value of it.</string>
 	<string name="other_reset_preference_title">Reset all settings to default</string>
@@ -97,4 +97,8 @@
 	<string name="delay_format">Delay for %s</string>
 	<string name="reminder_system_service_preference_title">Use system alarms service</string>
 	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
+	<string name="reminder_auto_close_time_preference_title">The time for which an alaram to auto-close</string>
+	<string name="reminder_auto_close_time_preference_summary">The alarm will close itself automatically if it has rung for a specified period of time. You can disable the function by setting the time to 0.</string>
+	<string name="other_q_and_a_preference_title">Q &amp; A</string>
+	<string name="other_q_and_a_preference_summary">If you have any questions, see here first.</string>
 </resources>

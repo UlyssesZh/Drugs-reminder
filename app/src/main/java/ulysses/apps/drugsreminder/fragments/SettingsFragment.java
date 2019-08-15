@@ -15,6 +15,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.AboutActivity;
+import ulysses.apps.drugsreminder.activities.QAndAActivity;
 import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 
@@ -41,6 +42,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			Preferences.systemService = (boolean) newValue;
 			Context context = getContext();
 			if (context != null) AlarmsLibrary.setupAllAlarms(context);
+			return true;
+		});
+		findPreference("qAndA").setOnPreferenceClickListener(preference -> {
+			Intent intent = new Intent(getContext(), QAndAActivity.class);
+			startActivity(intent);
 			return true;
 		});
 		findPreference("about").setOnPreferenceClickListener(preference -> {

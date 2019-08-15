@@ -181,7 +181,7 @@ public final class ElementsLibrary {
 	}
 	public static void saveElements(@NotNull Context context) {
 		SharedPreferences.Editor editor =
-				context.getSharedPreferences("elements", Context.MODE_PRIVATE).edit();
+				PreferenceManager.getDefaultSharedPreferences(context).edit();
 		saveReminders(editor);
 		saveDrugs(editor);
 		saveMeals(editor);

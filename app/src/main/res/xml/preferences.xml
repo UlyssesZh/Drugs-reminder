@@ -25,6 +25,10 @@
 			android:key="systemService"
 			android:title="@string/reminder_system_service_preference_title"
 			android:summary="@string/reminder_system_service_preference_summary" />
+		<ulysses.apps.drugsreminder.preferences.DurationPreference
+			android:title="@string/reminder_auto_close_time_preference_title"
+			android:summary="@string/reminder_auto_close_time_preference_summary"
+			android:key="autoCloseTimeMinutes" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/config_preference_category_title">
@@ -52,6 +56,10 @@
 			android:key="resetSettings"
 			android:title="@string/other_reset_preference_title"
 			android:summary="@string/other_reset_preference_summary" />
+		<Preference
+			android:key="qAndA"
+			android:title="@string/other_q_and_a_preference_title"
+			android:summary="@string/other_q_and_a_preference_summary" />
 		<Preference
 			android:key="about"
 			android:title="@string/other_about_preference_title"

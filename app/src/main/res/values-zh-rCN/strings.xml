@@ -75,7 +75,7 @@
     <string name="qq">QQ号：</string>
     <string name="qq_content">2938747508</string>
     <string name="wechat_content">youqiu_</string>
-    <string name="about_info">此应用是为学习目的而创建的开源项目。</string>
+    <string name="about_info">此应用是开源项目。</string>
     <string name="config_preference_category_title">配置设置</string>
     <string name="config_delay_preference_title">推迟的时间量</string>
     <string name="config_delay_preference_summary">如果您启用提醒响铃前的通知，您可以临时推迟下一次响铃。您可以在此设置它能被推迟多少时间。</string>
@@ -84,7 +84,7 @@
     <string name="config_reset_starting_preference_title">提醒在被重新启用后重新开始</string>
     <string name="config_reset_starting_preference_summary">您能通过打开提醒旁的开关来重新启用它。您可以在此设置提醒是否会在被重新启用时重新计算它何日首次响铃。如果您在先前的设置中选择了自己为它选择何日开始，此项设置并不会有作用。</string>
     <string name="other_source_preference_title">查看源代码/反馈</string>
-    <string name="other_source_preference_summary">此应用是为学习目的而创建的开源项目，所以您可以在GitHub页面上查看它的源文件。您也能通过报告问题的方式发送反馈。</string>
+    <string name="other_source_preference_summary">此应用是开源项目，所以您可以在GitHub页面上查看它的源文件。您也能以在GitHub页面上报告问题的方式发送反馈。</string>
 	<string name="config_default_frequency_preference_title">提醒的默认周期的天数</string>
     <string name="config_default_frequency_preference_summary">您可以为每一个提醒设置触发的频率。您可以在此设置其默认值。</string>
     <string name="other_reset_preference_title">将所有设置重置为默认值</string>
@@ -97,4 +97,8 @@
     <string name="reminder_system_service_preference_summary">是否使用Android系统提供的闹钟服务。它能在应用被关闭时让提醒响铃，但它在某些设备上很不稳定。</string>
 	<string name="notification_channel_name">提前提醒</string>
     <string name="notification_channel_description">在提醒响铃之前提醒的通知</string>
+	<string name="reminder_auto_close_time_preference_title">闹钟自动关闭需要的时间</string>
+    <string name="reminder_auto_close_time_preference_summary">如果某个提醒响铃的时间达到这里所设置的时间，它会自动停止响铃。您能通过将此时间设为0来取消这个功能。</string>
+    <string name="other_q_and_a_preference_title">常见问题</string>
+    <string name="other_q_and_a_preference_summary">如果您遇到了任何问题，请先看这里。</string>
 </resources>

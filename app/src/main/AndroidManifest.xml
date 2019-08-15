@@ -71,6 +71,10 @@
 			android:name=".activities.AboutActivity"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
+		<activity
+			android:name=".activities.QAndAActivity"
+			android:theme="@style/AppTheme.NoActionBar">
+		</activity>
 		<service
 			android:name=".services.NotificationService" />
 		<service
