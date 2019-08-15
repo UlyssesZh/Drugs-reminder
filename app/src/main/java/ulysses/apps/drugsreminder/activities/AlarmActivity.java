@@ -52,7 +52,7 @@ public class AlarmActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		reminder = ElementsLibrary.findReminderByID(intent.getIntExtra("reminderID", 0));
 		if (intent.getBooleanExtra("clearDelay", false))
-			reminder.setDelayed(false);
+			reminder.undelay();
 		setupAudio();
 		setupVibration();
 		setupViews();

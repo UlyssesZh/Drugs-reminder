@@ -25,7 +25,7 @@ public class Reminder implements Element {
 	protected boolean enabled;
 	protected int repeatPeriod;
 	protected long createdTime;
-	protected boolean delayed;
+	protected int delayed;
 	public Reminder(int ID, List<Integer> mealIDs, boolean before, Time relativeTime,
 	                List<Integer> drugIDs, List<String> usageDosages,  int repeatPeriod,
 	                long createdTime) {
@@ -38,7 +38,7 @@ public class Reminder implements Element {
 		this.repeatPeriod = repeatPeriod;
 		this.createdTime = createdTime;
 		enabled = true;
-		delayed = false;
+		delayed = 0;
 	}
 	@Override
 	public int getID() {
@@ -79,7 +79,7 @@ public class Reminder implements Element {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		if (Preferences.clearDelay) setDelayed(false);
+		if (Preferences.clearDelay) setDelayed(0);
 		if (Preferences.resetStarting &&
 				    !Preferences.startingTimeType.equals(Preferences.STARTING_TIME_TYPE_PICK))
 			setCreatedTime(System.currentTimeMillis());
@@ -96,11 +96,17 @@ public class Reminder implements Element {
 	public void setCreatedTime(long createdTime) {
 		this.createdTime = createdTime;
 	}
-	public boolean isDelayed() {
+	public int getDelayed() {
 		return delayed;
 	}
-	public void setDelayed(boolean delayed) {
+	public void setDelayed(int delayed) {
 		this.delayed = delayed;
+	}
+	public void delay() {
+		this.delayed += 1;
+	}
+	public void undelay() {
+		this.delayed -= 1;
 	}
 	public String timeString(Resources resources) {
 		return Reminder.timeString(mealIDs, relativeTime, before, resources);

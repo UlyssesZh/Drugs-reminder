@@ -17,7 +17,6 @@ import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.receivers.AlarmReceiver;
 import ulysses.apps.drugsreminder.receivers.NotificationReceiver;
 import ulysses.apps.drugsreminder.util.BackgroundThread;
-import ulysses.apps.drugsreminder.util.CalendarUtils;
 
 public final class AlarmsLibrary {
 	private static SparseArray<List<PendingIntent>> alarmIntents = new SparseArray<List<PendingIntent>>();
@@ -42,13 +41,18 @@ public final class AlarmsLibrary {
 		List<PendingIntent> notificationIntentsList = notificationIntents.get(reminderID);
 		long intervalMillis = 86400000 * reminder.getRepeatPeriod();
 		List<Long> triggerAtMillis = triggerAtMillis(reminder.alarmTimeMillis(), intervalMillis);
-		if (reminder.isDelayed()) {
+		if (reminder.getDelayed() > 0) {
 			// modify triggerAtMillis, set a delayed alarm
-			long[] delayedInfo = delayedInfo(triggerAtMillis, intervalMillis);
-			PendingIntent alarmIntent = generateAlarmPendingIntent(context, reminderID,
-					(int) delayedInfo[1], true);
-			alarmIntentsList.add(alarmIntent);
-			alarmSetter.set(delayedInfo[0], alarmIntent, "delayed");
+			int delayed = reminder.getDelayed();
+			long[][] delayedInfo = delayedInfo(triggerAtMillis, intervalMillis, delayed);
+			long[] delayedTriggerAtMillis = delayedInfo[0];
+			long[] delayedIndex = delayedInfo[1];
+			for (int i = 0; i < delayed; i++) {
+				PendingIntent alarmIntent = generateAlarmPendingIntent(context, reminderID,
+						(int) delayedIndex[i], true);
+				alarmIntentsList.add(alarmIntent);
+				alarmSetter.set(delayedTriggerAtMillis[i], alarmIntent, "delayed" + i);
+			}
 		}
 		// set un-delayed alarms
 		for (int i = 0; i < triggerAtMillis.size(); i++) {
@@ -56,17 +60,17 @@ public final class AlarmsLibrary {
 					i, false);
 			alarmIntentsList.add(alarmIntent);
 			alarmSetter.setRepeating(triggerAtMillis.get(i), intervalMillis,
-					alarmIntent, "un-delayed");
+					alarmIntent, "un-delayed" + i);
 		}
 		if (Preferences.reminderAdvanceTime.isZero()) return;
 		// set notifications
-		for (long millis : triggerAtMillis) {
-			millis -= Preferences.reminderAdvanceTime.millis();
+		for (int i = 0; i < triggerAtMillis.size(); i++) {
+			long millis = triggerAtMillis.get(i) - Preferences.reminderAdvanceTime.millis();
 			if (millis < System.currentTimeMillis()) millis += intervalMillis;
 			PendingIntent notificationIntent = generateNotificationPendingIntent(context, reminderID);
 			notificationIntentsList.add(notificationIntent);
 			alarmSetter.setRepeating(millis, intervalMillis, notificationIntent,
-					"notification");
+					"notification" + i);
 		}
 	}
 	/** Set up the time-scheduled alarms and notifications about one specified reminder using
@@ -144,20 +148,27 @@ public final class AlarmsLibrary {
 	 * @return an array whose [0] is the min value in triggerAtMillis plus
 	 *         {@link Preferences#delayTime} in millis, and whose [1] is the index of the min value
 	 *         in triggerAtMillis.*/
+	@Contract("_, _, _ -> new")
 	@NotNull
-	@Contract("_, _ -> new")
-	private static long[] delayedInfo(@NotNull List<Long> triggerAtMillis, long intervalMillis) {
-		long min = Long.MAX_VALUE;
-		int index = 0;
-		for (int i = 0; i < triggerAtMillis.size(); i++) {
-			long millis = triggerAtMillis.get(i);
-			if (millis < min) {
-				min = millis;
-				index = i;
+	private static long[][] delayedInfo(@NotNull List<Long> triggerAtMillis, long intervalMillis,
+	                                    int delayed) {
+		long[] delayedTriggerAtMillis = new long[delayed];
+		long[] delayedIndex = new long[delayed];
+		for (int i = 0; i < delayed; i++) {
+			long min = Long.MAX_VALUE;
+			int index = 0;
+			for (int j = 0; j < triggerAtMillis.size(); j++) {
+				long millis = triggerAtMillis.get(j);
+				if (millis < min) {
+					min = millis;
+					index = j;
+				}
 			}
+			triggerAtMillis.set(index, min + intervalMillis);
+			delayedTriggerAtMillis[i] = min + Preferences.delayTime.millis();
+			delayedIndex[i] = index;
 		}
-		triggerAtMillis.set(index, min + intervalMillis);
-		return new long[] {min + Preferences.delayTime.millis(), index};
+		return new long[][] {delayedTriggerAtMillis, delayedIndex};
 	}
 	/** Clear intents.get(reminderID). If the reminder is not enabled, make it null; otherwise make
 	 * it with a new ArrayList.*/
@@ -183,10 +194,7 @@ public final class AlarmsLibrary {
 		clearIntents(notificationIntents, context, reminderID);
 		if (BackgroundThread.isAlive())
 			BackgroundThread.interrupt();
-		String head = "reminder" + reminderID;
-		BackgroundThread.removeTask(head + "delayed");
-		BackgroundThread.removeTask(head + "un-delayed");
-		BackgroundThread.removeTask(head + "notification");
+		BackgroundThread.clearTasks("reminder" + reminderID + ".*");
 	}
 	/** Invoke {@link #setupAlarms(Context, int)} for each reminder.*/
 	public static void setupAllAlarms(@NotNull Context context) {

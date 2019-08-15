@@ -89,6 +89,9 @@ public class BackgroundThread {
 	public static void clearTasks() {
 		tasks.clear();
 	}
+	public static void clearTasks(String regexp) {
+		for (String key : tasks.keySet()) if (key.matches(regexp)) removeTask(key);
+	}
 	/** Equivalent to {@link PendingIntent#send()} except that it will catch the
 	 * {@link android.app.PendingIntent.CanceledException}.*/
 	public static void sendPendingIntent(Context context,  @NotNull PendingIntent pendingIntent) {

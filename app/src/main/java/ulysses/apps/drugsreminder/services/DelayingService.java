@@ -18,7 +18,7 @@ public class DelayingService extends IntentService {
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		NotificationManagerCompat.from(this).cancel(reminderID);
 		if (!ElementsLibrary.doesNotHaveReminder(reminderID)) {
-			ElementsLibrary.findReminderByID(reminderID).setDelayed(true);
+			ElementsLibrary.findReminderByID(reminderID).delay();
 			AlarmsLibrary.setupAlarms(this, reminderID);
 		}
 	}
