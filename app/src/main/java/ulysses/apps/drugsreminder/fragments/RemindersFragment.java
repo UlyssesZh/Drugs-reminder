@@ -4,6 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
@@ -57,21 +61,28 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 	protected Object findContentFromIndex(Reminder reminder, int index) {
 		switch (index) {
 			case 0:
-				return reminder.drugsString(getResources());
+				return dataForCheckable(reminder, reminder.drugsString(getResources()));
 			case 1:
-				return reminder.timeString(getResources());
+				return dataForCheckable(reminder, reminder.timeString(getResources()));
 			case 2:
-				return getString(R.string.reminder_next_time_format,
-						reminder.nextTimeString(getResources()));
+				return dataForCheckable(reminder, getString(R.string.reminder_next_time_format,
+						reminder.nextTimeString(getResources())));
 			case 3:
-				return new Object[] {reminder.isEnabled(),
+				return dataForCheckable(reminder,
 						(CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
 							reminder.setEnabled(isChecked);
+							ViewParent viewParent = buttonView.getParent();
+							if (viewParent instanceof View)
+								for (int viewId : to()) {
+									View view = ((View) viewParent).findViewById(viewId);
+									if (view instanceof CheckedTextView)
+										((CheckedTextView) view).setChecked(isChecked);
+								}
 							Context context = getContext();
 							if (context == null) return;
 							ElementsLibrary.saveElements(context);
 							AlarmsLibrary.setupAlarms(context, reminder.getID());
-						}};
+						});
 		}
 		return null;
 	}
@@ -90,6 +101,9 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 	@Override
 	protected Reminder getElement(int ID) {
 		return ElementsLibrary.findReminderByID(ID);
+	}
+	private Object[] dataForCheckable(Reminder reminder, Object data) {
+		return new Object[] {reminder.isEnabled(), data};
 	}
 	private static class Refresher extends Handler {
 		ElementsFragment<Reminder> fragment;

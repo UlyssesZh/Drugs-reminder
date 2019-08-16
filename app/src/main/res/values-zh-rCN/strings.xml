@@ -99,7 +99,7 @@
     <string name="channel_for_reminding_advance_description">在提醒响铃之前提醒的通知</string>
 	<string name="reminder_auto_close_time_preference_title">闹钟自动关闭需要的时间</string>
     <string name="reminder_auto_close_time_preference_summary">如果某个提醒响铃的时间达到这里所设置的时间，它会自动停止响铃。您能通过将此时间设为0来取消这个功能。</string>
-    <string name="other_q_and_a_preference_title">常见问题</string>
+    <string name="other_q_and_a_preference_title">常见问题及其解答</string>
     <string name="other_q_and_a_preference_summary">如果您遇到了任何问题，请先看这里。</string>
     <string name="channel_for_auto_close_hint_name">提醒响铃自动关闭提示</string>
     <string name="channel_for_auto_close_hint_description">在提醒响铃之后自动关闭的通知</string>

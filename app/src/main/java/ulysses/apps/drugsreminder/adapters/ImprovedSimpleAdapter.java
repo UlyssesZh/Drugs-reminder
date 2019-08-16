@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
@@ -63,8 +64,12 @@ public class ImprovedSimpleAdapter extends SimpleAdapter {
 					if (v instanceof Checkable) {
 						if (data instanceof Boolean) {
 							((Checkable) v).setChecked((boolean) data);
-						} else if (data instanceof Object[] && v instanceof CompoundButton) {
-							setButtonStateAndListener((CompoundButton) v, (Object[]) data);
+						} else if (data instanceof Object[]) {
+							if (v instanceof CompoundButton) {
+								setButtonStateAndListener((CompoundButton) v, (Object[]) data);
+							} else if (v instanceof CheckedTextView) {
+								setViewStateAndText((CheckedTextView) v, (Object[]) data);
+							}
 						} else if (v instanceof TextView) {
 							setViewText((TextView) v, text);
 						} else {
@@ -99,5 +104,9 @@ public class ImprovedSimpleAdapter extends SimpleAdapter {
 		if (data[1] instanceof CompoundButton.OnCheckedChangeListener)
 			v.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) data[1]);
 		if (data[0] instanceof Boolean) v.setChecked((boolean) data[0]);
+	}
+	private void setViewStateAndText(CheckedTextView v, @NotNull Object[] data) {
+		if (data[0] instanceof Boolean) v.setChecked((boolean) data[0]);
+		v.setText(data[1].toString());
 	}
 }

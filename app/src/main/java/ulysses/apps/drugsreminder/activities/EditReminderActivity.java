@@ -2,7 +2,6 @@ package ulysses.apps.drugsreminder.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -33,10 +32,8 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 	private TextView editTime;
 	private TimePicker editRelativeTime;
 	private RadioGroup editBeforeAfter;
-	private TextView mealsEmpty;
 	private LinearLayout editMealsCheckboxes;
 	private ScrollDisabledListView editDrugs;
-	private Button editAddDrug;
 	private List<Integer> mealIDs;
 	private List<Integer> checkedMealIDs;
 	private List<Integer> drugIDs;
@@ -52,10 +49,8 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		editTime = findViewById(R.id.edit_reminder_time);
 		editRelativeTime = findViewById(R.id.edit_reminder_relative_time);
 		editBeforeAfter = findViewById(R.id.edit_reminder_before_after);
-		mealsEmpty = findViewById(R.id.edit_reminder_meals_empty);
 		editMealsCheckboxes = findViewById(R.id.edit_reminder_meals_checkboxes);
 		editDrugs = findViewById(R.id.edit_reminder_drugs);
-		editAddDrug = findViewById(R.id.edit_reminder_add_drug);
 		editRepeatPeriod = findViewById(R.id.edit_reminder_frequency);
 		editStartingDay = findViewById(R.id.edit_reminder_starting_day);
 		mealIDs = new ArrayList<Integer>();
@@ -66,7 +61,7 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		editRelativeTime.setOnTimeChangedListener((view, hourOfDay, minute) -> refreshTime());
 		editBeforeAfter.setOnCheckedChangeListener((group, checkedId) -> refreshTime());
 		if (!ElementsLibrary.doesNotHaveMeals()) {
-			mealsEmpty.setVisibility(View.INVISIBLE);
+			findViewById(R.id.edit_reminder_meals_empty).setVisibility(View.INVISIBLE);
 			for (int mealID = 0; mealID < ElementsLibrary.mealsNumber(); mealID++) {
 				if (ElementsLibrary.doesNotHaveMeal(mealID)) continue;
 				mealIDs.add(mealID);
@@ -83,7 +78,7 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 				editMealsCheckboxes.addView(checkBox);
 			}
 		}
-		editAddDrug.setOnClickListener(view -> {
+		findViewById(R.id.edit_reminder_add_drug).setOnClickListener(view -> {
 			int addDrugsNumber = ElementsLibrary.drugsNumber() - drugListItems.size();
 			if (addDrugsNumber == 0)
 				alert(R.string.empty_hint);
@@ -168,7 +163,7 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		if (drugListItems == null || drugListItems.isEmpty()) {
 			alert(R.string.drugs_empty_hint);
 			return false;
-		} else if (editBeforeAfter.getCheckedRadioButtonId() == -1) {
+		} else if (!relativeTime().isZero() && editBeforeAfter.getCheckedRadioButtonId() == -1) {
 			alert(R.string.before_after_empty_hint);
 			return false;
 		} else if (checkedMealIDs.isEmpty()) {
@@ -238,7 +233,8 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		return drugIDs.size();
 	}
 	private void refreshTime() {
-		if (editBeforeAfter.getCheckedRadioButtonId() != -1 && checkedMealIDs.size() > 0)
+		if ((relativeTime().isZero() || editBeforeAfter.getCheckedRadioButtonId() != -1) &&
+				    checkedMealIDs.size() > 0)
 			editTime.setText(Reminder.timeString(checkedMealIDs, relativeTime(),
 					editBeforeAfter.getCheckedRadioButtonId() == R.id.edit_reminder_before,
 					getResources()));
