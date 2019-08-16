@@ -219,6 +219,7 @@ public final class AlarmsLibrary {
 	private static PendingIntent generateNotificationPendingIntent(Context context, int reminderID) {
 		Intent intent = new Intent(context, NotificationReceiver.class);
 		intent.putExtra("reminderID", reminderID);
+		intent.putExtra("forRemindingAdvance", true);
 		return PendingIntent.getBroadcast(context, 0x0520, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}

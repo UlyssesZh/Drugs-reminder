@@ -90,10 +90,10 @@
 	<string name="other_reset_preference_title">Reset all settings to default</string>
 	<string name="other_reset_preference_summary">You can reset all settings you modified above by applying this.</string>
 	<string name="comfirm_reset_settings_hint">Be sure to reset all the settings.</string>
-	<string name="notification_channel_name">Reminding in advance</string>
-	<string name="notification_channel_description">The notification channel for reminding in advance to alarming.</string>
-	<string name="notification_content_title_format">You will take drugs in %s.</string>
-	<string name="notification_content_text_format">You will soon need to take %s.</string>
+	<string name="channel_for_reminding_advance_name">Reminding in advance</string>
+	<string name="channel_for_reminding_advance_description">The notification channel for reminding in advance to alarming.</string>
+	<string name="notification_for_reminding_advance_content_title_format">You will take drugs in %s.</string>
+	<string name="notification_for_reminding_advance_content_text_format">You will soon need to take %s.</string>
 	<string name="delay_format">Delay for %s</string>
 	<string name="reminder_system_service_preference_title">Use system alarms service</string>
 	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
@@ -101,4 +101,8 @@
 	<string name="reminder_auto_close_time_preference_summary">The alarm will close itself automatically if it has rung for a specified period of time. You can disable the function by setting the time to 0.</string>
 	<string name="other_q_and_a_preference_title">Q &amp; A</string>
 	<string name="other_q_and_a_preference_summary">If you have any questions, see here first.</string>
+	<string name="channel_for_auto_close_hint_name">Alarms auto-close hint</string>
+	<string name="channel_for_auto_close_hint_description">The notification channel for informing the user of the auto-closing of an alarm.</string>
+	<string name="notification_for_auto_close_content_title">The alarm has fired.</string>
+	<string name="notification_for_auto_close_content_text_format">You should have taken %s.</string>
 </resources>

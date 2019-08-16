@@ -32,6 +32,8 @@ import ulysses.apps.drugsreminder.elements.Drug;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
+import ulysses.apps.drugsreminder.receivers.NotificationReceiver;
+import ulysses.apps.drugsreminder.services.NotificationService;
 
 public class AlarmActivity extends AppCompatActivity {
 	private static int MESSAGE_WHAT = 0x0520;
@@ -44,13 +46,14 @@ public class AlarmActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		wakeUp();
 		Intent intent = getIntent();
-		reminder = ElementsLibrary.findReminderByID(intent.getIntExtra("reminderID", 0));
+		int reminderID = intent.getIntExtra("reminderID", 0);
+		reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (intent.getBooleanExtra("clearDelay", false))
 			reminder.undelay();
 		setupAudio();
 		setupVibration();
 		setupViews();
-		Handler handler = new AlarmStopper(this);
+		Handler handler = new AlarmStopper(this, reminderID);
 		timer = new Timer();
 		if (!Preferences.autoCloseTime.isZero())
 			timer.schedule(new TimerTask() {
@@ -141,14 +144,22 @@ public class AlarmActivity extends AppCompatActivity {
 	}
 	private static class AlarmStopper extends Handler {
 		private AlarmActivity alarmActivity;
-		private AlarmStopper(AlarmActivity alarmActivity) {
+		private int reminderID;
+		private AlarmStopper(AlarmActivity alarmActivity, int reminderID) {
 			this.alarmActivity = alarmActivity;
+			this.reminderID = reminderID;
 		}
 		@Override
 		public void handleMessage(@NonNull Message message) {
 			super.handleMessage(message);
-			if (message.what == MESSAGE_WHAT)
+			if (message.what == MESSAGE_WHAT) {
+				Intent intent = new Intent(alarmActivity, NotificationReceiver.class);
+				intent.putExtra("reminderID", reminderID);
+				intent.putExtra("forRemindingAdvance", false);
+				alarmActivity.sendBroadcast(intent);
 				alarmActivity.shut();
+				alarmActivity.finish();
+			}
 		}
 	}
 }
