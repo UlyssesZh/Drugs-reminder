@@ -17,8 +17,8 @@ public final class Preferences {
 	public static Uri ringtoneUri;
 	public static boolean vibration;
 	public static String startingTimeType;
-	public static Time delayTime;
-	public static boolean clearDelay;
+	/*public static Time delayTime;
+	public static boolean clearDelay;*/
 	public static boolean resetStarting;
 	public static int defaultFrequency;
 	public static boolean systemService;
@@ -28,8 +28,8 @@ public final class Preferences {
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 		vibration = true;
 		startingTimeType = STARTING_TIME_TYPE_NEXT;
-		delayTime = new Time(0, 30);
-		clearDelay = true;
+		/*delayTime = new Time(0, 30);
+		clearDelay = true;*/
 		resetStarting = true;
 		defaultFrequency = 1;
 		systemService = false;
@@ -43,8 +43,8 @@ public final class Preferences {
 		editor.putString("ringtoneUri", ringtoneUri == null ? "" : ringtoneUri.toString());
 		editor.putBoolean("vibration", vibration);
 		editor.putString("startingTimeType", startingTimeType);
-		editor.putInt("delayMinutes", delayTime.minutes());
-		editor.putBoolean("clearDelay", clearDelay);
+		/*editor.putInt("delayMinutes", delayTime.minutes());
+		editor.putBoolean("clearDelay", clearDelay);*/
 		editor.putBoolean("resetStarting", resetStarting);
 		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
 		editor.putBoolean("systemService", systemService);
@@ -62,8 +62,8 @@ public final class Preferences {
 			vibration = preferences.getBoolean("vibration", true);
 			startingTimeType = preferences.getString("startingTimeType",
 					STARTING_TIME_TYPE_NEXT);
-			delayTime = new Time(preferences.getInt("delayMinutes", 30));
-			clearDelay = preferences.getBoolean("clearDelay", true);
+			/*delayTime = new Time(preferences.getInt("delayMinutes", 30));
+			clearDelay = preferences.getBoolean("clearDelay", true);*/
 			resetStarting = preferences.getBoolean("resetStarting", true);
 			String defaultFrequencyString = preferences.getString("defaultFrequency", "1");
 			try {

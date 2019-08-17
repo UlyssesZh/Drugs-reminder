@@ -1,4 +1,4 @@
-package ulysses.apps.drugsreminder.services;
+/*package ulysses.apps.drugsreminder.services;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -23,3 +23,4 @@ public class DelayingService extends IntentService {
 		}
 	}
 }
+*/

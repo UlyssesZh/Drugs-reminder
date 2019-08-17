@@ -32,14 +32,14 @@
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/config_preference_category_title">
-		<ulysses.apps.drugsreminder.preferences.DurationPreference
+		<!--<ulysses.apps.drugsreminder.preferences.DurationPreference
 			android:title="@string/config_delay_preference_title"
 			android:summary="@string/config_delay_preference_summary"
-			android:key="delayMinutes" />
-		<SwitchPreferenceCompat
+			android:key="delayMinutes" />-->
+		<!--<SwitchPreferenceCompat
 			android:key="clearDelay"
 			android:title="@string/config_clear_delay_preference_title"
-			android:summary="@string/config_clear_delay_preference_summary" />
+			android:summary="@string/config_clear_delay_preference_summary" />-->
 		<SwitchPreferenceCompat
 			android:key="resetStarting"
 			android:title="@string/config_reset_starting_preference_title"

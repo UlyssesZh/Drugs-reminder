@@ -77,14 +77,14 @@
 	<string name="qq_content">2938747508</string>
 	<string name="about_info">The app is an open-source project.</string>
 	<string name="config_preference_category_title">Configuration settings</string>
-	<string name="config_delay_preference_title">Delaying amount of time</string>
+	<!--<string name="config_delay_preference_title">Delaying amount of time</string>
 	<string name="config_delay_preference_summary">If you enable the pre-alarm notifications, you can delay the next alarm temporarily. You can set how much time it can be delayed for.</string>
 	<string name="config_clear_delay_preference_title">A reminder is not delayed after re-enabled</string>
-	<string name="config_clear_delay_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will clear its \'delayed\' status after re-enabled.</string>
+	<string name="config_clear_delay_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will clear its \'delayed\' status after re-enabled.</string>-->
 	<string name="config_reset_starting_preference_title">The reminder will restart after re-enabled</string>
-	<string name="config_reset_starting_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will re-caculate its starting day after re-enabled. If you have chosen to pick the starting day by yourself in the above settings, this setting does not matter.</string>
+	<string name="config_reset_starting_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a reminder will re-calculate its starting day after re-enabled. If you have chosen to pick the starting day by yourself in the above settings, this setting does not matter.</string>
 	<string name="other_source_preference_title">View source / feedback</string>
-	<string name="other_source_preference_summary">The app is an open-source project, so be free to view its source on the GitHub page. You can also send feedbacks by reporting issues on it.</string>
+	<string name="other_source_preference_summary">The app is an open-source project, so be free to view its source on the GitHub page. You can also send feedback by reporting issues on it.</string>
 	<string name="config_default_frequency_preference_title">The default period of a reminder</string>
 	<string name="config_default_frequency_preference_summary">You can set the frequency for each reminder you created. You can set the default value of it.</string>
 	<string name="other_reset_preference_title">Reset all settings to default</string>
@@ -94,7 +94,7 @@
 	<string name="channel_for_reminding_advance_description">The notification channel for reminding in advance to alarming.</string>
 	<string name="notification_for_reminding_advance_content_title_format">You will take drugs in %s.</string>
 	<string name="notification_for_reminding_advance_content_text_format">You will soon need to take %s.</string>
-	<string name="delay_format">Delay for %s</string>
+	<!--<string name="delay_format">Delay for %s</string>-->
 	<string name="reminder_system_service_preference_title">Use system alarms service</string>
 	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
 	<string name="reminder_auto_close_time_preference_title">The time for which an alaram to auto-close</string>

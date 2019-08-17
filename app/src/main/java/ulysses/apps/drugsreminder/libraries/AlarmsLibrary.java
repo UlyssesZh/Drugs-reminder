@@ -41,7 +41,7 @@ public final class AlarmsLibrary {
 		List<PendingIntent> notificationIntentsList = notificationIntents.get(reminderID);
 		long intervalMillis = 86400000 * reminder.getRepeatPeriod();
 		List<Long> triggerAtMillis = triggerAtMillis(reminder.alarmTimeMillis(), intervalMillis);
-		if (reminder.getDelayed() > 0) {
+		/*if (reminder.getDelayed() > 0) {
 			// modify triggerAtMillis, set a delayed alarm
 			int delayed = reminder.getDelayed();
 			long[][] delayedInfo = delayedInfo(triggerAtMillis, intervalMillis, delayed);
@@ -53,7 +53,7 @@ public final class AlarmsLibrary {
 				alarmIntentsList.add(alarmIntent);
 				alarmSetter.set(delayedTriggerAtMillis[i], alarmIntent, "delayed" + i);
 			}
-		}
+		}*/
 		// set un-delayed alarms
 		for (int i = 0; i < triggerAtMillis.size(); i++) {
 			PendingIntent alarmIntent = generateAlarmPendingIntent(context, reminderID,
@@ -87,10 +87,10 @@ public final class AlarmsLibrary {
 				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, intervalMillis,
 						pendingIntent);
 			}
-			@Override
+			/*@Override
 			public void set(long triggerAtMillis, PendingIntent pendingIntent, String tag) {
 				alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
-			}
+			}*/
 		});
 	}
 	/** Set up the time-scheduled alarms and notifications about one specified reminder using
@@ -106,16 +106,16 @@ public final class AlarmsLibrary {
 				BackgroundThread.putTask(head + tag, () -> {
 					long timeDifference = BackgroundThread.getStartTimeMillis() - triggerAtMillis;
 					if (timeDifference >= 0 && timeDifference % intervalMillis == 0)
-						BackgroundThread.sendPendingIntent(context, pendingIntent);
+						sendPendingIntent(context, pendingIntent);
 				});
 			}
-			@Override
+			/*@Override
 			public void set(long triggerAtMillis, PendingIntent pendingIntent, String tag) {
 				BackgroundThread.putTask(head + tag, () -> {
 					if (BackgroundThread.getStartTimeMillis() == triggerAtMillis)
-						BackgroundThread.sendPendingIntent(context, pendingIntent);
+						sendPendingIntent(context, pendingIntent);
 				});
-			}
+			}*/
 		});
 		BackgroundThread.start();
 	}
@@ -142,13 +142,13 @@ public final class AlarmsLibrary {
 		}
 		return result;
 	}
-	/** Add the min time by intervalMillis, and return the min time plus the delayed time.
+	/*/** Add the min time by intervalMillis, and return the min time plus the delayed time.
 	 * @param triggerAtMillis WILL be modified after invoking the method.
 	 * @param intervalMillis will be added to the min value in triggerAtMillis.
 	 * @return an array whose [0] is the min values in triggerAtMillis plus
 	 *         {@link Preferences#delayTime} in millis, and whose [1] is the indices of the min
 	 *         values in triggerAtMillis.*/
-	@Contract("_, _, _ -> new")
+	/*@Contract("_, _, _ -> new")
 	@NotNull
 	private static long[][] delayedInfo(@NotNull List<Long> triggerAtMillis, long intervalMillis,
 	                                    int delayed) {
@@ -169,7 +169,7 @@ public final class AlarmsLibrary {
 			delayedIndex[i] = index;
 		}
 		return new long[][] {delayedTriggerAtMillis, delayedIndex};
-	}
+	}*/
 	/** Clear intents.get(reminderID). If the reminder is not enabled, make it null; otherwise make
 	 * it with a new ArrayList.*/
 	private static void clearIntents(@NotNull SparseArray<List<PendingIntent>> intents,
@@ -223,6 +223,15 @@ public final class AlarmsLibrary {
 		return PendingIntent.getBroadcast(context, 0x0520, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
+	/** Equivalent to {@link PendingIntent#send()} except that it will catch the
+	 * {@link android.app.PendingIntent.CanceledException}.*/
+	public static void sendPendingIntent(Context context,  @NotNull PendingIntent pendingIntent) {
+		try {
+			pendingIntent.send(context, 0x0520, null);
+		} catch (PendingIntent.CanceledException e) {
+			e.printStackTrace();
+		}
+	}
 	/** An interface for those which can schedule tasks. A typical implementation is to use
 	 * {@link AlarmManager}, but there is another implementation used in this app, which is to use
 	 * {@link BackgroundThread}.*/
@@ -234,12 +243,12 @@ public final class AlarmsLibrary {
 		 * one task.*/
 		void setRepeating(long triggerAtMillis, long intervalMillis, PendingIntent pendingIntent,
 		                  String tag);
-		/** Schedule a non-repeating task. Information about the params can be seen in
+		/*/** Schedule a non-repeating task. Information about the params can be seen in
 		 * {@link AlarmManager#set(int, long, PendingIntent)}.
 		 * @param tag used to help differ tasks when there are more than one task. It is
 		 * unnecessarily used in the implementation if you have other means to deal with more than
 		 * one task.*/
-		void set(long triggerAtMillis, PendingIntent pendingIntent, String tag);
+		/*void set(long triggerAtMillis, PendingIntent pendingIntent, String tag);*/
 	}
 	private interface OnAlarmsClearFinishedListener {
 		/** A callback invoked when {@link #clearAlarms(Context, int)} is finished.*/

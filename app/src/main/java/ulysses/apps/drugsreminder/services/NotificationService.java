@@ -18,7 +18,7 @@ import ulysses.apps.drugsreminder.activities.MainActivity;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
-import ulysses.apps.drugsreminder.receivers.DelayingReceiver;
+/*import ulysses.apps.drugsreminder.receivers.DelayingReceiver;*/
 
 public class NotificationService extends IntentService {
 	private static final String CHANNEL_FOR_REMINDING_ADVANCE = "channelForRemindingAdvance";
@@ -40,19 +40,19 @@ public class NotificationService extends IntentService {
 				CHANNEL_FOR_REMINDING_ADVANCE);
 		builder.setSmallIcon(R.drawable.ic_notification);
 		builder.setContentTitle(getString(R.string.notification_for_reminding_advance_content_title_format,
-				Preferences.delayTime.toString(getResources())));
+				Preferences.reminderAdvanceTime.toString(getResources())));
 		builder.setContentText(getString(R.string.notification_for_reminding_advance_content_text_format,
 				reminder.drugsString(getResources())));
 		builder.setPriority(NotificationCompat.PRIORITY_MAX);
 		builder.setAutoCancel(true);
 		setContentIntentFor(builder);
-		// set the delay action for the notification
+		/*// set the delay action for the notification
 		Intent delayIntent = new Intent(this, DelayingReceiver.class);
 		delayIntent.putExtras(intent);
 		builder.addAction(R.drawable.ic_trending_down_white_24dp, getString(R.string.delay_format,
 				Preferences.delayTime.toString(getResources())),
 				PendingIntent.getBroadcast(this, 0x0520, delayIntent,
-						PendingIntent.FLAG_UPDATE_CURRENT));
+						PendingIntent.FLAG_UPDATE_CURRENT));*/
 		// send a notification whose id is the reminder's ID
 		NotificationManagerCompat.from(this).notify(reminder.getID(), builder.build());
 	}

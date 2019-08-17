@@ -74,8 +74,7 @@ public class ImprovedSimpleAdapter extends SimpleAdapter {
 							setViewText((TextView) v, text);
 						} else {
 							throw new IllegalStateException(
-									v.getClass().getName() +
-											" could not be bound to a " +
+									v.getClass().getName() + " could not be bound to a " +
 											(data == null ? "<unknown type>" : data.getClass()));
 						}
 					} else if (v instanceof TextView) {

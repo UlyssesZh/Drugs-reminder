@@ -70,6 +70,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 			case 3:
 				return dataForCheckable(reminder,
 						(CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
+							if (reminder.isEnabled() == isChecked) return;
 							reminder.setEnabled(isChecked);
 							ViewParent viewParent = buttonView.getParent();
 							if (viewParent instanceof View)

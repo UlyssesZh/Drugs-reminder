@@ -48,8 +48,8 @@ public class AlarmActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		reminder = ElementsLibrary.findReminderByID(reminderID);
-		if (intent.getBooleanExtra("clearDelay", false))
-			reminder.undelay();
+		/*if (intent.getBooleanExtra("clearDelay", false))
+			reminder.undelay();*/
 		setupAudio();
 		setupVibration();
 		setupViews();
@@ -64,16 +64,10 @@ public class AlarmActivity extends AppCompatActivity {
 			}, Preferences.autoCloseTime.millis());
 	}
 	private void wakeUp() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-			setTurnScreenOn(true);
-			setShowWhenLocked(true);
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		} else {
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-					                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-					                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-					                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-		}
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+				                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+				                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+				                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 	}
 	private void setupAudio() {
 		AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();

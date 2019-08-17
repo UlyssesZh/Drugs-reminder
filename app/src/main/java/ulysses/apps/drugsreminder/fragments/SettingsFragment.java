@@ -62,8 +62,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 				Preferences.save(getContext());
 				((SwitchPreferenceCompat) findPreference("vibration"))
 						.setChecked(Preferences.vibration);
-				((SwitchPreferenceCompat) findPreference("clearDelay"))
-						.setChecked(Preferences.clearDelay);
+				/*((SwitchPreferenceCompat) findPreference("clearDelay"))
+						.setChecked(Preferences.clearDelay);*/
 				((SwitchPreferenceCompat) findPreference("resetStarting"))
 						.setChecked(Preferences.resetStarting);
 			});
@@ -81,7 +81,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 				String uriString = uri == null ? "" : uri.toString();
 				if (preferenceRingtone.callChangeListener(uriString)) {
 					Preferences.ringtoneUri = uri;
-					SharedPreferences.Editor editor = preferenceRingtone.getSharedPreferences().edit();
+					SharedPreferences.Editor editor =
+							preferenceRingtone.getSharedPreferences().edit();
 					editor.putString("ringtoneUri", uriString);
 					editor.apply();
 				}

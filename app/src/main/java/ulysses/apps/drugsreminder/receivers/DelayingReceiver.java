@@ -1,4 +1,4 @@
-package ulysses.apps.drugsreminder.receivers;
+/*package ulysses.apps.drugsreminder.receivers;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -13,3 +13,4 @@ public class DelayingReceiver extends ReceiverForService {
 		return DelayingService.class;
 	}
 }
+*/

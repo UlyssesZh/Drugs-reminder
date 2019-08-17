@@ -3,6 +3,7 @@ package ulysses.apps.drugsreminder.util;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.util.ArraySet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -98,15 +99,6 @@ public class BackgroundThread {
 		Set<String> needRemoving = new ArraySet<String>();
 		for (String key : tasks.keySet()) if (key.matches(regexp)) needRemoving.add(key);
 		for (String key : needRemoving) removeTask(key);
-	}
-	/** Equivalent to {@link PendingIntent#send()} except that it will catch the
-	 * {@link android.app.PendingIntent.CanceledException}.*/
-	public static void sendPendingIntent(Context context,  @NotNull PendingIntent pendingIntent) {
-		try {
-			pendingIntent.send(context, 0x0520, null);
-		} catch (PendingIntent.CanceledException e) {
-			e.printStackTrace();
-		}
 	}
 	public static void setOnInterruptedListener(OnInterruptedListener listener) {
 		BackgroundThread.listener = listener;

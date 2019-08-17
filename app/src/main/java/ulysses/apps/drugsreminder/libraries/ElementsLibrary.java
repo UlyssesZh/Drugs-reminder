@@ -171,7 +171,7 @@ public final class ElementsLibrary {
 			editor.putInt(head + "repeatPeriod", reminder.getRepeatPeriod());
 			editor.putLong(head + "createdTime", reminder.getCreatedTime());
 			editor.putBoolean(head + "enabled", reminder.isEnabled());
-			editor.putInt(head + "delayed", reminder.getDelayed());
+			/*editor.putInt(head + "delayed", reminder.getDelayed());*/
 		}
 	}
 	private static void saveReminders(@NotNull SharedPreferences.Editor editor) {
@@ -228,7 +228,7 @@ public final class ElementsLibrary {
 					preferences.getLong(head + "createdTime",
 							System.currentTimeMillis()));
 			reminder.setEnabled(preferences.getBoolean(head + "enabled", true));
-			reminder.setDelayed(preferences.getInt(head + "delayed", 0));
+			/*reminder.setDelayed(preferences.getInt(head + "delayed", 0));*/
 			addReminder(reminder);
 		} else deleteReminder(ID);
 	}
