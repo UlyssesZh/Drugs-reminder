@@ -33,4 +33,11 @@
 		parent="@android:style/Widget.Material.Light.TimePicker">
 		<item name="android:timePickerMode">spinner</item>
 	</style>
+	<style
+		name="AppTheme.Transparent"
+		parent="AppTheme.NoActionBar">
+		<item name="colorPrimary">@color/colorTransparent</item>
+		<item name="colorPrimaryDark">@color/colorTransparent</item>
+		<item name="colorAccent">@color/colorTransparent</item>
+	</style>
 </resources>

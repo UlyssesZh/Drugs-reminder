@@ -1,6 +1,7 @@
 package ulysses.apps.drugsreminder.services;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -21,14 +22,17 @@ import ulysses.apps.drugsreminder.preferences.Preferences;
 /*import ulysses.apps.drugsreminder.receivers.DelayingReceiver;*/
 
 public class NotificationService extends IntentService {
-	private static final String CHANNEL_FOR_REMINDING_ADVANCE = "channelForRemindingAdvance";
-	private static final String CHANNEL_FOR_AUTO_CLOSE_HINT = "channelForAutoCloseHint";
+	public static final String CHANNEL_FOR_REMINDING_ADVANCE = "channelForRemindingAdvance";
+	public static final String CHANNEL_FOR_AUTO_CLOSE_HINT = "channelForAutoCloseHint";
+	public static final String CHANNEL_FOR_BACKGROUND_TASKS = "channelForBackgroundTasks";
 	public NotificationService() {
 		super("NotificationService");
 	}
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		createNotificationChannel(this);
+		createNotificationChannels(this);
+		startForeground(0x1108, backgroundTasksNotification(this));
+		NotificationManagerCompat.from(this).cancel(0x1108);
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		Reminder reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (intent.getBooleanExtra("forRemindingAdvance", true))
@@ -68,6 +72,22 @@ public class NotificationService extends IntentService {
 		setContentIntentFor(builder);
 		NotificationManagerCompat.from(this).notify(0x0520, builder.build());
 	}
+	public static Notification backgroundTasksNotification(Context context) {
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
+				NotificationService.CHANNEL_FOR_BACKGROUND_TASKS);
+		builder.setSmallIcon(R.drawable.ic_notification);
+		builder.setAutoCancel(false);
+		builder.setContentTitle(context.getString(
+				R.string.notification_for_background_tasks_content_title));
+		builder.setContentText(context.getString(
+				R.string.notification_for_background_tasks_content_text));
+		builder.setPriority(NotificationCompat.PRIORITY_LOW);
+		Intent intent = new Intent(context, MainActivity.class);
+		intent.setAction(Intent.ACTION_MAIN);
+		builder.setContentIntent(PendingIntent.getActivity(context, 0x0520, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT));
+		return builder.build();
+	}
 	private void setContentIntentFor(@NotNull NotificationCompat.Builder builder) {
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
@@ -75,7 +95,7 @@ public class NotificationService extends IntentService {
 		builder.setContentIntent(PendingIntent.getActivity(this, 0x0520,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
-	public static void createNotificationChannel(Context context) {
+	public static void createNotificationChannels(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channelForReminderAdvance =
 					new NotificationChannel(CHANNEL_FOR_REMINDING_ADVANCE,
@@ -85,16 +105,20 @@ public class NotificationService extends IntentService {
 					new NotificationChannel(CHANNEL_FOR_AUTO_CLOSE_HINT,
 							context.getString(R.string.channel_for_auto_close_hint_name),
 							NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel channelForBackgroundTasks =
+					new NotificationChannel(CHANNEL_FOR_BACKGROUND_TASKS,
+							context.getString(R.string.channel_for_background_tasks_name),
+							NotificationManager.IMPORTANCE_LOW);
 			channelForReminderAdvance.setDescription(
 					context.getString(R.string.channel_for_reminding_advance_description));
 			channelForAutoCloseHint.setDescription(
 					context.getString(R.string.channel_for_auto_close_hint_description));
-			NotificationManager notificationManager =
-					context.getSystemService(NotificationManager.class);
-			if (notificationManager != null) {
-				notificationManager.createNotificationChannel(channelForReminderAdvance);
-				notificationManager.createNotificationChannel(channelForAutoCloseHint);
-			}
+			channelForBackgroundTasks.setDescription(
+					context.getString(R.string.channel_for_background_tasks_description));
+			NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+			notificationManager.createNotificationChannel(channelForReminderAdvance);
+			notificationManager.createNotificationChannel(channelForAutoCloseHint);
+			notificationManager.createNotificationChannel(channelForBackgroundTasks);
 		}
 	}
 }

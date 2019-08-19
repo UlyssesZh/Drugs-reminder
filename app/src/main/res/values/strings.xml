@@ -105,4 +105,12 @@
 	<string name="channel_for_auto_close_hint_description">The notification channel for informing the user of the auto-closing of an alarm.</string>
 	<string name="notification_for_auto_close_content_title">The alarm has fired.</string>
 	<string name="notification_for_auto_close_content_text_format">You should have taken %s.</string>
+	<string name="channel_for_background_tasks_name">Background tasks</string>
+	<string name="channel_for_background_tasks_description">The notification channel for background tasks</string>
+	<string name="notification_for_background_tasks_content_title">Drugs reminder is running in background.</string>
+	<string name="notification_for_background_tasks_content_text">Tap to open the app.</string>
+	<string name="system_alert_window_permission_warning">Warning: On this version of Android, alarms may not show up when the app is running in background.</string>
+	<string name="overlay_permission_hint">You need to grant the permission of overlaying for the app, overwise the alarms will not work appropriately.</string>
+	<string name="overlay_permission_granted_hint">The permission is successfully granted!</string>
+	<string name="overlay_permission_ungranted_hint">The permission is unsuccessfully granted!</string>
 </resources>

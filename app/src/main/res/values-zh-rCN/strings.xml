@@ -105,4 +105,12 @@
     <string name="channel_for_auto_close_hint_description">在提醒响铃之后自动关闭的通知</string>
     <string name="notification_for_auto_close_content_title">提醒已响铃。</string>
     <string name="notification_for_auto_close_content_text_format">您应已服用%s。</string>
+    <string name="channel_for_background_tasks_name">后台运行通知</string>
+    <string name="channel_for_background_tasks_description">提示应用在后台运行的通知</string>
+    <string name="notification_for_background_tasks_content_title">理时珍正在后台运行。</string>
+    <string name="notification_for_background_tasks_content_text">点击以打开应用。</string>
+    <string name="system_alert_window_permission_warning">警告：在您的Android版本上，当应用在后台运行时可能无法正常响铃。</string>
+    <string name="overlay_permission_hint">您需要为APP授予在其他应用之上显示的权限，否则将无法正常响铃。</string>
+    <string name="overlay_permission_granted_hint">权限授予成功！</string>
+    <string name="overlay_permission_ungranted_hint">权限获取失败！</string>
 </resources>

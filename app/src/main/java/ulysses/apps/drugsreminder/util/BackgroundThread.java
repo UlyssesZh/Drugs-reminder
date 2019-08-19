@@ -69,8 +69,12 @@ public class BackgroundThread {
 						calendar.add(periodField, 1);
 						startTimeMillis = calendar.getTimeInMillis();
 						// wait for some time
-						lock.wait(startTimeMillis - System.currentTimeMillis());
+						long timeout = startTimeMillis - System.currentTimeMillis();
+						lock.wait(timeout > 0 ? timeout : 1);
 						// run the tasks one by one
+						CalendarUtils.print(startTimeMillis, "startingTimeMillis is %s.");
+						CalendarUtils.print(System.currentTimeMillis(), "It is %s now.");
+						Log.d("BackgroundThread", "running tasks: " + tasks.keySet());
 						for (Runnable runnable : tasks.values()) runnable.run();
 					}
 				} catch (InterruptedException e) {

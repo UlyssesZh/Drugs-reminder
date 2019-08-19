@@ -8,6 +8,10 @@
 		android:name="android.permission.WAKE_LOCK" />
 	<uses-permission
 		android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission
+		android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+	<uses-permission
+		android:name="android.permission.FOREGROUND_SERVICE" />
 	<application
 		android:allowBackup="true"
 		android:fullBackupContent="@xml/my_backup_rules"
@@ -15,13 +19,20 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
+		android:persistent="true"
 		android:theme="@style/AppTheme">
 		<receiver
 			android:name=".receivers.AlarmReceiver" />
 		<receiver
 			android:name=".receivers.NotificationReceiver" />
+		<!--<receiver
+			android:name=".receivers.DelayingReceiver" />-->
 		<receiver
-			android:name=".receivers.DelayingReceiver" />
+			android:name=".receivers.GuardReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
 		<activity
 			android:name=".activities.MainActivity"
 			android:label="@string/app_name"
@@ -38,7 +49,9 @@
 		<activity
 			android:name=".activities.EditMealActivity"
 			android:parentActivityName=".activities.MainActivity"
-			android:theme="@style/AppTheme.NoActionBar">
+			android:theme="@style/AppTheme.NoActionBar"
+			android:screenOrientation="portrait"
+			android:configChanges="orientation|screenSize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity" />
@@ -46,7 +59,9 @@
 		<activity
 			android:name=".activities.EditDrugActivity"
 			android:parentActivityName=".activities.MainActivity"
-			android:theme="@style/AppTheme.NoActionBar">
+			android:theme="@style/AppTheme.NoActionBar"
+			android:screenOrientation="portrait"
+			android:configChanges="orientation|screenSize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity" />
@@ -54,14 +69,18 @@
 		<activity
 			android:name=".activities.EditReminderActivity"
 			android:parentActivityName=".activities.MainActivity"
-			android:theme="@style/AppTheme.NoActionBar">
+			android:theme="@style/AppTheme.NoActionBar"
+			android:screenOrientation="portrait"
+			android:configChanges="orientation|screenSize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity" />
 		</activity>
 		<activity
 			android:name=".activities.AlarmActivity"
-			android:theme="@style/AppTheme.NoActionBar">
+			android:theme="@style/AppTheme.NoActionBar"
+			android:screenOrientation="portrait"
+			android:configChanges="orientation|screenSize">
 			<intent-filter>
 				<action
 					android:name="android.intent.action.MAIN" />
@@ -77,7 +96,15 @@
 		</activity>
 		<service
 			android:name=".services.NotificationService" />
+		<!--<service
+			android:name=".services.DelayingService" />-->
 		<service
-			android:name=".services.DelayingService" />
+			android:name=".services.GuardService"
+			android:exported="false">
+			<intent-filter android:priority="900">
+				<action
+					android:name=".receivers.ACTION_GUARD" />
+			</intent-filter>
+		</service>
 	</application>
 </manifest>

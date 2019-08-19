@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseArray;
 
 import org.jetbrains.annotations.Contract;
@@ -17,6 +18,8 @@ import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.receivers.AlarmReceiver;
 import ulysses.apps.drugsreminder.receivers.NotificationReceiver;
 import ulysses.apps.drugsreminder.util.BackgroundThread;
+import ulysses.apps.drugsreminder.util.CalendarUtils;
+import ulysses.apps.drugsreminder.util.ExceptionCatcher;
 
 public final class AlarmsLibrary {
 	private static SparseArray<List<PendingIntent>> alarmIntents = new SparseArray<List<PendingIntent>>();
@@ -225,7 +228,7 @@ public final class AlarmsLibrary {
 	}
 	/** Equivalent to {@link PendingIntent#send()} except that it will catch the
 	 * {@link android.app.PendingIntent.CanceledException}.*/
-	public static void sendPendingIntent(Context context,  @NotNull PendingIntent pendingIntent) {
+	private static void sendPendingIntent(Context context,  @NotNull PendingIntent pendingIntent) {
 		try {
 			pendingIntent.send(context, 0x0520, null);
 		} catch (PendingIntent.CanceledException e) {
