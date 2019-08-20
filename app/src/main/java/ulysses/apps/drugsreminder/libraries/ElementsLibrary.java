@@ -229,6 +229,9 @@ public final class ElementsLibrary {
 							System.currentTimeMillis()));
 			reminder.setEnabled(preferences.getBoolean(head + "enabled", true));
 			/*reminder.setDelayed(preferences.getInt(head + "delayed", 0));*/
+			List<String> usageDosages = reminder.getUsageDosages();
+			int drugsNumber = reminder.getDrugIDs().size();
+			while (drugsNumber > usageDosages.size()) usageDosages.add("");
 			addReminder(reminder);
 		} else deleteReminder(ID);
 	}
@@ -245,14 +248,12 @@ public final class ElementsLibrary {
 	}
 	private static Set<String> codeList(@NotNull List list) {
 		Set<String> result = new LinkedHashSet<String>(list.size());
-		for (Object object : list)
-			result.add(object.toString());
+		for (Object object : list) result.add(object.toString());
 		return result;
 	}
 	private static List<Integer> decodeStringSet(@NotNull Set<String> code) {
 		List<Integer> result = new ArrayList<Integer>(code.size());
-		for (String string : code)
-			result.add(Integer.decode(string));
+		for (String string : code) result.add(Integer.valueOf(string));
 		return result;
 	}
 }

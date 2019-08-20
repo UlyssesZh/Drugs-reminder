@@ -10,6 +10,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -138,11 +140,10 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		addAllDrugs(savedInstanceState.getStringArrayList("usageDosages"));
 		editRepeatPeriod.setText(savedInstanceState.getString("repeatPeriod"));
 		long createdTime = savedInstanceState.getLong("createdTime");
-		if (pickStartingTime() && createdTime != 0)
-			setWallTimeToDatePicker(createdTime);
+		if (pickStartingTime() && createdTime != 0) setWallTimeToDatePicker(createdTime);
 	}
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("hour", editRelativeTime.getHour());
 		outState.putInt("minute", editRelativeTime.getMinute());
@@ -220,14 +221,13 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 				       .findViewById(viewID);
 	}
 	private void loadUsageDosage() {
-		if (editDrugs.getAdapter() != null) {
-			int a = editDrugs.getChildCount();
-			int b = drugIDs.size();
-			int iBound = a > b ? b : a;
-			for (int i = 0; i < iBound; i++)
-				drugListItems.get(i).put("usage_dosage", ((EditText) getDrugView(i,
-						R.id.edit_reminder_drug_usage_dosage)).getText().toString());
-		}
+		if (editDrugs.getAdapter() == null) return;
+		int a = editDrugs.getChildCount();
+		int b = drugIDs.size();
+		int iBound = a > b ? b : a;
+		for (int i = 0; i < iBound; i++)
+			drugListItems.get(i).put("usage_dosage", ((EditText) getDrugView(i,
+					R.id.edit_reminder_drug_usage_dosage)).getText().toString());
 	}
 	private int drugsNumber() {
 		return drugIDs.size();

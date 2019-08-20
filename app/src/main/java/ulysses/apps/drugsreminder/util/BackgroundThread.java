@@ -1,7 +1,6 @@
 package ulysses.apps.drugsreminder.util;
 
 import android.util.ArraySet;
-import android.util.Log;
 
 import org.jetbrains.annotations.Contract;
 
@@ -23,8 +22,8 @@ public class BackgroundThread {
 	/** Records the starting time of every period. If the background thread is not currently
 	 * running, it is -1.*/
 	private static long startTimeMillis;
-	/** Used to mark threads.*/
-	private static int threadCount;
+	/** Used decide whether the thread is exactly the thread we want.*/
+	private static long currentThreadId;
 	private static final Object LOCK = new Object();
 	private BackgroundThread() {}
 	/** Be sure to call it before using the class. */
@@ -32,7 +31,7 @@ public class BackgroundThread {
 		thread = new Thread();
 		tasks = new HashMap<String, Runnable>();
 		periodField = Calendar.MINUTE;
-		threadCount = 0;
+		currentThreadId = -1;
 		startTimeMillis = -1;
 	}
 	public static Runnable putTask(String name, Runnable runnable) {
@@ -57,7 +56,6 @@ public class BackgroundThread {
 	/** Start the background thread. Do nothing if the thread is currently alive.*/
 	public static void start() {
 		if (isAlive()) return;
-		threadCount++;
 		thread = new Thread(() -> {
 			// synchronize on a static lock to avoid multiple threads running at the same time
 			synchronized (LOCK) {
@@ -75,7 +73,7 @@ public class BackgroundThread {
 						startTimeMillis = backup;
 						// get the current thread and do some judges
 						Thread currentThread = Thread.currentThread();
-						if (Integer.valueOf(currentThread.getName()) == threadCount)
+						if (currentThread.getId() == currentThreadId)
 							// run the tasks one by one
 							for (Runnable runnable : tasks.values()) runnable.run();
 						else // if the thread is not correct, interrupt it
@@ -85,7 +83,8 @@ public class BackgroundThread {
 				// when the thread is interrupted, come here
 				startTimeMillis = -1;
 			}
-		}, String.valueOf(threadCount)); // use threadCount to mark it
+		});
+		currentThreadId = thread.getId();
 		thread.start();
 	}
 	@Contract(pure = true)

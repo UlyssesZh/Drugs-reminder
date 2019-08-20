@@ -56,6 +56,7 @@ public final class AlarmsLibrary {
 	private static void setRepeating(long triggerAtMillis, long intervalMillis,
 	                                 PendingIntent pendingIntent, String taskName) {
 		BackgroundThread.putTask(taskName, () -> {
+			CalendarUtils.print(triggerAtMillis, "Will " + taskName + " trigger at %s?");
 			long timeDifference = BackgroundThread.getStartTimeMillis() - triggerAtMillis;
 			if (timeDifference >= 0 && timeDifference % intervalMillis == 0)
 				sendPendingIntent(pendingIntent);
