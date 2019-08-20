@@ -78,9 +78,7 @@
 	<string name="about_info">The app is an open-source project.</string>
 	<string name="config_preference_category_title">Configuration settings</string>
 	<!--<string name="config_delay_preference_title">Delaying amount of time</string>
-	<string name="config_delay_preference_summary">If you enable the pre-alarm notifications, you can delay the next alarm temporarily. You can set how much time it can be delayed for.</string>
-	<string name="config_clear_delay_preference_title">A reminder is not delayed after re-enabled</string>
-	<string name="config_clear_delay_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a delayed reminder will clear its \'delayed\' status after re-enabled.</string>-->
+	<string name="config_delay_preference_summary">If you enable the pre-alarm notifications, you can delay the next alarm temporarily. You can set how much time it can be delayed for.</string>-->
 	<string name="config_reset_starting_preference_title">The reminder will restart after re-enabled</string>
 	<string name="config_reset_starting_preference_summary">You can re-enable a reminder by toggling on the switch next to it. You can set whether a reminder will re-calculate its starting day after re-enabled. If you have chosen to pick the starting day by yourself in the above settings, this setting does not matter.</string>
 	<string name="other_source_preference_title">View source / feedback</string>
@@ -95,8 +93,6 @@
 	<string name="notification_for_reminding_advance_content_title_format">You will take drugs in %s.</string>
 	<string name="notification_for_reminding_advance_content_text_format">You will soon need to take %s.</string>
 	<!--<string name="delay_format">Delay for %s</string>-->
-	<string name="reminder_system_service_preference_title">Use system alarms service</string>
-	<string name="reminder_system_service_preference_summary">Whether to use alarm manager provided by Android system. It can make the alarms fire even when the app is not running, but it is extremely unstable on some devices.</string>
 	<string name="reminder_auto_close_time_preference_title">The time for which an alaram to auto-close</string>
 	<string name="reminder_auto_close_time_preference_summary">The alarm will close itself automatically if it has rung for a specified period of time. You can disable the function by setting the time to 0.</string>
 	<string name="other_q_and_a_preference_title">Q &amp; A</string>
@@ -110,7 +106,11 @@
 	<string name="notification_for_background_tasks_content_title">Drugs reminder is running in background.</string>
 	<string name="notification_for_background_tasks_content_text">Tap to open the app.</string>
 	<string name="system_alert_window_permission_warning">Warning: On this version of Android, alarms may not show up when the app is running in background.</string>
-	<string name="overlay_permission_hint">You need to grant the permission of overlaying for the app, overwise the alarms will not work appropriately.</string>
-	<string name="overlay_permission_granted_hint">The permission is successfully granted!</string>
-	<string name="overlay_permission_ungranted_hint">The permission is unsuccessfully granted!</string>
+	<string name="permission_hint">You need to grant some permissions for the app, overwise it will not work appropriately.</string>
+	<string name="settings">Settings</string>
+	<string name="config_grant_permissions_preference_title">Grant permissions</string>
+	<string name="config_grant_permissions_preference_summary">If the app is not working appropriately, maybe there are some key permissions you need to grant.</string>
+	<string name="config_allow_auto_start_preference_title">Allow autostarting</string>
+	<string name="config_allow_auto_start_preference_summary">Allow the app to autostart to make it run more steadily.</string>
+	<string name="neednt_auto_start_hint">On this device, you do not need to allow autostarting.</string>
 </resources>

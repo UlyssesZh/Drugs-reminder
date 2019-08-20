@@ -25,14 +25,15 @@ public class NotificationService extends IntentService {
 	public static final String CHANNEL_FOR_REMINDING_ADVANCE = "channelForRemindingAdvance";
 	public static final String CHANNEL_FOR_AUTO_CLOSE_HINT = "channelForAutoCloseHint";
 	public static final String CHANNEL_FOR_BACKGROUND_TASKS = "channelForBackgroundTasks";
+	public static final int BACKGROUND_NOTIFICATION_ID = 0x1108;
 	public NotificationService() {
 		super("NotificationService");
 	}
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		createNotificationChannels(this);
-		startForeground(0x1108, backgroundTasksNotification(this));
-		NotificationManagerCompat.from(this).cancel(0x1108);
+		startForeground(BACKGROUND_NOTIFICATION_ID, backgroundTasksNotification(this));
+		NotificationManagerCompat.from(this).cancel(BACKGROUND_NOTIFICATION_ID);
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		Reminder reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (intent.getBooleanExtra("forRemindingAdvance", true))
@@ -76,16 +77,16 @@ public class NotificationService extends IntentService {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
 				NotificationService.CHANNEL_FOR_BACKGROUND_TASKS);
 		builder.setSmallIcon(R.drawable.ic_notification);
-		builder.setAutoCancel(false);
+		builder.setAutoCancel(true);
+		builder.setPriority(NotificationCompat.PRIORITY_LOW);
 		builder.setContentTitle(context.getString(
 				R.string.notification_for_background_tasks_content_title));
-		builder.setContentText(context.getString(
+		/*builder.setContentText(context.getString(
 				R.string.notification_for_background_tasks_content_text));
-		builder.setPriority(NotificationCompat.PRIORITY_LOW);
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
 		builder.setContentIntent(PendingIntent.getActivity(context, 0x0520, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT));
+				PendingIntent.FLAG_UPDATE_CURRENT));*/
 		return builder.build();
 	}
 	private void setContentIntentFor(@NotNull NotificationCompat.Builder builder) {

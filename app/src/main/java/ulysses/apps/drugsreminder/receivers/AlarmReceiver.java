@@ -20,7 +20,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 				                     Intent.FLAG_FROM_BACKGROUND);
 		alarmIntent.setAction(Intent.ACTION_MAIN);
 		alarmIntent.putExtras(intent);
-		Log.d("AlarmReceiver", "onReceive: An alarm is received.");
+		Log.d("AlarmReceiver", "An alarm is received.");
 		context.startActivity(alarmIntent);
 	}
 }

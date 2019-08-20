@@ -12,7 +12,7 @@ public class CalendarUtils {
 	 * @param messageFormat the format of the message. Must include a "%s" in it.*/
 	public static void print(@NotNull Calendar calendar, String messageFormat) {
 		Log.d("CalendarUtils", String.format(messageFormat,
-				String.format("%04d-%02d-%02d %02d:%02d:%02d:%03d",
+				String.format("%04d-%02d-%02d %02d:%02d:%02d.%03d",
 						calendar.get(Calendar.YEAR),
 						calendar.get(Calendar.MONTH) + 1,
 						calendar.get(Calendar.DAY_OF_MONTH),
@@ -50,6 +50,22 @@ public class CalendarUtils {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(timeMillis);
 		setToBeginning(calendar, field);
+		return calendar.getTimeInMillis();
+	}
+	public static long addTo(long timeMillis, int field, int amount) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(timeMillis);
+		calendar.add(field, amount);
+		return calendar.getTimeInMillis();
+	}
+	public static void setToEnd(Calendar calendar, int field) {
+		setToBeginning(calendar, field);
+		calendar.add(field, 1);
+	}
+	public static long setToEnd(long timeMillis, int field) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(timeMillis);
+		setToEnd(calendar, field);
 		return calendar.getTimeInMillis();
 	}
 }

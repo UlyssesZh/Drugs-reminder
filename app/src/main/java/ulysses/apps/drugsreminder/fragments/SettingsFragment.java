@@ -2,7 +2,6 @@ package ulysses.apps.drugsreminder.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -16,8 +15,9 @@ import androidx.preference.SwitchPreferenceCompat;
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.AboutActivity;
 import ulysses.apps.drugsreminder.activities.QAndAActivity;
-import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
+import ulysses.apps.drugsreminder.util.AutoStartPageUtils;
+import ulysses.apps.drugsreminder.util.PermissionPageUtils;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 	private static final int RINGTONE_REQUEST_CODE = 0x0520;
@@ -38,10 +38,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			startActivityForResult(intent, RINGTONE_REQUEST_CODE);
 			return true;
 		});
-		findPreference("systemService").setOnPreferenceChangeListener((preference, newValue) -> {
-			Preferences.systemService = (boolean) newValue;
-			Context context = getContext();
-			if (context != null) AlarmsLibrary.setupAllAlarms(context);
+		findPreference("grantPermissions").setOnPreferenceClickListener(preference -> {
+			PermissionPageUtils.goPermissionPage(getContext());
+			return true;
+		});
+		findPreference("allowAutoStart").setOnPreferenceClickListener(preference -> {
+			AutoStartPageUtils.goAutoStartPage(getContext());
 			return true;
 		});
 		findPreference("qAndA").setOnPreferenceClickListener(preference -> {
@@ -75,18 +77,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK && requestCode == RINGTONE_REQUEST_CODE) {
-			if (data != null) {
-				Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-				String uriString = uri == null ? "" : uri.toString();
-				if (preferenceRingtone.callChangeListener(uriString)) {
-					Preferences.ringtoneUri = uri;
-					SharedPreferences.Editor editor =
-							preferenceRingtone.getSharedPreferences().edit();
-					editor.putString("ringtoneUri", uriString);
-					editor.apply();
-				}
-			}
+		if (resultCode == Activity.RESULT_OK && requestCode == RINGTONE_REQUEST_CODE && data != null) {
+			Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+			String uriString = uri == null ? "" : uri.toString();
+			if (!preferenceRingtone.callChangeListener(uriString)) return;
+			Preferences.ringtoneUri = uri;
+			SharedPreferences.Editor editor = preferenceRingtone.getSharedPreferences().edit();
+			editor.putString("ringtoneUri", uriString);
+			editor.apply();
 		}
 	}
 }

@@ -17,22 +17,19 @@ public final class Preferences {
 	public static Uri ringtoneUri;
 	public static boolean vibration;
 	public static String startingTimeType;
-	/*public static Time delayTime;
-	public static boolean clearDelay;*/
+	/*public static Time delayTime;*/
 	public static boolean resetStarting;
 	public static int defaultFrequency;
-	public static boolean systemService;
 	public static Time autoCloseTime;
+	public static boolean saved = false;
 	public static void setDefault() {
 		reminderAdvanceTime = new Time(0, 30);
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 		vibration = true;
 		startingTimeType = STARTING_TIME_TYPE_NEXT;
-		/*delayTime = new Time(0, 30);
-		clearDelay = true;*/
+		/*delayTime = new Time(0, 30);*/
 		resetStarting = true;
 		defaultFrequency = 1;
-		systemService = false;
 		autoCloseTime = new Time(0, 5);
 	}
 	public static void save(Context context) {
@@ -43,17 +40,15 @@ public final class Preferences {
 		editor.putString("ringtoneUri", ringtoneUri == null ? "" : ringtoneUri.toString());
 		editor.putBoolean("vibration", vibration);
 		editor.putString("startingTimeType", startingTimeType);
-		/*editor.putInt("delayMinutes", delayTime.minutes());
-		editor.putBoolean("clearDelay", clearDelay);*/
+		/*editor.putInt("delayMinutes", delayTime.minutes());*/
 		editor.putBoolean("resetStarting", resetStarting);
 		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
-		editor.putBoolean("systemService", systemService);
 		editor.putInt("autoCloseTimeMinutes", autoCloseTime.minutes());
 		editor.apply();
 	}
 	public static void load(Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		if (preferences.getBoolean("saved", false)) {
+		if (saved = preferences.getBoolean("saved", false)) {
 			reminderAdvanceTime = new Time(preferences.getInt("advanceTimeMinutes", 30));
 			String uriString = preferences.getString("ringtoneUri", "");
 			ringtoneUri = uriString.isEmpty() ?
@@ -62,8 +57,7 @@ public final class Preferences {
 			vibration = preferences.getBoolean("vibration", true);
 			startingTimeType = preferences.getString("startingTimeType",
 					STARTING_TIME_TYPE_NEXT);
-			/*delayTime = new Time(preferences.getInt("delayMinutes", 30));
-			clearDelay = preferences.getBoolean("clearDelay", true);*/
+			/*delayTime = new Time(preferences.getInt("delayMinutes", 30));*/
 			resetStarting = preferences.getBoolean("resetStarting", true);
 			String defaultFrequencyString = preferences.getString("defaultFrequency", "1");
 			try {
@@ -72,7 +66,6 @@ public final class Preferences {
 				defaultFrequency = 1;
 			}
 			if (defaultFrequency <= 0) defaultFrequency = 1;
-			systemService = preferences.getBoolean("systemService", false);
 			autoCloseTime = new Time(preferences.getInt("autoCloseTimeMinutes", 5));
 		} else setDefault();
 	}

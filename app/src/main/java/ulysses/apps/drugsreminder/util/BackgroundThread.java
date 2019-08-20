@@ -1,14 +1,9 @@
 package ulysses.apps.drugsreminder.util;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.util.ArraySet;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -25,16 +20,19 @@ public class BackgroundThread {
 	private static Map<String, Runnable> tasks;
 	/** One of the {@link Calendar} fields.*/
 	private static int periodField;
-	private static OnInterruptedListener listener;
 	/** Records the starting time of every period. If the background thread is not currently
 	 * running, it is -1.*/
 	private static long startTimeMillis;
+	/** Used to mark threads.*/
+	private static int threadCount;
+	private static final Object LOCK = new Object();
 	private BackgroundThread() {}
 	/** Be sure to call it before using the class. */
 	public static void init() {
 		thread = new Thread();
 		tasks = new HashMap<String, Runnable>();
 		periodField = Calendar.MINUTE;
+		threadCount = 0;
 		startTimeMillis = -1;
 	}
 	public static Runnable putTask(String name, Runnable runnable) {
@@ -56,41 +54,43 @@ public class BackgroundThread {
 	public static long getStartTimeMillis() {
 		return startTimeMillis;
 	}
-	/** Start the background thread. Do nothing if the thread is currently alive.
-	 * @param lock an object used for synchronizing inside the thread.*/
-	public static void start(Object lock) {
+	/** Start the background thread. Do nothing if the thread is currently alive.*/
+	public static void start() {
 		if (isAlive()) return;
+		threadCount++;
 		thread = new Thread(() -> {
-			synchronized (lock) {
+			// synchronize on a static lock to avoid multiple threads running at the same time
+			synchronized (LOCK) {
 				try {
-					Calendar calendar = Calendar.getInstance();
-					CalendarUtils.setToBeginning(calendar, periodField);
-					while (true) {
-						calendar.add(periodField, 1);
-						startTimeMillis = calendar.getTimeInMillis();
+					while (!Thread.interrupted()) {
+						// update startTimeMillis
+						startTimeMillis = CalendarUtils.setToEnd(System.currentTimeMillis(),
+								periodField);
+						// startTimeMillis may be modified, so back it up here
+						long backup = startTimeMillis;
 						// wait for some time
 						long timeout = startTimeMillis - System.currentTimeMillis();
-						lock.wait(timeout > 0 ? timeout : 1);
-						// run the tasks one by one
-						CalendarUtils.print(startTimeMillis, "startingTimeMillis is %s.");
-						CalendarUtils.print(System.currentTimeMillis(), "It is %s now.");
-						Log.d("BackgroundThread", "running tasks: " + tasks.keySet());
-						for (Runnable runnable : tasks.values()) runnable.run();
+						LOCK.wait(timeout > 0 ? timeout : 1);
+						// restore the backed up data
+						startTimeMillis = backup;
+						// get the current thread and do some judges
+						Thread currentThread = Thread.currentThread();
+						if (Integer.valueOf(currentThread.getName()) == threadCount)
+							// run the tasks one by one
+							for (Runnable runnable : tasks.values()) runnable.run();
+						else // if the thread is not correct, interrupt it
+							currentThread.interrupt();
 					}
-				} catch (InterruptedException e) {
-					startTimeMillis = -1;
-					if (listener != null) listener.onInterrupted();
-				}
+				} catch (InterruptedException ignored) {}
+				// when the thread is interrupted, come here
+				startTimeMillis = -1;
 			}
-		}, "BackgroundThread");
+		}, String.valueOf(threadCount)); // use threadCount to mark it
 		thread.start();
 	}
-	/** Start the background thread using a newly created object for synchronizing.*/
-	public static void start() {
-		start(new Object());
-	}
+	@Contract(pure = true)
 	public static boolean isAlive() {
-		return thread.isAlive();
+		return startTimeMillis >= 0;
 	}
 	public static void interrupt() {
 		thread.interrupt();
@@ -103,12 +103,5 @@ public class BackgroundThread {
 		Set<String> needRemoving = new ArraySet<String>();
 		for (String key : tasks.keySet()) if (key.matches(regexp)) needRemoving.add(key);
 		for (String key : needRemoving) removeTask(key);
-	}
-	public static void setOnInterruptedListener(OnInterruptedListener listener) {
-		BackgroundThread.listener = listener;
-	}
-	public interface OnInterruptedListener {
-		/** A callback invoked when the background thread is interrupted.*/
-		void onInterrupted();
 	}
 }

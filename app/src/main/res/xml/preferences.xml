@@ -21,10 +21,6 @@
 			android:summary="@string/reminder_starting_day_preference_summary"
 			android:entries="@array/reminder_starting_day_preference_entries"
 			android:entryValues="@array/reminder_starting_day_preference_values" />
-		<SwitchPreferenceCompat
-			android:key="systemService"
-			android:title="@string/reminder_system_service_preference_title"
-			android:summary="@string/reminder_system_service_preference_summary" />
 		<ulysses.apps.drugsreminder.preferences.DurationPreference
 			android:title="@string/reminder_auto_close_time_preference_title"
 			android:summary="@string/reminder_auto_close_time_preference_summary"
@@ -36,10 +32,6 @@
 			android:title="@string/config_delay_preference_title"
 			android:summary="@string/config_delay_preference_summary"
 			android:key="delayMinutes" />-->
-		<!--<SwitchPreferenceCompat
-			android:key="clearDelay"
-			android:title="@string/config_clear_delay_preference_title"
-			android:summary="@string/config_clear_delay_preference_summary" />-->
 		<SwitchPreferenceCompat
 			android:key="resetStarting"
 			android:title="@string/config_reset_starting_preference_title"
@@ -49,6 +41,14 @@
 			android:title="@string/config_default_frequency_preference_title"
 			android:summary="@string/config_default_frequency_preference_summary"
 			android:dialogLayout="@layout/config_default_frequency_layout" />
+		<Preference
+			android:key="grantPermissions"
+			android:title="@string/config_grant_permissions_preference_title"
+			android:summary="@string/config_grant_permissions_preference_summary" />
+		<Preference
+			android:key="allowAutoStart"
+			android:title="@string/config_allow_auto_start_preference_title"
+			android:summary="@string/config_allow_auto_start_preference_summary" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/others_preference_category_title">

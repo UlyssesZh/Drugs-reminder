@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
-import android.view.OrientationEventListener;
 import android.view.WindowManager;
 import android.widget.ListView;
 
@@ -34,7 +33,6 @@ import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.receivers.NotificationReceiver;
-import ulysses.apps.drugsreminder.util.ExceptionCatcher;
 
 public class AlarmActivity extends AppCompatActivity {
 	private static int MESSAGE_WHAT = 0x0520;
@@ -49,8 +47,7 @@ public class AlarmActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		reminder = ElementsLibrary.findReminderByID(reminderID);
-		/*if (intent.getBooleanExtra("clearDelay", false))
-			reminder.undelay();*/
+		/*reminder.undelay();*/
 		setupAudio();
 		setupVibration();
 		setupViews();
@@ -66,8 +63,6 @@ public class AlarmActivity extends AppCompatActivity {
 	}
 	@Override
 	protected void onDestroy() {
-		Log.d("AlarmActivity", "The alarm is shutting!");
-		ExceptionCatcher.printStackTrace();
 		if (timer != null) timer.cancel();
 		if (mediaPlayer != null) {
 			if (mediaPlayer.isPlaying()) mediaPlayer.stop();
@@ -92,6 +87,7 @@ public class AlarmActivity extends AppCompatActivity {
 		attributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
 		mediaPlayer = MediaPlayer.create(this, Preferences.ringtoneUri, null,
 				attributesBuilder.build(), audioManager.generateAudioSessionId());
+		if (mediaPlayer == null) return;
 		mediaPlayer.setLooping(true);
 		mediaPlayer.start();
 	}

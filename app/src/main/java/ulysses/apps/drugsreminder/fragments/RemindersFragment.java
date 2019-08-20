@@ -82,7 +82,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 							Context context = getContext();
 							if (context == null) return;
 							ElementsLibrary.saveElements(context);
-							AlarmsLibrary.setupAlarms(context, reminder.getID());
+							AlarmsLibrary.setupAllAlarms(context);
 						});
 		}
 		return null;
