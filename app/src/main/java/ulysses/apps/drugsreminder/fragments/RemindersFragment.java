@@ -1,5 +1,6 @@
 package ulysses.apps.drugsreminder.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,9 @@ import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
@@ -19,11 +23,12 @@ import java.util.TimerTask;
 
 import ulysses.apps.drugsreminder.activities.EditReminderActivity;
 import ulysses.apps.drugsreminder.R;
+import ulysses.apps.drugsreminder.elements.IReminder;
 import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.elements.Reminder;
 
-public class RemindersFragment extends ElementsFragment<Reminder> {
+public class RemindersFragment extends ElementsFragment<IReminder> {
 	private static final int MESSAGE_WHAT = 0x0520;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 				R.id.reminder_switch};
 	}
 	@Override
-	protected Object findContentFromIndex(Reminder reminder, int index) {
+	protected Object findContentFromIndex(IReminder reminder, int index) {
 		switch (index) {
 			case 0:
 				return dataForCheckable(reminder, reminder.drugsString(getResources()));
@@ -68,22 +73,7 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 				return dataForCheckable(reminder, getString(R.string.reminder_next_time_format,
 						reminder.nextTimeString(getResources())));
 			case 3:
-				return dataForCheckable(reminder,
-						(CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
-							if (reminder.isEnabled() == isChecked) return;
-							reminder.setEnabled(isChecked);
-							ViewParent viewParent = buttonView.getParent();
-							if (viewParent instanceof View)
-								for (int viewId : to()) {
-									View view = ((View) viewParent).findViewById(viewId);
-									if (view instanceof CheckedTextView)
-										((CheckedTextView) view).setChecked(isChecked);
-								}
-							Context context = getContext();
-							if (context == null) return;
-							ElementsLibrary.saveElements(context);
-							AlarmsLibrary.setupAllAlarms(context);
-						});
+				return dataForCheckable(reminder, switchToggledListener(reminder));
 		}
 		return null;
 	}
@@ -100,15 +90,54 @@ public class RemindersFragment extends ElementsFragment<Reminder> {
 		return ElementsLibrary.doesNotHaveReminders();
 	}
 	@Override
-	protected Reminder getElement(int ID) {
+	protected IReminder getElement(int ID) {
 		return ElementsLibrary.findReminderByID(ID);
 	}
-	private Object[] dataForCheckable(Reminder reminder, Object data) {
+	@NotNull
+	@Contract("_, _ -> new")
+	private Object[] dataForCheckable(@NotNull IReminder reminder, Object data) {
 		return new Object[] {reminder.isEnabled(), data};
 	}
+	@NotNull
+	@Contract(pure = true)
+	private CompoundButton.OnCheckedChangeListener switchToggledListener(IReminder reminder) {
+		return (buttonView, isChecked) -> {
+			if (reminder.isRepeating()) { // un-delayed reminder
+				if (reminder.isEnabled() == isChecked) return;
+				((Reminder) reminder).setEnabled(isChecked);
+				ViewParent viewParent = buttonView.getParent();
+				if (viewParent instanceof View)
+					for (int viewId : to()) {
+						View view = ((View) viewParent).findViewById(viewId);
+						if (view instanceof CheckedTextView)
+							((CheckedTextView) view).setChecked(isChecked);
+					}
+				Context context = getContext();
+				if (context == null) return;
+				ElementsLibrary.saveElements(context);
+				if (AlarmsLibrary.setupAllAlarms(context)) refresh();
+			} else { // delayed reminder
+				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+				builder.setMessage(R.string.cancel_delaying_hint);
+				builder.setPositiveButton(R.string.positive_text,
+						(dialogInterface, i) -> {
+							ElementsLibrary.deleteReminder(reminder.getID());
+							refresh();
+						});
+				builder.setNegativeButton(R.string.negative_text,
+						(dialogInterface, i) -> {});
+				builder.create().show();
+			}
+		};
+	}
+	@Override
+	protected boolean shouldEdit(IReminder reminder) {
+		super.shouldEdit(reminder);
+		return reminder.isRepeating();
+	}
 	private static class Refresher extends Handler {
-		ElementsFragment<Reminder> fragment;
-		private Refresher(ElementsFragment<Reminder> fragment) {
+		RemindersFragment fragment;
+		private Refresher(RemindersFragment fragment) {
 			this.fragment = fragment;
 		}
 		@Override

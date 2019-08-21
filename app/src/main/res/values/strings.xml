@@ -113,4 +113,6 @@
 	<string name="config_allow_auto_start_preference_title">Allow autostarting</string>
 	<string name="config_allow_auto_start_preference_summary">Allow the app to autostart to make it run more steadily.</string>
 	<string name="neednt_auto_start_hint">On this device, you do not need to allow autostarting.</string>
+	<string name="temporary_hint">Delayed reminder</string>
+	<string name="cancel_delaying_hint">Be sure to cancel the delayed reminder.</string>
 </resources>

@@ -17,10 +17,10 @@ import java.util.Map;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.EditElementActivity;
-import ulysses.apps.drugsreminder.elements.Element;
+import ulysses.apps.drugsreminder.elements.IElement;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
 
-public abstract class ElementsFragment<T extends Element> extends Fragment {
+public abstract class ElementsFragment<T extends IElement> extends Fragment {
 	private List<Integer> IDs;
 	private ListView elementsList;
 	private TextView emptyText;
@@ -31,8 +31,10 @@ public abstract class ElementsFragment<T extends Element> extends Fragment {
 		emptyText = root.findViewById(R.id.empty_text);
 		elementsList = root.findViewById(R.id.elements_list);
 		refresh();
-		elementsList.setOnItemClickListener(
-				(parent, view, position, id) -> startEditActivity(IDs.get(position)));
+		elementsList.setOnItemClickListener((parent, view, position, id) -> {
+			int ID = IDs.get(position);
+			if (shouldEdit(getElement(ID))) startEditActivity(ID);
+		});
 		root.findViewById(R.id.add_button).setOnClickListener(
 				view -> startEditActivity(listSize()));
 		return root;
@@ -62,6 +64,9 @@ public abstract class ElementsFragment<T extends Element> extends Fragment {
 		Intent intent = new Intent(getActivity(), editActivityClass());
 		intent.putExtra("ID", ID);
 		startActivity(intent);
+	}
+	protected boolean shouldEdit(T element) {
+		return true;
 	}
 	/** @return how many elements there totally are.*/
 	protected abstract int listSize();

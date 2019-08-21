@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.MainActivity;
+import ulysses.apps.drugsreminder.elements.IReminder;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
@@ -35,12 +36,12 @@ public class NotificationService extends IntentService {
 		startForeground(BACKGROUND_NOTIFICATION_ID, backgroundTasksNotification(this));
 		NotificationManagerCompat.from(this).cancel(BACKGROUND_NOTIFICATION_ID);
 		int reminderID = intent.getIntExtra("reminderID", 0);
-		Reminder reminder = ElementsLibrary.findReminderByID(reminderID);
+		IReminder reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (intent.getBooleanExtra("forRemindingAdvance", true))
 			notifyForRemindingAdvance(intent, reminder);
 		else notifyForAutoCloseHint(reminder);
 	}
-	private void notifyForRemindingAdvance(Intent intent, @NotNull Reminder reminder) {
+	private void notifyForRemindingAdvance(Intent intent, @NotNull IReminder reminder) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
 				CHANNEL_FOR_REMINDING_ADVANCE);
 		builder.setSmallIcon(R.drawable.ic_notification);
@@ -61,7 +62,7 @@ public class NotificationService extends IntentService {
 		// send a notification whose id is the reminder's ID
 		NotificationManagerCompat.from(this).notify(reminder.getID(), builder.build());
 	}
-	private void notifyForAutoCloseHint(@NotNull Reminder reminder) {
+	private void notifyForAutoCloseHint(@NotNull IReminder reminder) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
 				CHANNEL_FOR_AUTO_CLOSE_HINT);
 		builder.setSmallIcon(R.drawable.ic_notification);

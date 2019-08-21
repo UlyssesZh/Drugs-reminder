@@ -15,10 +15,10 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.List;
 
 import ulysses.apps.drugsreminder.R;
-import ulysses.apps.drugsreminder.elements.Element;
+import ulysses.apps.drugsreminder.elements.IElement;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 
-public abstract class EditElementActivity<T extends Element> extends AppCompatActivity {
+public abstract class EditElementActivity<T extends IElement> extends AppCompatActivity {
 	private AlertDialog.Builder alertBuilder;
 	private int ID;
 	@Override

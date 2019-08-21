@@ -31,20 +31,12 @@ public class MainActivity extends AppCompatActivity {
 		// initialize the background thread
 		BackgroundThread.init();
 		// make Preferences change its static fields when preferences is changed
-		// The listener is registered in onResume and unregistered in onPause
+		// The listener is registered onResume and unregistered onPause
 		preferencesListener = (sharedPreferences, key) -> Preferences.load(this);
 		// load data from local files
 		ElementsLibrary.loadElements(this);
 		Preferences.load(this);
-		// setup views
-		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this,
-				getSupportFragmentManager());
-		ViewPager viewPager = findViewById(R.id.main_view_pager);
-		viewPager.setAdapter(sectionsPagerAdapter);
-		((TabLayout) findViewById(R.id.tabs)).setupWithViewPager(viewPager);
-		// start GuardService to protect BackgroundThread
-		sendBroadcast(new Intent(this, GuardReceiver.class));
-		// check and ask for permissions
+		// ask for permissions
 		if (!Preferences.saved) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.permission_hint);
@@ -53,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
 			builder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
 			builder.create().show();
 		}
+		// save
+		saveAll();
+		// setup views
+		SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this,
+				getSupportFragmentManager());
+		ViewPager viewPager = findViewById(R.id.main_view_pager);
+		viewPager.setAdapter(sectionsPagerAdapter);
+		((TabLayout) findViewById(R.id.tabs)).setupWithViewPager(viewPager);
+		// start GuardService to protect BackgroundThread
+		sendBroadcast(new Intent(this, GuardReceiver.class));
 	}
 	@Override
 	protected void onResume() {

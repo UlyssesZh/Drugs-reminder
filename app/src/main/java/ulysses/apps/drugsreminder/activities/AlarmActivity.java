@@ -28,7 +28,9 @@ import java.util.TimerTask;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
+import ulysses.apps.drugsreminder.elements.DelayedReminder;
 import ulysses.apps.drugsreminder.elements.Drug;
+import ulysses.apps.drugsreminder.elements.IReminder;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
@@ -38,7 +40,8 @@ public class AlarmActivity extends AppCompatActivity {
 	private static int MESSAGE_WHAT = 0x0520;
 	private MediaPlayer mediaPlayer;
 	private Thread vibratingThread;
-	private Reminder reminder;
+	private IReminder reminder;
+	private Reminder rootReminder;
 	private Timer timer;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +50,10 @@ public class AlarmActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		reminder = ElementsLibrary.findReminderByID(reminderID);
-		/*reminder.undelay();*/
+		if (!reminder.isRepeating()) {
+			ElementsLibrary.deleteReminder(reminderID);
+			rootReminder = ((DelayedReminder) reminder).getReminder();
+		} else rootReminder = (Reminder) reminder;
 		setupAudio();
 		setupVibration();
 		setupViews();

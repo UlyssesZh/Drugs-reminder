@@ -23,6 +23,7 @@ import java.util.Map;
 
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.elements.Drug;
+import ulysses.apps.drugsreminder.elements.IReminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.preferences.Preferences;
@@ -30,7 +31,7 @@ import ulysses.apps.drugsreminder.views.ScrollDisabledListView;
 import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
 import ulysses.apps.drugsreminder.util.Time;
 
-public class EditReminderActivity extends EditElementActivity<Reminder> {
+public class EditReminderActivity extends EditElementActivity<IReminder> {
 	private TextView editTime;
 	private TimePicker editRelativeTime;
 	private RadioGroup editBeforeAfter;
@@ -117,17 +118,18 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 		editRepeatPeriod.setText(String.valueOf(Preferences.defaultFrequency));
 	}
 	@Override
-	protected void loadViews(Reminder reminder) {
-		Time time = reminder.getRelativeTime();
+	protected void loadViews(IReminder reminder) {
+		Reminder aReminder = (Reminder) reminder;
+		Time time = aReminder.getRelativeTime();
 		editRelativeTime.setHour(time.getHour());
 		editRelativeTime.setMinute(time.getMinute());
-		editBeforeAfter.check(reminder.isBefore() ? R.id.edit_reminder_before :
+		editBeforeAfter.check(aReminder.isBefore() ? R.id.edit_reminder_before :
 				                      R.id.edit_reminder_after);
-		checkMealIDs(reminder.getMealIDs());
-		drugIDs = reminder.getDrugIDs();
-		addAllDrugs(reminder.getUsageDosages());
-		editRepeatPeriod.setText(String.valueOf(reminder.getRepeatPeriod()));
-		if (pickStartingTime()) setWallTimeToDatePicker(reminder.getCreatedTime());
+		checkMealIDs(aReminder.getMealIDs());
+		drugIDs = aReminder.getDrugIDs();
+		addAllDrugs(aReminder.getUsageDosages());
+		editRepeatPeriod.setText(String.valueOf(aReminder.getRepeatPeriod()));
+		if (pickStartingTime()) setWallTimeToDatePicker(aReminder.getCreatedTime());
 	}
 	@Override
 	protected void loadViews(Bundle savedInstanceState) {
@@ -252,7 +254,7 @@ public class EditReminderActivity extends EditElementActivity<Reminder> {
 	}
 	@Override
 	protected Reminder getElement(int ID) {
-		return ElementsLibrary.findReminderByID(ID);
+		return (Reminder) ElementsLibrary.findReminderByID(ID);
 	}
 	private long getCreatedTime(int ID) {
 		if (pickStartingTime())

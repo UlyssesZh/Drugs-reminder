@@ -13,7 +13,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import ulysses.apps.drugsreminder.elements.DelayedReminder;
 import ulysses.apps.drugsreminder.elements.Drug;
+import ulysses.apps.drugsreminder.elements.IReminder;
 import ulysses.apps.drugsreminder.elements.Meal;
 import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.util.BitmapCoder;
@@ -21,7 +23,7 @@ import ulysses.apps.drugsreminder.util.Time;
 
 public final class ElementsLibrary {
 	private static ArrayList<Drug> drugs = new ArrayList<Drug>();
-	private static ArrayList<Reminder> reminders = new ArrayList<Reminder>();
+	private static ArrayList<IReminder> reminders = new ArrayList<IReminder>();
 	private static ArrayList<Meal> meals = new ArrayList<Meal>();
 	private ElementsLibrary() {}
 	@Contract(pure = true)
@@ -34,10 +36,10 @@ public final class ElementsLibrary {
 		drugs.set(ID, drug);
 	}
 	@Contract(pure = true)
-	public static Reminder findReminderByID(int ID) {
+	public static IReminder findReminderByID(int ID) {
 		return reminders.get(ID);
 	}
-	public static void addReminder(@NotNull Reminder reminder) {
+	public static void addReminder(@NotNull IReminder reminder) {
 		int ID = reminder.getID();
 		extendReminders(ID);
 		reminders.set(ID, reminder);
@@ -98,7 +100,7 @@ public final class ElementsLibrary {
 	}
 	@Contract(pure = true)
 	public static boolean doesNotHaveReminders() {
-		for (Reminder reminder : reminders)
+		for (IReminder reminder : reminders)
 			if (reminder != null) return false;
 		return true;
 	}
@@ -160,18 +162,40 @@ public final class ElementsLibrary {
 			editor.putBoolean(head + "exists", false);
 		else {
 			editor.putBoolean(head + "exists", true);
-			Reminder reminder = findReminderByID(ID);
-			Time relativeTime = reminder.getRelativeTime();
-			editor.putInt(head + "hour", relativeTime.getHour());
-			editor.putInt(head + "minute", relativeTime.getMinute());
-			editor.putBoolean(head + "before", reminder.isBefore());
-			editor.putStringSet(head + "drugIDs", codeList(reminder.getDrugIDs()));
-			editor.putStringSet(head + "mealIDs", codeList(reminder.getMealIDs()));
-			editor.putStringSet(head + "usageDosages", codeList(reminder.getUsageDosages()));
-			editor.putInt(head + "repeatPeriod", reminder.getRepeatPeriod());
-			editor.putLong(head + "createdTime", reminder.getCreatedTime());
-			editor.putBoolean(head + "enabled", reminder.isEnabled());
-			/*editor.putInt(head + "delayed", reminder.getDelayed());*/
+			IReminder reminder = findReminderByID(ID);
+			if (reminder.isRepeating()) {
+				Reminder aReminder = (Reminder) reminder;
+				editor.putBoolean(head + "delayed", false);
+				editor.putInt(head + "repeatPeriod", aReminder.getRepeatPeriod());
+				editor.putLong(head + "createdTime", aReminder.getCreatedTime());
+				editor.putBoolean(head + "enabled", aReminder.isEnabled());
+				// save relativeTime
+				editor.putInt(head + "relativeMinutes", aReminder.getRelativeTime().minutes());
+				// save before / after
+				editor.putBoolean(head + "before", aReminder.isBefore());
+				// save drugIDs and usageDosages
+				List<Integer> drugIDs = aReminder.getDrugIDs();
+				List<String> usageDosages = aReminder.getUsageDosages();
+				int a = drugIDs.size();
+				int b = usageDosages.size();
+				int iBound = a > b ? b : a;
+				editor.putInt(head + "drugsNumber", iBound);
+				for (int i = 0; i < iBound; i++) {
+					editor.putInt(head + "drugID" + i, drugIDs.get(i));
+					editor.putString(head + "usageDosage" + i, usageDosages.get(i));
+				}
+				// save mealIDs
+				List<Integer> mealIDs = aReminder.getMealIDs();
+				iBound = mealIDs.size();
+				editor.putInt(head + "mealsNumber", iBound);
+				for (int i = 0; i < iBound; i++)
+					editor.putInt(head + "mealID" + i, mealIDs.get(i));
+			} else {
+				DelayedReminder aReminder = (DelayedReminder) reminder;
+				editor.putBoolean(head + "delayed", true);
+				editor.putInt(head + "reminderID", aReminder.getReminderID());
+				editor.putLong(head + "triggerAtMillis", aReminder.getTriggerAtMillis());
+			}
 		}
 	}
 	private static void saveReminders(@NotNull SharedPreferences.Editor editor) {
@@ -215,23 +239,35 @@ public final class ElementsLibrary {
 	private static void loadReminder(int ID, @NotNull SharedPreferences preferences) {
 		String head = "reminder" + ID;
 		if (preferences.getBoolean(head + "exists", false)) {
-			Reminder reminder = new Reminder(ID, decodeStringSet(preferences.getStringSet(
-					head + "mealIDs", new LinkedHashSet<String>(0))),
-					preferences.getBoolean(head + "before", true),
-					new Time(preferences.getInt(head + "hour", 0),
-							preferences.getInt(head + "minute", 0)),
-					decodeStringSet(preferences.getStringSet(head + "drugIDs",
-							new LinkedHashSet<String>(0))),
-					new ArrayList<String>(preferences.getStringSet(head + "usageDosages",
-							new LinkedHashSet<String>(0))),
-					preferences.getInt(head + "repeatPeriod", 1),
-					preferences.getLong(head + "createdTime",
-							System.currentTimeMillis()));
-			reminder.setEnabled(preferences.getBoolean(head + "enabled", true));
-			/*reminder.setDelayed(preferences.getInt(head + "delayed", 0));*/
-			List<String> usageDosages = reminder.getUsageDosages();
-			int drugsNumber = reminder.getDrugIDs().size();
-			while (drugsNumber > usageDosages.size()) usageDosages.add("");
+			IReminder reminder;
+			if (preferences.getBoolean(head + "delayed", true)) { // a delayed reminder
+				reminder = new DelayedReminder(ID,
+						preferences.getInt(head + "reminderID", 0),
+						preferences.getLong(head + "triggerAtMillis", System.currentTimeMillis()));
+			} else { // an un-delayed reminder
+				// load drugIDs and usageDosages
+				int drugsNumber = preferences.getInt(head + "drugsNumber", 0);
+				List<Integer> drugIDs = new ArrayList<Integer>(drugsNumber);
+				List<String> usageDosages = new ArrayList<String>(drugsNumber);
+				for (int i = 0; i < drugsNumber; i++) {
+					drugIDs.add(preferences.getInt(head + "drugID" + i, i));
+					usageDosages.add(preferences.getString(head + "usageDosage" + i, ""));
+				}
+				// load mealIDs
+				int mealsNumber = preferences.getInt(head + "mealsNumber", 0);
+				List<Integer> mealIDs = new ArrayList<Integer>(mealsNumber);
+				for (int i = 0; i < mealsNumber; i++)
+					mealIDs.add(preferences.getInt(head + "mealID" + i, i));
+				// create the Reminder instance
+				Reminder aReminder = new Reminder(ID, mealIDs,
+						preferences.getBoolean(head + "before", true),
+						new Time(preferences.getInt(head + "relativeMinutes", 0)),
+						drugIDs, usageDosages,
+						preferences.getInt(head + "repeatPeriod", 1),
+						preferences.getLong(head + "createdTime", System.currentTimeMillis()));
+				aReminder.setEnabled(preferences.getBoolean(head + "enabled", true));
+				reminder = aReminder;
+			}
 			addReminder(reminder);
 		} else deleteReminder(ID);
 	}

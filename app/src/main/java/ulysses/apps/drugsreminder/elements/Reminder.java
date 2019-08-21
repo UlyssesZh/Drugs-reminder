@@ -15,7 +15,7 @@ import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.util.CalendarUtils;
 import ulysses.apps.drugsreminder.util.Time;
 
-public class Reminder implements Element {
+public class Reminder implements IReminder {
 	private int ID;
 	protected List<Integer> mealIDs;
 	protected Time relativeTime;
@@ -44,6 +44,7 @@ public class Reminder implements Element {
 	public int getID() {
 		return ID;
 	}
+	@Override
 	public List<Integer> getDrugIDs() {
 		return drugIDs;
 	}
@@ -56,6 +57,7 @@ public class Reminder implements Element {
 	public void setMealIDs(List<Integer> mealIDs) {
 		this.mealIDs = mealIDs;
 	}
+	@Override
 	public List<String> getUsageDosages() {
 		return usageDosages;
 	}
@@ -74,16 +76,17 @@ public class Reminder implements Element {
 	public void setBefore(boolean before) {
 		this.before = before;
 	}
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		/*if (Preferences.clearDelay) setDelayed(0);*/
 		if (Preferences.resetStarting &&
 				    !Preferences.startingTimeType.equals(Preferences.STARTING_TIME_TYPE_PICK))
 			setCreatedTime(System.currentTimeMillis());
 	}
+	@Override
 	public int getRepeatPeriod() {
 		return repeatPeriod;
 	}
@@ -96,18 +99,7 @@ public class Reminder implements Element {
 	public void setCreatedTime(long createdTime) {
 		this.createdTime = createdTime;
 	}
-	/*public int getDelayed() {
-		return delayed;
-	}
-	public void setDelayed(int delayed) {
-		this.delayed = delayed;
-	}
-	public void delay() {
-		this.delayed += 1;
-	}
-	public void undelay() {
-		this.delayed -= 1;
-	}*/
+	@Override
 	public String timeString(Resources resources) {
 		return Reminder.timeString(mealIDs, relativeTime, before, resources);
 	}
@@ -172,6 +164,7 @@ public class Reminder implements Element {
 	}
 	/** @return a List containing time represented in millis passed since 1970 of when the reminder
 	 * would alarm on the first day. */
+	@Override
 	public List<Long> alarmTimeMillis() {
 		Calendar calendar = startingTimeCalendar();
 		Time startingTime = new Time(calendar);
@@ -199,6 +192,7 @@ public class Reminder implements Element {
 	}
 	/** @return the String representing how soon the next alarm time is coming. When it is greater
 	 * than one day, it is represented in the format of %dd, and %dh%dm otherwise. */
+	@Override
 	public String nextTimeString(Resources resources) {
 		int pendingDaysNumber = pendingDaysNumber();
 		if (pendingDaysNumber > 0)
@@ -222,6 +216,7 @@ public class Reminder implements Element {
 				resources.getString(before ? R.string.before : R.string.after),
 				mealNamesBuilder.toString());
 	}
+	@Override
 	public String drugsString(Resources resources) {
 		StringBuilder builder = new StringBuilder();
 		int iMax = drugIDs.size() - 1;
@@ -234,5 +229,9 @@ public class Reminder implements Element {
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
 		return new ArrayList<Integer>(0);
+	}
+	@Override
+	public boolean isRepeating() {
+		return true;
 	}
 }
