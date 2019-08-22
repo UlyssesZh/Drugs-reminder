@@ -66,7 +66,7 @@
 	<string name="reminder_starting_day_preference_title">The algorithm used to determine the date of the first alarm</string>
 	<string name="reminder_starting_day_preference_summary">You can choose one of the three available types of algorithms.</string>
 	<string name="other_about_preference_summary">Information about the app, the developer, etc.</string>
-	<string name="version_name" translatable="false">0.9</string>
+	<string name="version_name" translatable="false">0.9.0</string>
 	<string name="author">Author:</string>
 	<string name="ulysses">Ulysses Zhan</string>
 	<string name="email">E-mail:</string>
@@ -117,5 +117,5 @@
 	<string name="cancel_delaying_hint">Be sure to cancel the delayed reminder.</string>
 	<string name="delay_for">Delay for</string>
 	<string name="reminder_delay_preference_title">The basic amount of delay</string>
-	<string name="reminder_delay_preference_summary">You can delay a reminder when it fires an alarm. The amount for which you can delay is once, twice or three times of the amount you specified here.</string>
+	<string name="reminder_delay_preference_summary">You can delay a reminder when it fires an alarm. The amount for which you can delay is one to four times of the amount you specified here.</string>
 </resources>

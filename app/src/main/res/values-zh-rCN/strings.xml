@@ -117,5 +117,5 @@
     <string name="cancel_delaying_hint">确定要取消推迟。</string>
     <string name="delay_for">推迟</string>
     <string name="reminder_delay_preference_title">基础推迟量</string>
-    <string name="reminder_delay_preference_summary">您能在提醒响铃时推迟它。推迟量是您在此设置的基础推迟量的一倍、二倍或三倍。</string>
+    <string name="reminder_delay_preference_summary">您能在提醒响铃时推迟它。推迟量是您在此设置的基础推迟量的一至四倍。</string>
 </resources>
