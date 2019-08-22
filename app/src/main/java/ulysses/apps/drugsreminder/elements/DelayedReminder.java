@@ -2,6 +2,8 @@ package ulysses.apps.drugsreminder.elements;
 
 import android.content.res.Resources;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +17,11 @@ public class DelayedReminder implements IReminder {
 	private int ID;
 	protected Reminder reminder;
 	protected long triggerAtMillis;
+	public DelayedReminder(int reminderID, long triggerAtMillis) {
+		this.ID = ElementsLibrary.remindersNumber();
+		this.reminder = (Reminder) ElementsLibrary.findReminderByID(reminderID);
+		this.triggerAtMillis = triggerAtMillis;
+	}
 	public DelayedReminder(int ID, int reminderID, long triggerAtMillis) {
 		this.ID = ID;
 		this.reminder = (Reminder) ElementsLibrary.findReminderByID(reminderID);
@@ -30,7 +37,7 @@ public class DelayedReminder implements IReminder {
 	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
-		return new ArrayList<>(0);
+		return new ArrayList<Integer>(0);
 	}
 	@Override
 	public List<Integer> getDrugIDs() {
@@ -63,7 +70,7 @@ public class DelayedReminder implements IReminder {
 				(CalendarUtils.setToBeginning(triggerAtMillis, Calendar.DAY_OF_MONTH) -
 						 CalendarUtils.setToBeginning(currentTimeMillis, Calendar.DAY_OF_MONTH)) /
 						86400000);
-		long timeDifference = triggerAtMillis - currentTimeMillis;
+		int timeDifference = (int) ((triggerAtMillis - currentTimeMillis) / 60000) + 1;
 		switch (Integer.compare(pendingDaysNumber, 1)) {
 			case 1:
 				return resources.getString(R.string.day_format, pendingDaysNumber);

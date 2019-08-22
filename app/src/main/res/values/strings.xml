@@ -41,7 +41,7 @@
 	<string name="meals_empty_hint">Designate at least 1 meal for the reminder.</string>
 	<string name="before_after_empty_hint">Set the reminder before / after meal.</string>
 	<string name="reminder_next_time_format">%s later</string>
-	<string name="time_format">%dh%dm</string>
+	<string name="time_format" formatted="false">%dh%dm</string>
 	<string name="involved_hint">Involved in certain reminder(s), it cannot be deleted. Delete the involving reminder(s)?</string>
 	<string name="ringtone">Ringtone:</string>
 	<string name="default_ringtone">Default ringtone</string>
@@ -61,7 +61,7 @@
 	<string name="reminder_ringtone_preference_summary">Set the ringtone of alarms fired when it is time to take drugs.</string>
 	<string name="reminder_vibration_preference_title">Vibration when alarming</string>
 	<string name="reminder_vibration_preference_summary">Set whether the phone will vibrate when alarming.</string>
-	<string name="others_preference_category_title">Other settings</string>
+	<string name="others_preference_category_title">Others</string>
 	<string name="other_about_preference_title">About</string>
 	<string name="reminder_starting_day_preference_title">The algorithm used to determine the date of the first alarm</string>
 	<string name="reminder_starting_day_preference_summary">You can choose one of the three available types of algorithms.</string>
@@ -115,4 +115,7 @@
 	<string name="neednt_auto_start_hint">On this device, you do not need to allow autostarting.</string>
 	<string name="temporary_hint">Delayed reminder</string>
 	<string name="cancel_delaying_hint">Be sure to cancel the delayed reminder.</string>
+	<string name="delay_for">Delay for</string>
+	<string name="reminder_delay_preference_title">The basic amount of delay</string>
+	<string name="reminder_delay_preference_summary">You can delay a reminder when it fires an alarm. The amount for which you can delay is once, twice or three times of the amount you specified here.</string>
 </resources>

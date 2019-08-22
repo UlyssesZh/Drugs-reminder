@@ -15,11 +15,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ListView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,18 +35,21 @@ import ulysses.apps.drugsreminder.adapters.ImprovedSimpleAdapter;
 import ulysses.apps.drugsreminder.elements.DelayedReminder;
 import ulysses.apps.drugsreminder.elements.Drug;
 import ulysses.apps.drugsreminder.elements.IReminder;
-import ulysses.apps.drugsreminder.elements.Reminder;
+import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.receivers.NotificationReceiver;
+import ulysses.apps.drugsreminder.util.CalendarUtils;
+import ulysses.apps.drugsreminder.util.Time;
 
 public class AlarmActivity extends AppCompatActivity {
 	private static int MESSAGE_WHAT = 0x0520;
 	private MediaPlayer mediaPlayer;
 	private Thread vibratingThread;
 	private IReminder reminder;
-	private Reminder rootReminder;
+	private int rootReminderID;
 	private Timer timer;
+	private long triggerAtMillis;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,8 +59,10 @@ public class AlarmActivity extends AppCompatActivity {
 		reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (!reminder.isRepeating()) {
 			ElementsLibrary.deleteReminder(reminderID);
-			rootReminder = ((DelayedReminder) reminder).getReminder();
-		} else rootReminder = (Reminder) reminder;
+			rootReminderID = ((DelayedReminder) reminder).getReminderID();
+		} else rootReminderID = reminder.getID();
+		triggerAtMillis = intent.getLongExtra("triggerAtMillis",
+				CalendarUtils.setToBeginning(System.currentTimeMillis(), Calendar.MINUTE));
 		setupAudio();
 		setupVibration();
 		setupViews();
@@ -116,10 +125,12 @@ public class AlarmActivity extends AppCompatActivity {
 	}
 	private void setupViews() {
 		setContentView(R.layout.alarm_activity);
+		// setup toolbar
 		Toolbar toolbar = findViewById(R.id.alarm_toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		toolbar.setNavigationOnClickListener(view -> finish());
+		// setup drugs list
 		List<Integer> drugIDs = reminder.getDrugIDs();
 		List<String> usageDosages = reminder.getUsageDosages();
 		int listSize = drugIDs.size();
@@ -136,6 +147,28 @@ public class AlarmActivity extends AppCompatActivity {
 				this, listItems, R.layout.alarm_drug_item,
 				new String[] {"name", "bitmap", "usageDosages"},
 				new int[] {R.id.alarm_drug_name, R.id.alarm_drug_image, R.id.alarm_drug_usage_dosage}));
+		// setup delay buttons
+		if (Preferences.delayMinutes == 0) {
+			findViewById(R.id.alarm_delay).setVisibility(View.GONE);
+		} else {
+			setupDelayButton(findViewById(R.id.alarm_delay_button1), 1);
+			setupDelayButton(findViewById(R.id.alarm_delay_button2), 2);
+			setupDelayButton(findViewById(R.id.alarm_delay_button3), 3);
+			setupDelayButton(findViewById(R.id.alarm_delay_button4), 4);
+		}
+	}
+	private void setupDelayButton(@NotNull Button button, int multiplier) {
+		int delayMinutes = multiplier * Preferences.delayMinutes;
+		int daysNumber = delayMinutes / 720;
+		button.setText((daysNumber == 0 ? "" : getString(R.string.day_format, daysNumber)) +
+				               new Time(delayMinutes).toString(getResources()));
+		long delayMillis = delayMinutes * 60000;
+		button.setOnClickListener(view -> {
+			ElementsLibrary.addReminder(new DelayedReminder(rootReminderID,
+					triggerAtMillis + delayMillis));
+			AlarmsLibrary.setupAllAlarms(this);
+			finish();
+		});
 	}
 	private static class AlarmStopper extends Handler {
 		private AlarmActivity alarmActivity;

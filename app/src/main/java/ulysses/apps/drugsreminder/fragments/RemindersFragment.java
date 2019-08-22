@@ -55,11 +55,11 @@ public class RemindersFragment extends ElementsFragment<IReminder> {
 	}
 	@Override
 	protected String[] from() {
-		return new String[]{"drugs", "time", "next_time", "enabled"};
+		return new String[] {"drugs", "time", "next_time", "enabled"};
 	}
 	@Override
 	protected int[] to() {
-		return new int[]{R.id.reminder_drugs, R.id.reminder_time, R.id.reminder_next_time,
+		return new int[] {R.id.reminder_drugs, R.id.reminder_time, R.id.reminder_next_time,
 				R.id.reminder_switch};
 	}
 	@Override
@@ -102,8 +102,8 @@ public class RemindersFragment extends ElementsFragment<IReminder> {
 	@Contract(pure = true)
 	private CompoundButton.OnCheckedChangeListener switchToggledListener(IReminder reminder) {
 		return (buttonView, isChecked) -> {
+			if (reminder.isEnabled() == isChecked) return;
 			if (reminder.isRepeating()) { // un-delayed reminder
-				if (reminder.isEnabled() == isChecked) return;
 				((Reminder) reminder).setEnabled(isChecked);
 				ViewParent viewParent = buttonView.getParent();
 				if (viewParent instanceof View)
@@ -125,7 +125,7 @@ public class RemindersFragment extends ElementsFragment<IReminder> {
 							refresh();
 						});
 				builder.setNegativeButton(R.string.negative_text,
-						(dialogInterface, i) -> {});
+						(dialogInterface, i) -> buttonView.setChecked(!isChecked));
 				builder.create().show();
 			}
 		};

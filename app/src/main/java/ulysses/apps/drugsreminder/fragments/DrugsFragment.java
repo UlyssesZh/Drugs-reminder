@@ -20,11 +20,11 @@ public class DrugsFragment extends ElementsFragment<Drug> {
     }
     @Override
     protected String[] from() {
-        return new String[]{"name", "image"};
+        return new String[] {"name", "image"};
     }
     @Override
     protected int[] to() {
-        return new int[]{R.id.drug_name, R.id.drug_image};
+        return new int[] {R.id.drug_name, R.id.drug_image};
     }
     @Override
     protected Object findContentFromIndex(Drug drug, int index) {

@@ -15,7 +15,7 @@ import ulysses.apps.drugsreminder.fragments.SettingsFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.reminders_tab, R.string.drugs_tab, R.string.meals_tab, R.string.settings_tab};
+    private static final int[] TAB_TITLES = new int[] {R.string.reminders_tab, R.string.drugs_tab, R.string.meals_tab, R.string.settings_tab};
     private final Context context;
     public SectionsPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);

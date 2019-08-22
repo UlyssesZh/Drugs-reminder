@@ -20,11 +20,11 @@ public class MealsFragment extends ElementsFragment<Meal> {
     }
     @Override
     protected String[] from() {
-        return new String[]{"name", "time"};
+        return new String[] {"name", "time"};
     }
     @Override
     protected int[] to() {
-        return new int[]{R.id.meal_name, R.id.meal_time};
+        return new int[] {R.id.meal_name, R.id.meal_time};
     }
     @Override
     protected Object findContentFromIndex(Meal meal, int index) {

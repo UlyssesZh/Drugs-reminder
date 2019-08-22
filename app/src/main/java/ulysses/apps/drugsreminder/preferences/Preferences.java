@@ -17,7 +17,7 @@ public final class Preferences {
 	public static Uri ringtoneUri;
 	public static boolean vibration;
 	public static String startingTimeType;
-	/*public static Time delayTime;*/
+	public static int delayMinutes;
 	public static boolean resetStarting;
 	public static int defaultFrequency;
 	public static Time autoCloseTime;
@@ -27,7 +27,7 @@ public final class Preferences {
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 		vibration = true;
 		startingTimeType = STARTING_TIME_TYPE_NEXT;
-		/*delayTime = new Time(0, 30);*/
+		delayMinutes = 20;
 		resetStarting = true;
 		defaultFrequency = 1;
 		autoCloseTime = new Time(0, 5);
@@ -40,7 +40,7 @@ public final class Preferences {
 		editor.putString("ringtoneUri", ringtoneUri == null ? "" : ringtoneUri.toString());
 		editor.putBoolean("vibration", vibration);
 		editor.putString("startingTimeType", startingTimeType);
-		/*editor.putInt("delayMinutes", delayTime.minutes());*/
+		editor.putInt("delayMinutes", delayMinutes);
 		editor.putBoolean("resetStarting", resetStarting);
 		editor.putString("defaultFrequency", String.valueOf(defaultFrequency));
 		editor.putInt("autoCloseTimeMinutes", autoCloseTime.minutes());
@@ -57,7 +57,7 @@ public final class Preferences {
 			vibration = preferences.getBoolean("vibration", true);
 			startingTimeType = preferences.getString("startingTimeType",
 					STARTING_TIME_TYPE_NEXT);
-			/*delayTime = new Time(preferences.getInt("delayMinutes", 30));*/
+			delayMinutes = preferences.getInt("delayMinutes", 30);
 			resetStarting = preferences.getBoolean("resetStarting", true);
 			String defaultFrequencyString = preferences.getString("defaultFrequency", "1");
 			try {

@@ -170,8 +170,7 @@ public class Reminder implements IReminder {
 		Time startingTime = new Time(calendar);
 		if (Time.sumOverOneDay(startingTime, nextTime(startingTime)))
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
+		CalendarUtils.setToBeginning(calendar, Calendar.MINUTE);
 		List<Long> result = new ArrayList<Long>(mealIDs.size());
 		long relativeTimeMillis = relativeTime.millis();
 		if (before) relativeTimeMillis *= -1;

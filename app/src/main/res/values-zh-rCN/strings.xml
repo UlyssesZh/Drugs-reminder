@@ -34,7 +34,7 @@
     <string name="drugs">药物：</string>
     <string name="before_or_after">饭前/饭后：</string>
     <string name="add_a_drug">添加一种药物</string>
-    <string name="usage_dosage">用法用量</string>
+    <string name="usage_dosage">用法用量：</string>
     <string name="usage_dosage_hint">如，口服2粒</string>
     <string name="comma">、</string>
     <string name="delete_reminder">删除此提醒</string>
@@ -62,7 +62,7 @@
     <string name="reminder_ringtone_preference_summary">设置提醒触发时播放的铃声。</string>
     <string name="reminder_vibration_preference_title">提醒响铃时振动</string>
     <string name="reminder_vibration_preference_summary">设置当提醒触发时手机是否振动。</string>
-    <string name="others_preference_category_title">其他设置</string>
+    <string name="others_preference_category_title">其他</string>
 	<string name="other_about_preference_title">关于</string>
     <string name="reminder_starting_day_preference_title">用于决定提醒何日首次响铃的算法</string>
     <string name="reminder_starting_day_preference_summary">您可以从三种可选的算法中选择一种。</string>
@@ -115,4 +115,7 @@
     <string name="neednt_auto_start_hint">这台设备上，您不需要允许自启动。</string>
     <string name="temporary_hint">被推迟的提醒</string>
     <string name="cancel_delaying_hint">确定要取消推迟。</string>
+    <string name="delay_for">推迟</string>
+    <string name="reminder_delay_preference_title">基础推迟量</string>
+    <string name="reminder_delay_preference_summary">您能在提醒响铃时推迟它。推迟量是您在此设置的基础推迟量的一倍、二倍或三倍。</string>
 </resources>

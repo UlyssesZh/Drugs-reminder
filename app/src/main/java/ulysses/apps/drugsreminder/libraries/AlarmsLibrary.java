@@ -37,19 +37,19 @@ public final class AlarmsLibrary {
 		String head = "reminder" + reminderID;
 		if (reminder.isRepeating()) { // set un-delayed reminder
 			long intervalMillis = 86400000 * reminder.getRepeatPeriod();
-			List<Long> triggerAtMillis = triggerAtMillis(reminder.alarmTimeMillis(), intervalMillis);
+			List<Long> triggerAtMillis = reminder.alarmTimeMillis();
 			// set repeating alarms
 			for (int i = 0; i < triggerAtMillis.size(); i++) {
 				long millis = triggerAtMillis.get(i);
 				PendingIntent alarmIntent = generateAlarmPendingIntent(context, reminderID, millis);
 				alarmIntentsList.add(alarmIntent);
-				setRepeating(millis, intervalMillis, alarmIntent, head + i);
+				setRepeating(millis, intervalMillis, alarmIntent,
+						head + "un-delayed" + i);
 			}
 			// set notifications
 			if (!Preferences.reminderAdvanceTime.isZero())
 				for (int i = 0; i < triggerAtMillis.size(); i++) {
 					long millis = triggerAtMillis.get(i) - Preferences.reminderAdvanceTime.millis();
-					if (millis < System.currentTimeMillis()) millis += intervalMillis;
 					PendingIntent notificationIntent =
 							generateNotificationPendingIntent(context, reminderID);
 					notificationIntentsList.add(notificationIntent);
@@ -60,14 +60,14 @@ public final class AlarmsLibrary {
 			List<Long> triggerAtMillis = reminder.alarmTimeMillis();
 			for (int i = 0; i < triggerAtMillis.size(); i++) {
 				long millis = triggerAtMillis.get(i);
-				if (millis < System.currentTimeMillis()) {
+				if (millis < System.currentTimeMillis() - 60000) {
 					ElementsLibrary.deleteReminder(reminderID);
 					result = true;
 					break;
 				}
 				PendingIntent alarmIntent = generateAlarmPendingIntent(context, reminderID, millis);
 				alarmIntentsList.add(alarmIntent);
-				set(millis, alarmIntent, head + i);
+				set(millis, alarmIntent, head + "delayed" + i);
 			}
 		}
 		BackgroundThread.start();
@@ -90,22 +90,6 @@ public final class AlarmsLibrary {
 			if (timeDifference >= 0 && timeDifference % intervalMillis == 0)
 				sendPendingIntent(pendingIntent);
 		});
-	}
-	/** @param alarmTimeMillis should be obtained from {@link Reminder#alarmTimeMillis()}.
-	 * @param intervalMillis the repeat period of the alarms represented in millis.
-	 * @return a list of wall time millis of the reminder's next triggered time, each of which
-	 * corresponds to one of the reminder's meal.*/
-	private static List<Long> triggerAtMillis(@NotNull List<Long> alarmTimeMillis,
-	                                          long intervalMillis) {
-		List<Long> result = new ArrayList<Long>(alarmTimeMillis.size());
-		long currentMillis = System.currentTimeMillis();
-		for (int i = 0; i < alarmTimeMillis.size(); i++) {
-			long millis = alarmTimeMillis.get(i);
-			if (currentMillis > millis)
-				millis += ((currentMillis - millis) / intervalMillis + 1) * intervalMillis;
-			result.add(millis);
-		}
-		return result;
 	}
 	/** Clear intents.get(reminderID). If the reminder is not enabled, make it null; otherwise make
 	 * it with a new ArrayList.*/
@@ -139,7 +123,8 @@ public final class AlarmsLibrary {
 	public static boolean setupAllAlarms(@NotNull Context context) {
 		boolean result = false;
 		for (int ID = 0; !ElementsLibrary.reminderIDOutOfBound(ID); ID++)
-			if (setupAlarms(context, ID)) result = true;
+			if (!ElementsLibrary.doesNotHaveReminder(ID) && setupAlarms(context, ID))
+				result = true;
 		return result;
 	}
 	/** @return a PendingIntent referring to {@link AlarmReceiver}.*/

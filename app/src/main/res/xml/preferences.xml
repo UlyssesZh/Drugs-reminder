@@ -25,13 +25,13 @@
 			android:title="@string/reminder_auto_close_time_preference_title"
 			android:summary="@string/reminder_auto_close_time_preference_summary"
 			android:key="autoCloseTimeMinutes" />
+		<ulysses.apps.drugsreminder.preferences.DurationPreference
+			android:title="@string/reminder_delay_preference_title"
+			android:summary="@string/reminder_delay_preference_summary"
+			android:key="delayMinutes" />
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/config_preference_category_title">
-		<!--<ulysses.apps.drugsreminder.preferences.DurationPreference
-			android:title="@string/config_delay_preference_title"
-			android:summary="@string/config_delay_preference_summary"
-			android:key="delayMinutes" />-->
 		<SwitchPreferenceCompat
 			android:key="resetStarting"
 			android:title="@string/config_reset_starting_preference_title"

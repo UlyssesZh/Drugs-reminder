@@ -99,8 +99,8 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 					addDrugItems.add(addDrugItem);
 				}
 				alert(new ImprovedSimpleAdapter(this, addDrugItems,
-						R.layout.drug_item, new String[]{"name", "image"},
-						new int[]{R.id.drug_name, R.id.drug_image}), (dialogInterface, i) -> {
+						R.layout.drug_item, new String[] {"name", "image"},
+						new int[] {R.id.drug_name, R.id.drug_image}), (dialogInterface, i) -> {
 					int addDrugID = addDrugIDs.get(i);
 					drugIDs.add(addDrugID);
 					addDrugListItem(ElementsLibrary.findDrugByID(addDrugID), "");
@@ -126,7 +126,7 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		editBeforeAfter.check(aReminder.isBefore() ? R.id.edit_reminder_before :
 				                      R.id.edit_reminder_after);
 		checkMealIDs(aReminder.getMealIDs());
-		drugIDs = aReminder.getDrugIDs();
+		drugIDs = new ArrayList<Integer>(aReminder.getDrugIDs());
 		addAllDrugs(aReminder.getUsageDosages());
 		editRepeatPeriod.setText(String.valueOf(aReminder.getRepeatPeriod()));
 		if (pickStartingTime()) setWallTimeToDatePicker(aReminder.getCreatedTime());
@@ -193,11 +193,12 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 	private void refreshDrugList() {
 		loadUsageDosage();
 		editDrugs.setAdapter(new ImprovedSimpleAdapter(this, drugListItems,
-				R.layout.edit_reminder_drug_item, new String[]{"name", "image", "usage_dosage"},
-				new int[]{R.id.edit_reminder_drug_name, R.id.edit_reminder_drug_image,
+				R.layout.edit_reminder_drug_item, new String[] {"name", "image", "usage_dosage"},
+				new int[] {R.id.edit_reminder_drug_name, R.id.edit_reminder_drug_image,
 						R.id.edit_reminder_drug_usage_dosage}));
 		editDrugs.post(() -> {
-			for (int i = 0; i < drugsNumber(); i++) {
+			int iBound = drugsNumber();
+			for (int i = 0; i < iBound; i++) {
 				final int position = i;
 				getDrugView(position, R.id.edit_reminder_delete_drug)
 						.setOnClickListener(view -> {
@@ -215,24 +216,34 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		drugListItems.add(drugListItem);
 	}
 	private void removeDrugListItem(int index) {
+		int iBound = drugsNumber();
+		for (int i = index; i < iBound;)
+			((EditText) getDrugView(i, R.id.edit_reminder_drug_usage_dosage))
+					.setText(++i < iBound ? ((EditText) getDrugView(i,
+							R.id.edit_reminder_drug_usage_dosage)).getText() : "");
 		drugIDs.remove(index);
 		drugListItems.remove(index);
 	}
-	private View getDrugView(int position, int viewID) {
+	private <T extends View> T getDrugView(int position, int viewId) {
 		return editDrugs.getChildAt(position - editDrugs.getFirstVisiblePosition())
-				       .findViewById(viewID);
+				       .findViewById(viewId);
 	}
 	private void loadUsageDosage() {
 		if (editDrugs.getAdapter() == null) return;
-		int a = editDrugs.getChildCount();
-		int b = drugIDs.size();
-		int iBound = a > b ? b : a;
+		int iBound = drugsNumber();
 		for (int i = 0; i < iBound; i++)
 			drugListItems.get(i).put("usage_dosage", ((EditText) getDrugView(i,
 					R.id.edit_reminder_drug_usage_dosage)).getText().toString());
 	}
 	private int drugsNumber() {
-		return drugIDs.size();
+		return drugsNumber(true);
+	}
+	private int drugsNumber(boolean safe) {
+		if (safe) {
+			int a = editDrugs.getChildCount();
+			int b = drugIDs.size();
+			return a > b ? b : a;
+		} else return drugIDs.size();
 	}
 	private void refreshTime() {
 		if ((relativeTime().isZero() || editBeforeAfter.getCheckedRadioButtonId() != -1) &&
@@ -240,8 +251,7 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 			editTime.setText(Reminder.timeString(checkedMealIDs, relativeTime(),
 					editBeforeAfter.getCheckedRadioButtonId() == R.id.edit_reminder_before,
 					getResources()));
-		else
-			editTime.setText("");
+		else editTime.setText("");
 	}
 	@NotNull
 	@Contract(" -> new")
@@ -257,12 +267,9 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		return (Reminder) ElementsLibrary.findReminderByID(ID);
 	}
 	private long getCreatedTime(int ID) {
-		if (pickStartingTime())
-			return getWallTimeFromDatePicker();
-		else if (isNotCreating(ID))
-			return getElement(ID).getCreatedTime();
-		else
-			return System.currentTimeMillis();
+		if (pickStartingTime()) return getWallTimeFromDatePicker();
+		else if (isNotCreating(ID)) return getElement(ID).getCreatedTime();
+		else return System.currentTimeMillis();
 	}
 	private long getWallTimeFromDatePicker() {
 		Calendar calendar = Calendar.getInstance();
@@ -287,15 +294,16 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 	}
 	private void addAllDrugs(List<String> usageDosages) {
 		drugListItems.clear();
-		for (int i = 0; i < drugsNumber(); i++)
-			addDrugListItem(ElementsLibrary.findDrugByID(drugIDs.get(i)),
-					usageDosages.get(i));
+		int iBound = drugsNumber(false);
+		for (int i = 0; i < iBound; i++)
+			addDrugListItem(ElementsLibrary.findDrugByID(drugIDs.get(i)), usageDosages.get(i));
 		refreshDrugList();
 	}
 	private List<String> getUsageDosages() {
 		loadUsageDosage();
 		List<String> result = new ArrayList<String>(drugsNumber());
-		for (int i = 0; i < drugsNumber(); i++)
+		int iBound = drugsNumber();
+		for (int i = 0; i < iBound; i++)
 			result.add((String) drugListItems.get(i).get("usage_dosage"));
 		return result;
 	}
