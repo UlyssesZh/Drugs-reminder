@@ -12,6 +12,8 @@
 		android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	<uses-permission
 		android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<application
 		android:allowBackup="true"
 		android:fullBackupContent="@xml/my_backup_rules"
@@ -96,8 +98,6 @@
 		</activity>
 		<service
 			android:name=".services.NotificationService" />
-		<!--<service
-			android:name=".services.DelayingService" />-->
 		<service
 			android:name=".services.GuardService"
 			android:exported="true">
@@ -117,5 +117,14 @@
 					android:name=".ACTION_PROTECTION" />
 			</intent-filter>
 		</service>
+		<provider
+			android:authorities="ulysses.apps.drugsreminder.provider"
+			android:name=".util.MyFileProvider"
+			android:grantUriPermissions="true"
+			android:exported="false">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/provider_paths" />
+		</provider>
 	</application>
 </manifest>

@@ -5,7 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
+import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,18 +16,20 @@ import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.util.BackgroundThread;
 import ulysses.apps.drugsreminder.util.Constants;
 import ulysses.apps.drugsreminder.util.IProcessConnection;
+import ulysses.apps.drugsreminder.util.LogUtils;
 
 public class GuardService extends Service {
 	public static final String ACTION_PROTECTION = Constants.packageName + ".ACTION_PROTECTION";
+	private static PowerManager.WakeLock wakeLock;
 	private static boolean running;
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			Log.d("GuardService", "connected!");
+			LogUtils.d("GuardService", "connected!");
 		}
 		@Override
 		public void onServiceDisconnected(ComponentName componentName) {
-			Log.d("GuardService", "disconnected!");
+			LogUtils.d("GuardService", "disconnected!");
 			startProtectionService();
 		}
 	};
@@ -49,12 +51,17 @@ public class GuardService extends Service {
 		new Thread(() -> {
 			synchronized (lock) {
 				while (!Thread.interrupted()) {
+					acquireWakeLock();
 					try {
 						lock.wait(60000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if (!BackgroundThread.isAlive()) AlarmsLibrary.setupAllAlarms(this);
+					releaseWakeLock();
+					if (!BackgroundThread.isAlive()) {
+						AlarmsLibrary.setupAllAlarms(this);
+						LogUtils.d("GuardService", "BackgroundThread is not alive.");
+					} else LogUtils.d("GuardService", "BackgroundThread is alive.");
 				}
 				checkBackgroundThread();
 			}
@@ -77,12 +84,27 @@ public class GuardService extends Service {
 	}
 	@Override
 	public void onDestroy() {
-		unbindService(serviceConnection);
+		try {
+			unbindService(serviceConnection);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
 		super.onDestroy();
 		running = false;
 	}
 	@Contract(pure = true)
 	public static boolean isRunning() {
 		return running;
+	}
+	private void acquireWakeLock() {
+		PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+		if (powerManager != null) {
+			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+					"drugsreminder:guardWakeLock");
+			wakeLock.acquire(60000);
+		}
+	}
+	private void releaseWakeLock() {
+		if (wakeLock != null) wakeLock.release();
 	}
 }

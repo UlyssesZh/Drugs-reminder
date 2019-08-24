@@ -66,7 +66,7 @@
 	<string name="reminder_starting_day_preference_title">The algorithm used to determine the date of the first alarm</string>
 	<string name="reminder_starting_day_preference_summary">You can choose one of the three available types of algorithms.</string>
 	<string name="other_about_preference_summary">Information about the app, the developer, etc.</string>
-	<string name="version_name" translatable="false">0.9.0</string>
+	<string name="version_name" translatable="false">0.9.1</string>
 	<string name="author">Author:</string>
 	<string name="ulysses">Ulysses Zhan</string>
 	<string name="email">E-mail:</string>
@@ -118,4 +118,14 @@
 	<string name="delay_for">Delay for</string>
 	<string name="reminder_delay_preference_title">The basic amount of delay</string>
 	<string name="reminder_delay_preference_summary">You can delay a reminder when it fires an alarm. The amount for which you can delay is one to four times of the amount you specified here.</string>
+	<string name="init_log_failed_hint">Failed to initialize log file.</string>
+	<string name="clear_log_failed_hint">Failed to clear log file.</string>
+	<string name="open_log_failed_hint">Failed to open log file.</string>
+	<string name="open_log_succeeded_hint">Succeeded to output log file. Would you like to open it now?</string>
+	<string name="test_preference_category_title">Test</string>
+	<string name="test_clear_log_preference_title">Clear log file</string>
+	<string name="test_clear_log_preference_summary">The app writes log to a log file automatically when running. When you encounter a bug, you should clear the log file and re-trigger the bug, then provide log file to the developer.</string>
+	<string name="test_open_log_preference_summary">Open log file which you may provide for the developer.</string>
+	<string name="test_open_log_preference_title">Open log file</string>
+	<string name="clear_log_succeeded_hint">Succeeded in clearing log file.</string>
 </resources>

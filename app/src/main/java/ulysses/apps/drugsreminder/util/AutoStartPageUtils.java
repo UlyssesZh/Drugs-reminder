@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import ulysses.apps.drugsreminder.R;
 
-public class AutoStartPageUtils {
+public final class AutoStartPageUtils {
 	public static void goAutoStartPage(Context context){
 		String packageName = null;
 		String className = null;

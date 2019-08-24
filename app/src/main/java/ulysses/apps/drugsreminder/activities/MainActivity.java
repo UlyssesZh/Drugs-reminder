@@ -2,7 +2,9 @@ package ulysses.apps.drugsreminder.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
@@ -18,6 +20,7 @@ import ulysses.apps.drugsreminder.adapters.SectionsPagerAdapter;
 import ulysses.apps.drugsreminder.receivers.GuardReceiver;
 import ulysses.apps.drugsreminder.services.NotificationService;
 import ulysses.apps.drugsreminder.util.BackgroundThread;
+import ulysses.apps.drugsreminder.util.LogUtils;
 import ulysses.apps.drugsreminder.util.PermissionPageUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,10 +29,8 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
-		// create notification channels
-		NotificationService.createNotificationChannels(this);
-		// initialize the background thread
-		BackgroundThread.init();
+		// run some async tasks
+		runAsyncTasks();
 		// make Preferences change its static fields when preferences is changed
 		// The listener is registered onResume and unregistered onPause
 		preferencesListener = (sharedPreferences, key) -> Preferences.load(this);
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.permission_hint);
 			builder.setPositiveButton(R.string.positive_text,
-					(dialogInterface, i) -> PermissionPageUtils.goPermissionPage(this));
+					(dialogInterface, i) -> PermissionPageUtils.goPermissionPage(this,
+							0x1314));
 			builder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
 			builder.create().show();
 		}
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 		PreferenceManager.getDefaultSharedPreferences(this)
 				.registerOnSharedPreferenceChangeListener(preferencesListener);
 	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -75,5 +76,13 @@ public class MainActivity extends AppCompatActivity {
 		ElementsLibrary.saveElements(this);
 		Preferences.save(this);
 		AlarmsLibrary.setupAllAlarms(this);
+	}
+	private void runAsyncTasks() {
+		AsyncTask.execute(() -> {
+			Looper.prepare();
+			NotificationService.createNotificationChannels(this);
+			BackgroundThread.init();
+			LogUtils.init(this);
+		});
 	}
 }

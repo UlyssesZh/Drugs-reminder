@@ -1,8 +1,8 @@
 package ulysses.apps.drugsreminder.util;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,13 +16,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /** @author Donkor */
-public class PermissionPageUtils {
-	private Context context;
-	private PermissionPageUtils(Context context) {
-		this.context = context;
+public final class PermissionPageUtils {
+	private Activity activity;
+	private int requestCode;
+	private PermissionPageUtils(Activity activity, int requestCode) {
+		this.activity = activity;
+		this.requestCode = requestCode;
 	}
 	private void goPermissionPage() {
 		switch (Build.MANUFACTURER) {
@@ -64,7 +65,7 @@ public class PermissionPageUtils {
 			ComponentName componentName = new ComponentName("com.android.settings",
 					"com.android.settings.Settings$AccessLockSummaryActivity");
 			intent.setComponent(componentName);
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			goIntentSetting();
@@ -76,7 +77,7 @@ public class PermissionPageUtils {
 			ComponentName componentName = new ComponentName("com.sonymobile.cta",
 					"com.sonymobile.cta.SomcCTAMainActivity");
 			intent.setComponent(componentName);
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			goIntentSetting();
@@ -89,7 +90,7 @@ public class PermissionPageUtils {
 			ComponentName componentName = new ComponentName("com.huawei.systemmanager",
 					"com.huawei.permissionmanager.ui.MainActivity");
 			intent.setComponent(componentName);
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			goIntentSetting();
@@ -120,14 +121,14 @@ public class PermissionPageUtils {
 		}
 		intent.setAction("miui.intent.action.APP_PERM_EDITOR");
 		intent.putExtra("extra_pkgname", Constants.packageName);
-		context.startActivity(intent);
+		activity.startActivityForResult(intent, requestCode);
 	}
 	private void goMeizu() {
 		try {
 			Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
 			intent.addCategory(Intent.CATEGORY_DEFAULT);
 			intent.putExtra("packageName", Constants.packageName);
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (ActivityNotFoundException localActivityNotFoundException) {
 			localActivityNotFoundException.printStackTrace();
 			goIntentSetting();
@@ -138,10 +139,10 @@ public class PermissionPageUtils {
 	}
 	private void goIntentSetting() {
 		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-		Uri uri = Uri.fromParts("package", context.getPackageName(), null);
+		Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
 		intent.setData(uri);
 		try {
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -163,7 +164,7 @@ public class PermissionPageUtils {
 	private void doStartApplicationWithPackageName(String packagename) {
 		PackageInfo packageinfo = null;
 		try {
-			packageinfo = context.getPackageManager().getPackageInfo(packagename, 0);
+			packageinfo = activity.getPackageManager().getPackageInfo(packagename, 0);
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -171,7 +172,7 @@ public class PermissionPageUtils {
 		Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
 		resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		resolveIntent.setPackage(packageinfo.packageName);
-		ResolveInfo resolveInfo = context.getPackageManager().queryIntentActivities(resolveIntent,
+		ResolveInfo resolveInfo = activity.getPackageManager().queryIntentActivities(resolveIntent,
 				0).iterator().next();
 		if (resolveInfo == null) return;
 		String packageName = resolveInfo.activityInfo.packageName;
@@ -180,7 +181,7 @@ public class PermissionPageUtils {
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		intent.setComponent(new ComponentName(packageName, className));
 		try {
-			context.startActivity(intent);
+			activity.startActivityForResult(intent, requestCode);
 		} catch (Exception e) {
 			goIntentSetting();
 			e.printStackTrace();
@@ -208,7 +209,7 @@ public class PermissionPageUtils {
 		}
 		return result;
 	}
-	public static void goPermissionPage(Context context) {
-		new PermissionPageUtils(context).goPermissionPage();
+	public static void goPermissionPage(Activity activity, int requestCode) {
+		new PermissionPageUtils(activity, requestCode).goPermissionPage();
 	}
 }

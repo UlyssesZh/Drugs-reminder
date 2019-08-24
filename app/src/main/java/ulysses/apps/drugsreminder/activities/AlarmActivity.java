@@ -66,7 +66,7 @@ public class AlarmActivity extends AppCompatActivity {
 		setupAudio();
 		setupVibration();
 		setupViews();
-		Handler handler = new AlarmStopper(this, reminderID);
+		Handler handler = new AlarmStopper(this, rootReminderID);
 		timer = new Timer();
 		if (!Preferences.autoCloseTime.isZero())
 			timer.schedule(new TimerTask() {

@@ -1,7 +1,7 @@
 package ulysses.apps.drugsreminder.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -17,6 +17,7 @@ import ulysses.apps.drugsreminder.activities.AboutActivity;
 import ulysses.apps.drugsreminder.activities.QAndAActivity;
 import ulysses.apps.drugsreminder.preferences.Preferences;
 import ulysses.apps.drugsreminder.util.AutoStartPageUtils;
+import ulysses.apps.drugsreminder.util.LogUtils;
 import ulysses.apps.drugsreminder.util.PermissionPageUtils;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -39,7 +40,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			return true;
 		});
 		findPreference("grantPermissions").setOnPreferenceClickListener(preference -> {
-			PermissionPageUtils.goPermissionPage(getContext());
+			PermissionPageUtils.goPermissionPage(getActivity(), 0x1314);
+			return true;
+		});
+		findPreference("clearLog").setOnPreferenceClickListener(preference -> {
+			LogUtils.clear(getContext());
+			return true;
+		});
+		findPreference("openLog").setOnPreferenceClickListener(preference -> {
+			LogUtils.openLog(getContext());
 			return true;
 		});
 		findPreference("allowAutoStart").setOnPreferenceClickListener(preference -> {

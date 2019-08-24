@@ -14,15 +14,15 @@
 	</string-array>
 	<string-array
 		name="q_and_a_entries">
-		<item><![CDATA[Q: How to create a reminder?
-A: A reminder must include at least 1 drug and at least 1 meal, so you need to create a drug and a meal first. Note that 'Image' and 'Usage & dosage' of a drug is optional, and the time of a reminder is relative to its meals.]]></item>
-		<item><![CDATA[Q: How to create a reminder with absolute time?
-A: The only way to create a reminder with absolute time is to create a meal for it specially.]]></item>
-		<item><![CDATA[Q: Why do not the alarms fire while the app is running in the background?
-A: You need to grant some permissions for the app to start from background and show over other apps, otherwise the alarms will not fire as you expected.]]></item>
-		<item><![CDATA[Q: Why do not the alarms fire while the app is not running?
-A: Currently, the app does not support firing alarms out of its lifecycle, so be careful to keep it alive in the background.]]></item>
-		<item><![CDATA[Q: Why do not the notifications sent as regularly as I expect?
-A: Your device may have forbidden the app to show notifications, so you may need to grant the permission for the app manually.]]></item>
+		<item>Q: How to create a reminder?</item>
+		<item>A: A reminder must include at least 1 drug and at least 1 meal, so you need to create a drug and a meal first. Note that &quot;Image&quot; and &quot;Usage &amp; dosage&quot; of a drug is optional, and the time of a reminder is relative to its meals.</item>
+		<item>Q: How to create a reminder with absolute time?</item>
+		<item>A: The only way to create a reminder with absolute time is to create a meal for it specially.</item>
+		<item>Q: Why do not the alarms fire while the app is running in the background?</item>
+		<item>A: You need to grant some permissions for the app to start from background and show over other apps, otherwise the alarms will not fire as you expected.</item>
+		<item>Q: Why do not the alarms fire while the app is not running?</item>
+		<item>A: Currently, the app does not support firing alarms out of its lifecycle, so be careful to keep it alive in the background.</item>
+		<item>Q: Why do not the notifications sent as regularly as I expect?</item>
+		<item>A: Your device may have forbidden the app to show notifications, so you may need to grant the permission for the app manually.</item>
 	</string-array>
 </resources>

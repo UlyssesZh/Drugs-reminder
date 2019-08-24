@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 import ulysses.apps.drugsreminder.R;
 
-public class Time implements Serializable, Comparable<Time> {
+public final class Time implements Serializable, Comparable<Time> {
 	protected int hour = 0;
 	protected int minute = 0;
 	public Time(int hour, int minute) {
@@ -35,12 +35,14 @@ public class Time implements Serializable, Comparable<Time> {
 	public Time(int minutes) {
 		set(minutes / 60, minutes % 60);
 	}
+	@Contract(pure = true)
 	public int getHour() {
 		return hour;
 	}
 	public void setHour(int hours) {
 		this.hour = clamp(hours, 24);
 	}
+	@Contract(pure = true)
 	public int getMinute() {
 		return minute;
 	}
@@ -69,11 +71,14 @@ public class Time implements Serializable, Comparable<Time> {
 	public String toString() {
 		return String.format("%02d:%02d", hour, minute);
 	}
+	@NotNull
 	public String toString(Resources resources) {
 		if (hour == 0) return resources.getString(R.string.time_format_without_hour, minute);
 		else return resources.getString(R.string.time_format, hour, minute);
 	}
-	public Time plus(Time other) {
+	@NotNull
+	@Contract("_ -> new")
+	public Time plus(@NotNull Time other) {
 		int resultMinute = minute + other.getMinute();
 		int resultHour = hour + other.getHour();
 		if (resultMinute >= 60) {
@@ -83,7 +88,9 @@ public class Time implements Serializable, Comparable<Time> {
 		if (resultHour >= 24) resultHour -= 24;
 		return new Time(resultHour, resultMinute);
 	}
-	public Time minus(Time other) {
+	@NotNull
+	@Contract("_ -> new")
+	public Time minus(@NotNull Time other) {
 		int resultMinute = minute - other.minute;
 		int resultHour = hour - other.hour;
 		if (resultMinute < 0) {
@@ -106,12 +113,15 @@ public class Time implements Serializable, Comparable<Time> {
 		if (time1.minute + time2.minute >= 60) hour += 1;
 		return hour >= 24;
 	}
+	@Contract(pure = true)
 	public long millis() {
 		return hour * 3600000 + minute * 60000;
 	}
+	@Contract(pure = true)
 	public int minutes() {
 		return hour * 60 + minute;
 	}
+	@Contract(pure = true)
 	public boolean isZero() {
 		return hour == 0 && minute == 0;
 	}

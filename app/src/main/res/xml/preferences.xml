@@ -51,6 +51,17 @@
 			android:summary="@string/config_allow_auto_start_preference_summary" />
 	</PreferenceCategory>
 	<PreferenceCategory
+		android:title="@string/test_preference_category_title">
+		<Preference
+			android:key="clearLog"
+			android:title="@string/test_clear_log_preference_title"
+			android:summary="@string/test_clear_log_preference_summary" />
+		<Preference
+			android:key="openLog"
+			android:title="@string/test_open_log_preference_title"
+			android:summary="@string/test_open_log_preference_summary" />
+	</PreferenceCategory>
+	<PreferenceCategory
 		android:title="@string/others_preference_category_title">
 		<Preference
 			android:key="resetSettings"

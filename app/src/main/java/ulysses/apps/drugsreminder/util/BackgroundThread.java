@@ -13,7 +13,7 @@ import java.util.Set;
  * waits for a while, and the series of tasks runs again, and the loop goes on. It is ensured that
  * the tasks run at an 'integral time point'. And the period is specified by {@link #periodField},
  * which accepts one of the {@link Calendar} fields like {@link Calendar#MINUTE}.*/
-public class BackgroundThread {
+public final class BackgroundThread {
 	private static Thread thread;
 	/** The tasks that are executed at the beginning of every period.*/
 	private static Map<String, Runnable> tasks;
@@ -73,9 +73,12 @@ public class BackgroundThread {
 						startTimeMillis = backup;
 						// get the current thread and do some judges
 						Thread currentThread = Thread.currentThread();
-						if (currentThread.getId() == currentThreadId)
+						if (currentThread.getId() == currentThreadId) {
 							// run the tasks one by one
+							LogUtils.d("BackgroundThread", "Running tasks: " +
+									                               tasks.keySet().toString());
 							for (Runnable runnable : tasks.values()) runnable.run();
+						}
 						else // if the thread is not correct, interrupt it
 							currentThread.interrupt();
 					}

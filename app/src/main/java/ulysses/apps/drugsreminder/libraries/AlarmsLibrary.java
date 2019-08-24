@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.util.SparseArray;
 
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +75,7 @@ public final class AlarmsLibrary {
 	/** Set a non-repeating alarm.*/
 	private static void set(long triggerAtMillis, PendingIntent pendingIntent, String taskName) {
 		BackgroundThread.putTask(taskName, () -> {
-			CalendarUtils.print(triggerAtMillis, "Will " + taskName + " trigger at %s?");
+			CalendarUtils.logMessage(triggerAtMillis, taskName + " triggers at %s.");
 			if (triggerAtMillis == BackgroundThread.getStartTimeMillis())
 				sendPendingIntent(pendingIntent);
 		});
@@ -85,7 +84,7 @@ public final class AlarmsLibrary {
 	private static void setRepeating(long triggerAtMillis, long intervalMillis,
 	                                 PendingIntent pendingIntent, String taskName) {
 		BackgroundThread.putTask(taskName, () -> {
-			CalendarUtils.print(triggerAtMillis, "Will " + taskName + " trigger at %s?");
+			CalendarUtils.logMessage(triggerAtMillis, taskName + " triggers at %s.");
 			long timeDifference = BackgroundThread.getStartTimeMillis() - triggerAtMillis;
 			if (timeDifference >= 0 && timeDifference % intervalMillis == 0)
 				sendPendingIntent(pendingIntent);

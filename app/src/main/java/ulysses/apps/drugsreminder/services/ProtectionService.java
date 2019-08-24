@@ -12,17 +12,18 @@ import androidx.core.app.NotificationManagerCompat;
 
 import ulysses.apps.drugsreminder.util.Constants;
 import ulysses.apps.drugsreminder.util.IProcessConnection;
+import ulysses.apps.drugsreminder.util.LogUtils;
 
 public class ProtectionService extends Service {
 	public static final String ACTION_GUARD = Constants.packageName + ".ACTION_GUARD";
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			Log.d("ProtectionService", "connected!");
+			LogUtils.d("ProtectionService", "connected!");
 		}
 		@Override
 		public void onServiceDisconnected(ComponentName componentName) {
-			Log.d("ProtectionService", "disconnected!");
+			LogUtils.d("ProtectionService", "disconnected!");
 			startGuardService();
 		}
 	};
@@ -34,7 +35,8 @@ public class ProtectionService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d("ProtectionService", "created!");
+		LogUtils.init(this);
+		LogUtils.d("ProtectionService", "created!");
 		startForeground(NotificationService.BACKGROUND_NOTIFICATION_ID,
 				NotificationService.backgroundTasksNotification(this));
 		NotificationManagerCompat.from(this).cancel(NotificationService.BACKGROUND_NOTIFICATION_ID);
@@ -56,7 +58,11 @@ public class ProtectionService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d("ProtectionService", "destroyed!");
-		unbindService(serviceConnection);
+		try {
+			unbindService(serviceConnection);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		LogUtils.d("ProtectionService", "destroyed!");
 	}
 }

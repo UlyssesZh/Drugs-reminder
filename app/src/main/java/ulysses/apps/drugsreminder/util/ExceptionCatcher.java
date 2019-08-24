@@ -1,12 +1,12 @@
 package ulysses.apps.drugsreminder.util;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 
 import ulysses.apps.drugsreminder.BuildConfig;
 
-public class ExceptionCatcher {
+public final class ExceptionCatcher {
 	public static void catchException(Runnable runnable, OnExceptionCaughtListener listener) {
 		if (BuildConfig.DEBUG)
 			try {
@@ -46,7 +46,7 @@ public class ExceptionCatcher {
 	public static void printStackTrace() {
 		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
 			if (element.getClassName().matches("ulysses.*"))
-				Log.d("StackTrace", element.toString());
+				LogUtils.d("StackTrace", element.toString());
 		}
 	}
 }

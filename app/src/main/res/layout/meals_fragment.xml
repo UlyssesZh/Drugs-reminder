@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MealsFragment">
+    tools:activity=".fragments.MealsFragment">
     <TextView
         android:id="@+id/empty_text"
         android:layout_width="match_parent"

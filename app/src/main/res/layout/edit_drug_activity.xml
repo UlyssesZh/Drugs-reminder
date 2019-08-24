@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.EditDrugActivity"
+    tools:activity=".activities.EditDrugActivity"
     android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_toolbar"
