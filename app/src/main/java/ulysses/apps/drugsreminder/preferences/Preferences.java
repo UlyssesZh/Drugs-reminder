@@ -13,6 +13,7 @@ public final class Preferences {
 	public static final String STARTING_TIME_TYPE_NEXT = "next";
 	public static final String STARTING_TIME_TYPE_THAT = "that";
 	public static final String STARTING_TIME_TYPE_PICK = "pick";
+	private static SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
 	public static Time reminderAdvanceTime;
 	public static Uri ringtoneUri;
 	public static boolean vibration;
@@ -22,6 +23,23 @@ public final class Preferences {
 	public static int defaultFrequency;
 	public static Time autoCloseTime;
 	public static boolean saved = false;
+	public static void init(Context context) {
+		initListener(context);
+		load(context);
+	}
+	private static void initListener(Context context) {
+		preferencesListener = (sharedPreferences, key) -> load(context);
+	}
+	public static void registerListener(Context context) {
+		if (preferencesListener == null) initListener(context);
+		PreferenceManager.getDefaultSharedPreferences(context)
+				.registerOnSharedPreferenceChangeListener(preferencesListener);
+	}
+	public static void unregisterListener(Context context) {
+		if (preferencesListener == null) initListener(context);
+		PreferenceManager.getDefaultSharedPreferences(context)
+				.unregisterOnSharedPreferenceChangeListener(preferencesListener);
+	}
 	public static void setDefault() {
 		reminderAdvanceTime = new Time(0, 30);
 		ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -46,7 +64,7 @@ public final class Preferences {
 		editor.putInt("autoCloseTimeMinutes", autoCloseTime.minutes());
 		editor.apply();
 	}
-	public static void load(Context context) {
+	private static void load(Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (saved = preferences.getBoolean("saved", false)) {
 			reminderAdvanceTime = new Time(preferences.getInt("advanceTimeMinutes", 30));

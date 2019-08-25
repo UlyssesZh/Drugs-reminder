@@ -9,8 +9,8 @@ import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 
 public class Drug implements IElement {
 	private int ID;
-	protected String name;
-	protected Bitmap bitmap;
+	private String name;
+	private Bitmap bitmap;
 	public Drug(int ID, String name, Bitmap bitmap) {
 		this.ID = ID;
 		this.name = name;
@@ -34,7 +34,7 @@ public class Drug implements IElement {
 	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
-		List<Integer> result = new ArrayList<Integer>();
+		List<Integer> result = new ArrayList<>();
 		for (int reminderID = 0; reminderID < ElementsLibrary.remindersNumber(); reminderID++) {
 			if (!ElementsLibrary.doesNotHaveReminder(reminderID) &&
 					    ElementsLibrary.findReminderByID(reminderID).getDrugIDs().contains(ID))

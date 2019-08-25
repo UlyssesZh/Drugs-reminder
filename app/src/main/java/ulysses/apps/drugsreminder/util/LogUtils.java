@@ -1,17 +1,15 @@
 package ulysses.apps.drugsreminder.util;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
@@ -19,23 +17,43 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import ulysses.apps.drugsreminder.BuildConfig;
 import ulysses.apps.drugsreminder.R;
+import ulysses.apps.drugsreminder.provider.LogProvider;
 
 public final class LogUtils {
-	public static final String OUTPUT_FILENAME = "log";
-	public static final String OUTPUT_FILE_EXT = "txt";
+	private static final String OUTPUT_FILENAME = "log";
+	private static final String OUTPUT_FILE_EXT = "txt";
 	private static String filePath;
-	public static int priorityFilter = Log.VERBOSE;
-	public static void init(@NotNull Context context) {
+	private static int priorityFilter = Log.VERBOSE;
+	public static void init(Context context) {
+		initFilePath(context);
+	}
+	private static void initFilePath(Context context) {
 		String dirPath;
 		try {
-			dirPath = context.getExternalFilesDir(null).getCanonicalPath();
-		} catch (IOException e) {
+			dirPath = getDirPath(context);
+		} catch (IOException | NullPointerException e) {
 			e.printStackTrace();
-			dirPath = String.format("%sAndroid/data/%s/files",
-					Environment.getExternalStorageDirectory(), Constants.packageName);
+			dirPath = getDirPath();
 		}
-		filePath = String.format("%s/%s.%s", dirPath, OUTPUT_FILENAME, OUTPUT_FILE_EXT);
+		filePath = getFilePath(dirPath);
+	}
+	private static void initFilePath() {
+		filePath = getFilePath(getDirPath());
+	}
+	@NotNull
+	private static String getDirPath(@NotNull Context context) throws IOException {
+		return context.getExternalFilesDir(null).getCanonicalPath();
+	}
+	@NotNull
+	private static String getDirPath() {
+		return String.format("%sAndroid/data/%s/files",
+				Environment.getExternalStorageDirectory(), BuildConfig.APPLICATION_ID);
+	}
+	@NotNull
+	private static String getFilePath(String dirPath) {
+		return String.format("%s/%s.%s", dirPath, OUTPUT_FILENAME, OUTPUT_FILE_EXT);
 	}
 	private static void writeLog(int priority, String type, String tag, String message) {
 		if (priority >= priorityFilter)
@@ -91,18 +109,19 @@ public final class LogUtils {
 		Log.v(tag, message, throwable);
 		writeLog(Log.VERBOSE, "V", tag, message, throwable);
 	}
-	public static void clear(@NotNull Context context) {
+	public static void clear(Context context) {
+		if (filePath == null) initFilePath(context);
 		File file = new File(filePath);
 		if (file.exists()) file.delete();
 		Toast.makeText(context, R.string.clear_log_succeeded_hint, Toast.LENGTH_LONG)
 				.show();
 	}
-	public static void openLog(@NotNull Context context) {
+	public static void openLog(Context context) {
 		try {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
+			if (filePath == null) initFilePath(context);
 			File file = new File(filePath);
-			Uri uri = FileProvider.getUriForFile(context,
-					Constants.packageName + ".provider", file);
+			Uri uri = FileProvider.getUriForFile(context, LogProvider.AUTHORITY, file);
 			intent.setDataAndType(uri, "text/plain");
 			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION |
 					                Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
@@ -119,6 +138,7 @@ public final class LogUtils {
 	}
 	private static void appendLog(String text) {
 		try {
+			if (filePath == null) initFilePath();
 			File file = new File(filePath);
 			if (!file.exists()) file.createNewFile();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
@@ -128,5 +148,19 @@ public final class LogUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	@Contract(pure = true)
+	public static String getFilePath() {
+		return filePath;
+	}
+	public static void setFilePath(String filePath) {
+		LogUtils.filePath = filePath;
+	}
+	@Contract(pure = true)
+	public static int getPriorityFilter() {
+		return priorityFilter;
+	}
+	public static void setPriorityFilter(int priorityFilter) {
+		LogUtils.priorityFilter = priorityFilter;
 	}
 }

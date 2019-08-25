@@ -134,9 +134,9 @@ public class AlarmActivity extends AppCompatActivity {
 		List<Integer> drugIDs = reminder.getDrugIDs();
 		List<String> usageDosages = reminder.getUsageDosages();
 		int listSize = drugIDs.size();
-		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>(listSize);
+		List<Map<String, Object>> listItems = new ArrayList<>(listSize);
 		for (int i = 0; i < listSize; i++) {
-			Map<String, Object> listItem = new HashMap<String, Object>();
+			Map<String, Object> listItem = new HashMap<>();
 			Drug drug = ElementsLibrary.findDrugByID(drugIDs.get(i));
 			listItem.put("name", drug.getName());
 			listItem.put("bitmap", drug.getBitmap());

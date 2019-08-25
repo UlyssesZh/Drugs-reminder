@@ -68,19 +68,19 @@ public abstract class EditElementActivity<T extends IElement> extends AppCompatA
 	protected abstract boolean saveChanges(int ID);
 	protected void alert(int stringID) {
 		alertBuilder.setMessage(stringID);
-		alertBuilder.setPositiveButton(R.string.positive_text, (dialogInterface, i) -> {});
+		alertBuilder.setPositiveButton(R.string.positive_text, null);
 		alertBuilder.create().show();
 	}
 	protected void alert(int stringID, DialogInterface.OnClickListener positiveListener) {
 		alertBuilder.setMessage(stringID);
 		alertBuilder.setPositiveButton(R.string.positive_text, positiveListener);
-		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
+		alertBuilder.setNegativeButton(R.string.negative_text, null);
 		alertBuilder.create().show();
 	}
 	protected void alert(ListAdapter adapter, DialogInterface.OnClickListener listener) {
 		alertBuilder.setMessage(null);
 		alertBuilder.setAdapter(adapter, listener);
-		alertBuilder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
+		alertBuilder.setNegativeButton(R.string.negative_text, null);
 		alertBuilder.create().show();
 	}
 	protected abstract boolean isNotCreating(int ID);

@@ -20,8 +20,8 @@ import ulysses.apps.drugsreminder.util.BackgroundThread;
 import ulysses.apps.drugsreminder.util.CalendarUtils;
 
 public final class AlarmsLibrary {
-	private static SparseArray<List<PendingIntent>> alarmIntents = new SparseArray<List<PendingIntent>>();
-	private static SparseArray<List<PendingIntent>> notificationIntents = new SparseArray<List<PendingIntent>>();
+	private static SparseArray<List<PendingIntent>> alarmIntents = new SparseArray<>();
+	private static SparseArray<List<PendingIntent>> notificationIntents = new SparseArray<>();
 	/** Set up the time-scheduled alarms and notifications about a specified reminder.
 	 * @param context the context from which the pending intents will start.
 	 * @param reminderID specifying the reminder whose alarms will be setRepeating up.
@@ -105,7 +105,7 @@ public final class AlarmsLibrary {
 		if (!ElementsLibrary.doesNotHaveReminder(reminderID)) {
 			IReminder reminder = ElementsLibrary.findReminderByID(reminderID);
 			if (reminder.isEnabled())
-				intents.put(reminderID, new ArrayList<PendingIntent>(
+				intents.put(reminderID, new ArrayList<>(
 						reminder.isRepeating() ? ((Reminder) reminder).getMealIDs().size() : 1));
 		}
 	}

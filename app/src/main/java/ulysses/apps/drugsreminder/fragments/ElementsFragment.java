@@ -41,8 +41,8 @@ public abstract class ElementsFragment<T extends IElement> extends Fragment {
 	}
 	public void refresh() {
 		emptyText.setVisibility(isEmpty() ? View.VISIBLE : View.INVISIBLE);
-		IDs = new ArrayList<Integer>();
-		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
+		IDs = new ArrayList<>();
+		List<Map<String, Object>> listItems = new ArrayList<>();
 		for (int ID = 0; ID < listSize(); ID++) {
 			if (doesNotHave(ID)) continue;
 			int stringsNumber = from().length;

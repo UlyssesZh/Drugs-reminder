@@ -15,8 +15,8 @@ import ulysses.apps.drugsreminder.util.Time;
 
 public class DelayedReminder implements IReminder {
 	private int ID;
-	protected Reminder reminder;
-	protected long triggerAtMillis;
+	private Reminder reminder;
+	private long triggerAtMillis;
 	public DelayedReminder(int reminderID, long triggerAtMillis) {
 		this.ID = ElementsLibrary.remindersNumber();
 		this.reminder = (Reminder) ElementsLibrary.findReminderByID(reminderID);
@@ -37,7 +37,7 @@ public class DelayedReminder implements IReminder {
 	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
-		return new ArrayList<Integer>(0);
+		return new ArrayList<>(0);
 	}
 	@Override
 	public List<Integer> getDrugIDs() {
@@ -59,7 +59,7 @@ public class DelayedReminder implements IReminder {
 	}
 	@Override
 	public List<Long> alarmTimeMillis() {
-		List<Long> result = new ArrayList<Long>(1);
+		List<Long> result = new ArrayList<>(1);
 		result.add(triggerAtMillis);
 		return result;
 	}

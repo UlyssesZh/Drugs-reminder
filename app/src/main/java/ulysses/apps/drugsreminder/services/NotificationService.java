@@ -17,10 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import ulysses.apps.drugsreminder.R;
 import ulysses.apps.drugsreminder.activities.MainActivity;
 import ulysses.apps.drugsreminder.elements.IReminder;
-import ulysses.apps.drugsreminder.elements.Reminder;
 import ulysses.apps.drugsreminder.libraries.ElementsLibrary;
 import ulysses.apps.drugsreminder.preferences.Preferences;
-/*import ulysses.apps.drugsreminder.receivers.DelayingReceiver;*/
 
 public class NotificationService extends IntentService {
 	public static final String CHANNEL_FOR_REMINDING_ADVANCE = "channelForRemindingAdvance";
@@ -30,18 +28,22 @@ public class NotificationService extends IntentService {
 	public NotificationService() {
 		super("NotificationService");
 	}
+	public static void init(Context context) {
+		createNotificationChannels(context);
+	}
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		createNotificationChannels(this);
 		startForeground(BACKGROUND_NOTIFICATION_ID, backgroundTasksNotification(this));
 		NotificationManagerCompat.from(this).cancel(BACKGROUND_NOTIFICATION_ID);
+		if (intent == null) return;
 		int reminderID = intent.getIntExtra("reminderID", 0);
 		IReminder reminder = ElementsLibrary.findReminderByID(reminderID);
 		if (intent.getBooleanExtra("forRemindingAdvance", true))
-			notifyForRemindingAdvance(intent, reminder);
+			notifyForRemindingAdvance(reminder);
 		else notifyForAutoCloseHint(reminder);
 	}
-	private void notifyForRemindingAdvance(Intent intent, @NotNull IReminder reminder) {
+	private void notifyForRemindingAdvance(@NotNull IReminder reminder) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
 				CHANNEL_FOR_REMINDING_ADVANCE);
 		builder.setSmallIcon(R.drawable.ic_notification);
@@ -52,13 +54,6 @@ public class NotificationService extends IntentService {
 		builder.setPriority(NotificationCompat.PRIORITY_MAX);
 		builder.setAutoCancel(true);
 		setContentIntentFor(builder);
-		/*// set the delay action for the notification
-		Intent delayIntent = new Intent(this, DelayingReceiver.class);
-		delayIntent.putExtras(intent);
-		builder.addAction(R.drawable.ic_trending_down_white_24dp, getString(R.string.delay_format,
-				Preferences.delayTime.toString(getResources())),
-				PendingIntent.getBroadcast(this, 0x0520, delayIntent,
-						PendingIntent.FLAG_UPDATE_CURRENT));*/
 		// send a notification whose id is the reminder's ID
 		NotificationManagerCompat.from(this).notify(reminder.getID(), builder.build());
 	}
@@ -82,12 +77,6 @@ public class NotificationService extends IntentService {
 		builder.setPriority(NotificationCompat.PRIORITY_LOW);
 		builder.setContentTitle(context.getString(
 				R.string.notification_for_background_tasks_content_title));
-		/*builder.setContentText(context.getString(
-				R.string.notification_for_background_tasks_content_text));
-		Intent intent = new Intent(context, MainActivity.class);
-		intent.setAction(Intent.ACTION_MAIN);
-		builder.setContentIntent(PendingIntent.getActivity(context, 0x0520, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT));*/
 		return builder.build();
 	}
 	private void setContentIntentFor(@NotNull NotificationCompat.Builder builder) {
@@ -97,7 +86,7 @@ public class NotificationService extends IntentService {
 		builder.setContentIntent(PendingIntent.getActivity(this, 0x0520,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
-	public static void createNotificationChannels(Context context) {
+	private static void createNotificationChannels(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channelForReminderAdvance =
 					new NotificationChannel(CHANNEL_FOR_REMINDING_ADVANCE,

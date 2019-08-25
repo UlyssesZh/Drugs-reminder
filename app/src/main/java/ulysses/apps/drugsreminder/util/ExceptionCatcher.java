@@ -2,7 +2,8 @@ package ulysses.apps.drugsreminder.util;
 
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
+
+import org.jetbrains.annotations.NotNull;
 
 import ulysses.apps.drugsreminder.BuildConfig;
 
@@ -29,7 +30,7 @@ public final class ExceptionCatcher {
 			this.context = context;
 		}
 		@Override
-		public void onExceptionCaught(Exception e) {
+		public void onExceptionCaught(@NotNull Exception e) {
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append(e.getClass().getName());

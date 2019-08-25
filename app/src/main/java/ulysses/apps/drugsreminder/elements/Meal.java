@@ -8,8 +8,8 @@ import ulysses.apps.drugsreminder.util.Time;
 
 public class Meal implements IElement {
 	private int ID;
-	protected Time time;
-	protected String name;
+	private Time time;
+	private String name;
 	public Meal(int ID, String name, Time time) {
 		this.ID = ID;
 		this.name = name;
@@ -27,11 +27,11 @@ public class Meal implements IElement {
 	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
-		List<Integer> result = new ArrayList<Integer>();
+		List<Integer> result = new ArrayList<>();
 		for (int reminderID = 0; reminderID < ElementsLibrary.remindersNumber(); reminderID++)
 			if (!ElementsLibrary.doesNotHaveReminder(reminderID)) {
 				IReminder reminder = ElementsLibrary.findReminderByID(reminderID);
-				if (reminder.isRepeating() && ((Reminder) reminder).mealIDs.contains(ID))
+				if (reminder.isRepeating() && ((Reminder) reminder).getMealIDs().contains(ID))
 					result.add(reminderID);
 			}
 		return result;

@@ -2,6 +2,8 @@ package ulysses.apps.drugsreminder.fragments;
 
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -27,7 +29,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		addPreferencesFromResource(R.xml.preferences);
 		preferenceRingtone = findPreference("ringtoneUri");
-		preferenceRingtone.setOnPreferenceClickListener(preference -> {
+		setOnClickListener(preferenceRingtone, preference -> {
 			Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
 			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Preferences.ringtoneUri);
 			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
@@ -39,46 +41,44 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			startActivityForResult(intent, RINGTONE_REQUEST_CODE);
 			return true;
 		});
-		findPreference("grantPermissions").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("grantPermissions", preference -> {
 			PermissionPageUtils.goPermissionPage(getActivity(), 0x1314);
 			return true;
 		});
-		findPreference("clearLog").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("clearLog", preference -> {
 			LogUtils.clear(getContext());
 			return true;
 		});
-		findPreference("openLog").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("openLog", preference -> {
 			LogUtils.openLog(getContext());
 			return true;
 		});
-		findPreference("allowAutoStart").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("allowAutoStart", preference -> {
 			AutoStartPageUtils.goAutoStartPage(getContext());
 			return true;
 		});
-		findPreference("qAndA").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("qAndA", preference -> {
 			Intent intent = new Intent(getContext(), QAndAActivity.class);
 			startActivity(intent);
 			return true;
 		});
-		findPreference("about").setOnPreferenceClickListener(preference -> {
+		setOnClickListener("about", preference -> {
 			Intent intent = new Intent(getContext(), AboutActivity.class);
 			startActivity(intent);
 			return true;
 		});
-		findPreference("resetSettings").setOnPreferenceClickListener(preference -> {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		setOnClickListener("resetSettings", preference -> {
+			Context context = getContext();
+			if (context == null) return false;
+			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setMessage(R.string.comfirm_reset_settings_hint);
 			builder.setPositiveButton(R.string.positive_text, (dialogInterface, i) -> {
 				Preferences.setDefault();
 				Preferences.save(getContext());
-				((SwitchPreferenceCompat) findPreference("vibration"))
-						.setChecked(Preferences.vibration);
-				/*((SwitchPreferenceCompat) findPreference("clearDelay"))
-						.setChecked(Preferences.clearDelay);*/
-				((SwitchPreferenceCompat) findPreference("resetStarting"))
-						.setChecked(Preferences.resetStarting);
+				setChecked("vibration", Preferences.vibration);
+				setChecked("resetStarting", Preferences.resetStarting);
 			});
-			builder.setNegativeButton(R.string.negative_text, (dialogInterface, i) -> {});
+			builder.setNegativeButton(R.string.negative_text, null);
 			builder.create().show();
 			return true;
 		});
@@ -95,5 +95,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 			editor.putString("ringtoneUri", uriString);
 			editor.apply();
 		}
+	}
+	private void setOnClickListener(Preference preference,
+	                                Preference.OnPreferenceClickListener listener) {
+		if (preference != null) preference.setOnPreferenceClickListener(listener);
+	}
+	private void setOnClickListener(CharSequence key,
+	                                Preference.OnPreferenceClickListener listener) {
+		setOnClickListener((Preference) findPreference(key), listener);
+	}
+	private void setChecked(CharSequence key, boolean checked) {
+		SwitchPreferenceCompat preference = findPreference(key);
+		if (preference != null) preference.setChecked(checked);
 	}
 }

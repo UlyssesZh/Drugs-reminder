@@ -66,7 +66,7 @@
 	<string name="reminder_starting_day_preference_title">The algorithm used to determine the date of the first alarm</string>
 	<string name="reminder_starting_day_preference_summary">You can choose one of the three available types of algorithms.</string>
 	<string name="other_about_preference_summary">Information about the app, the developer, etc.</string>
-	<string name="version_name" translatable="false">0.9.1</string>
+	<string name="version_name" translatable="false">0.9.2</string>
 	<string name="author">Author:</string>
 	<string name="ulysses">Ulysses Zhan</string>
 	<string name="email">E-mail:</string>

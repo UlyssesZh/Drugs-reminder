@@ -56,10 +56,10 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		editDrugs = findViewById(R.id.edit_reminder_drugs);
 		editRepeatPeriod = findViewById(R.id.edit_reminder_frequency);
 		editStartingDay = findViewById(R.id.edit_reminder_starting_day);
-		mealIDs = new ArrayList<Integer>();
-		checkedMealIDs = new ArrayList<Integer>();
-		drugListItems = new ArrayList<Map<String, Object>>();
-		drugIDs = new ArrayList<Integer>();
+		mealIDs = new ArrayList<>();
+		checkedMealIDs = new ArrayList<>();
+		drugListItems = new ArrayList<>();
+		drugIDs = new ArrayList<>();
 		editRelativeTime.setIs24HourView(true);
 		editRelativeTime.setOnTimeChangedListener((view, hourOfDay, minute) -> refreshTime());
 		editBeforeAfter.setOnCheckedChangeListener((group, checkedId) -> refreshTime());
@@ -86,14 +86,14 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 			if (addDrugsNumber == 0)
 				alert(R.string.empty_hint);
 			else {
-				List<Map<String, Object>> addDrugItems = new ArrayList<Map<String, Object>>(addDrugsNumber);
-				List<Integer> addDrugIDs = new ArrayList<Integer>(addDrugsNumber);
+				List<Map<String, Object>> addDrugItems = new ArrayList<>(addDrugsNumber);
+				List<Integer> addDrugIDs = new ArrayList<>(addDrugsNumber);
 				for (int addDrugID = 0; addDrugID < ElementsLibrary.drugsNumber(); addDrugID++) {
 					if (ElementsLibrary.doesNotHaveDrug(addDrugID) || drugIDs.contains(addDrugID))
 						continue;
 					Drug drug = ElementsLibrary.findDrugByID(addDrugID);
 					addDrugIDs.add(addDrugID);
-					Map<String, Object> addDrugItem = new HashMap<String, Object>(2);
+					Map<String, Object> addDrugItem = new HashMap<>(2);
 					addDrugItem.put("name", drug.getName());
 					addDrugItem.put("image", drug.getBitmap());
 					addDrugItems.add(addDrugItem);
@@ -126,7 +126,7 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		editBeforeAfter.check(aReminder.isBefore() ? R.id.edit_reminder_before :
 				                      R.id.edit_reminder_after);
 		checkMealIDs(aReminder.getMealIDs());
-		drugIDs = new ArrayList<Integer>(aReminder.getDrugIDs());
+		drugIDs = new ArrayList<>(aReminder.getDrugIDs());
 		addAllDrugs(aReminder.getUsageDosages());
 		editRepeatPeriod.setText(String.valueOf(aReminder.getRepeatPeriod()));
 		if (pickStartingTime()) setWallTimeToDatePicker(aReminder.getCreatedTime());
@@ -151,9 +151,9 @@ public class EditReminderActivity extends EditElementActivity<IReminder> {
 		outState.putInt("minute", editRelativeTime.getMinute());
 		outState.putBoolean("before",
 				editBeforeAfter.getCheckedRadioButtonId() == R.id.edit_reminder_before);
-		outState.putIntegerArrayList("mealIDs", new ArrayList<Integer>(checkedMealIDs));
-		outState.putIntegerArrayList("drugIDs", new ArrayList<Integer>(drugIDs));
-		outState.putStringArrayList("usageDosages", new ArrayList<String>(getUsageDosages()));
+		outState.putIntegerArrayList("mealIDs", new ArrayList<>(checkedMealIDs));
+		outState.putIntegerArrayList("drugIDs", new ArrayList<>(drugIDs));
+		outState.putStringArrayList("usageDosages", new ArrayList<>(getUsageDosages()));
 		outState.putString("repeatPeriod", editRepeatPeriod.getText().toString());
 		outState.putLong("createdTime", getWallTimeFromDatePicker());
 	}

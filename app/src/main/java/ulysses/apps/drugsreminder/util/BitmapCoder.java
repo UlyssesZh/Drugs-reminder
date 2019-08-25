@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;

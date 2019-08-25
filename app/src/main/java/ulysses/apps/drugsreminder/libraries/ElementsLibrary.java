@@ -9,9 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import ulysses.apps.drugsreminder.elements.DelayedReminder;
 import ulysses.apps.drugsreminder.elements.Drug;
@@ -22,10 +20,13 @@ import ulysses.apps.drugsreminder.util.BitmapCoder;
 import ulysses.apps.drugsreminder.util.Time;
 
 public final class ElementsLibrary {
-	private static ArrayList<Drug> drugs = new ArrayList<Drug>();
-	private static ArrayList<IReminder> reminders = new ArrayList<IReminder>();
-	private static ArrayList<Meal> meals = new ArrayList<Meal>();
+	private static List<Drug> drugs = new ArrayList<>();
+	private static List<IReminder> reminders = new ArrayList<>();
+	private static List<Meal> meals = new ArrayList<>();
 	private ElementsLibrary() {}
+	public static void init(Context context) {
+		loadElements(context);
+	}
 	@Contract(pure = true)
 	public static Drug findDrugByID(int ID) {
 		return drugs.get(ID);
@@ -247,15 +248,15 @@ public final class ElementsLibrary {
 			} else { // an un-delayed reminder
 				// load drugIDs and usageDosages
 				int drugsNumber = preferences.getInt(head + "drugsNumber", 0);
-				List<Integer> drugIDs = new ArrayList<Integer>(drugsNumber);
-				List<String> usageDosages = new ArrayList<String>(drugsNumber);
+				List<Integer> drugIDs = new ArrayList<>(drugsNumber);
+				List<String> usageDosages = new ArrayList<>(drugsNumber);
 				for (int i = 0; i < drugsNumber; i++) {
 					drugIDs.add(preferences.getInt(head + "drugID" + i, i));
 					usageDosages.add(preferences.getString(head + "usageDosage" + i, ""));
 				}
 				// load mealIDs
 				int mealsNumber = preferences.getInt(head + "mealsNumber", 0);
-				List<Integer> mealIDs = new ArrayList<Integer>(mealsNumber);
+				List<Integer> mealIDs = new ArrayList<>(mealsNumber);
 				for (int i = 0; i < mealsNumber; i++)
 					mealIDs.add(preferences.getInt(head + "mealID" + i, i));
 				// create the Reminder instance
@@ -276,20 +277,10 @@ public final class ElementsLibrary {
 		for (int ID = 0; !reminderIDOutOfBound(ID); ID++)
 			loadReminder(ID, preferences);
 	}
-	public static void loadElements(@NotNull Context context) {
+	private static void loadElements(@NotNull Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		loadReminders(preferences);
 		loadDrugs(preferences);
 		loadMeals(preferences);
-	}
-	private static Set<String> codeList(@NotNull List list) {
-		Set<String> result = new LinkedHashSet<String>(list.size());
-		for (Object object : list) result.add(object.toString());
-		return result;
-	}
-	private static List<Integer> decodeStringSet(@NotNull Set<String> code) {
-		List<Integer> result = new ArrayList<Integer>(code.size());
-		for (String string : code) result.add(Integer.valueOf(string));
-		return result;
 	}
 }

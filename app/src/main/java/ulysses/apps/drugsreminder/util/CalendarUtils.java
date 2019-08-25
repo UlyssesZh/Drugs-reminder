@@ -1,7 +1,5 @@
 package ulysses.apps.drugsreminder.util;
 
-import android.util.Log;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintStream;

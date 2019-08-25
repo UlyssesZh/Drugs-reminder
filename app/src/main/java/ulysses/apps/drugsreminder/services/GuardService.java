@@ -12,14 +12,14 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.jetbrains.annotations.Contract;
 
+import ulysses.apps.drugsreminder.BuildConfig;
 import ulysses.apps.drugsreminder.libraries.AlarmsLibrary;
 import ulysses.apps.drugsreminder.util.BackgroundThread;
-import ulysses.apps.drugsreminder.util.Constants;
 import ulysses.apps.drugsreminder.util.IProcessConnection;
 import ulysses.apps.drugsreminder.util.LogUtils;
 
 public class GuardService extends Service {
-	public static final String ACTION_PROTECTION = Constants.packageName + ".ACTION_PROTECTION";
+	public static final String ACTION_PROTECTION = BuildConfig.APPLICATION_ID + ".ACTION_PROTECTION";
 	private static PowerManager.WakeLock wakeLock;
 	private static boolean running;
 	private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -57,11 +57,11 @@ public class GuardService extends Service {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					releaseWakeLock();
 					if (!BackgroundThread.isAlive()) {
 						AlarmsLibrary.setupAllAlarms(this);
 						LogUtils.d("GuardService", "BackgroundThread is not alive.");
 					} else LogUtils.d("GuardService", "BackgroundThread is alive.");
+					releaseWakeLock();
 				}
 				checkBackgroundThread();
 			}
@@ -70,8 +70,8 @@ public class GuardService extends Service {
 	private void startProtectionService() {
 		new Thread(() -> {
 			Intent protectionIntent = new Intent(ACTION_PROTECTION);
-			String className = Constants.packageName + ".services.ProtectionService";
-			protectionIntent.setComponent(new ComponentName(Constants.packageName,
+			String className = BuildConfig.APPLICATION_ID + ".services.ProtectionService";
+			protectionIntent.setComponent(new ComponentName(BuildConfig.APPLICATION_ID,
 					className));
 			startService(protectionIntent);
 			bindService(protectionIntent, serviceConnection, BIND_AUTO_CREATE);
@@ -105,6 +105,6 @@ public class GuardService extends Service {
 		}
 	}
 	private void releaseWakeLock() {
-		if (wakeLock != null) wakeLock.release();
+		if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
 	}
 }

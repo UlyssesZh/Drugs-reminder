@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import ulysses.apps.drugsreminder.BuildConfig;
+
 /** @author Donkor */
 public final class PermissionPageUtils {
 	private Activity activity;
@@ -61,7 +63,7 @@ public final class PermissionPageUtils {
 	}
 	private void goLG() {
 		try {
-			Intent intent = new Intent(Constants.packageName);
+			Intent intent = new Intent(BuildConfig.APPLICATION_ID);
 			ComponentName componentName = new ComponentName("com.android.settings",
 					"com.android.settings.Settings$AccessLockSummaryActivity");
 			intent.setComponent(componentName);
@@ -73,7 +75,7 @@ public final class PermissionPageUtils {
 	}
 	private void goSony() {
 		try {
-			Intent intent = new Intent(Constants.packageName);
+			Intent intent = new Intent(BuildConfig.APPLICATION_ID);
 			ComponentName componentName = new ComponentName("com.sonymobile.cta",
 					"com.sonymobile.cta.SomcCTAMainActivity");
 			intent.setComponent(componentName);
@@ -85,7 +87,7 @@ public final class PermissionPageUtils {
 	}
 	private void goHuaWei() {
 		try {
-			Intent intent = new Intent(Constants.packageName);
+			Intent intent = new Intent(BuildConfig.APPLICATION_ID);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			ComponentName componentName = new ComponentName("com.huawei.systemmanager",
 					"com.huawei.permissionmanager.ui.MainActivity");
@@ -120,14 +122,14 @@ public final class PermissionPageUtils {
 				return;
 		}
 		intent.setAction("miui.intent.action.APP_PERM_EDITOR");
-		intent.putExtra("extra_pkgname", Constants.packageName);
+		intent.putExtra("extra_pkgname", BuildConfig.APPLICATION_ID);
 		activity.startActivityForResult(intent, requestCode);
 	}
 	private void goMeizu() {
 		try {
 			Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
 			intent.addCategory(Intent.CATEGORY_DEFAULT);
-			intent.putExtra("packageName", Constants.packageName);
+			intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
 			activity.startActivityForResult(intent, requestCode);
 		} catch (ActivityNotFoundException localActivityNotFoundException) {
 			localActivityNotFoundException.printStackTrace();
@@ -155,11 +157,6 @@ public final class PermissionPageUtils {
 	}
 	private void goVivo() {
 		doStartApplicationWithPackageName("com.bairenkeji.icaller");
-	}
-	private Intent getAppDetailSettingIntent() {
-		Intent localIntent = new Intent();
-		localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		return localIntent;
 	}
 	private void doStartApplicationWithPackageName(String packagename) {
 		PackageInfo packageinfo = null;

@@ -118,8 +118,8 @@
 			</intent-filter>
 		</service>
 		<provider
-			android:authorities="ulysses.apps.drugsreminder.provider"
-			android:name=".util.MyFileProvider"
+			android:authorities="ulysses.apps.drugsreminder.providers.LogProvider"
+			android:name=".provider.LogProvider"
 			android:grantUriPermissions="true"
 			android:exported="false">
 			<meta-data

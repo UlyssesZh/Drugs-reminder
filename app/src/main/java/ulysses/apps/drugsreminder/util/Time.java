@@ -15,8 +15,8 @@ import java.util.Calendar;
 import ulysses.apps.drugsreminder.R;
 
 public final class Time implements Serializable, Comparable<Time> {
-	protected int hour = 0;
-	protected int minute = 0;
+	private int hour = 0;
+	private int minute = 0;
 	public Time(int hour, int minute) {
 		set(hour, minute);
 	}

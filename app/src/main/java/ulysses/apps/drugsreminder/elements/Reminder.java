@@ -17,15 +17,14 @@ import ulysses.apps.drugsreminder.util.Time;
 
 public class Reminder implements IReminder {
 	private int ID;
-	protected List<Integer> mealIDs;
-	protected Time relativeTime;
-	protected List<Integer> drugIDs;
-	protected List<String> usageDosages;
-	protected boolean before;
-	protected boolean enabled;
-	protected int repeatPeriod;
-	protected long createdTime;
-	//protected int delayed;
+	private List<Integer> mealIDs;
+	private Time relativeTime;
+	private List<Integer> drugIDs;
+	private List<String> usageDosages;
+	private boolean before;
+	private boolean enabled;
+	private int repeatPeriod;
+	private long createdTime;
 	public Reminder(int ID, List<Integer> mealIDs, boolean before, Time relativeTime,
 	                List<Integer> drugIDs, List<String> usageDosages,  int repeatPeriod,
 	                long createdTime) {
@@ -113,7 +112,7 @@ public class Reminder implements IReminder {
 	 * it.*/
 	@NotNull
 	private Time nextTime(Time now) {
-		List<Time> remindTimes = new ArrayList<Time>(mealIDs.size());
+		List<Time> remindTimes = new ArrayList<>(mealIDs.size());
 		if (before)
 			for (int mealID : mealIDs)
 				remindTimes.add(ElementsLibrary.findMealByID(mealID).getTime()
@@ -171,7 +170,7 @@ public class Reminder implements IReminder {
 		if (Time.sumOverOneDay(startingTime, nextTime(startingTime)))
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		CalendarUtils.setToBeginning(calendar, Calendar.MINUTE);
-		List<Long> result = new ArrayList<Long>(mealIDs.size());
+		List<Long> result = new ArrayList<>(mealIDs.size());
 		long relativeTimeMillis = relativeTime.millis();
 		if (before) relativeTimeMillis *= -1;
 		for (int mealID : mealIDs) {
@@ -227,7 +226,7 @@ public class Reminder implements IReminder {
 	}
 	@Override
 	public List<Integer> getInvolvingReminderIDs() {
-		return new ArrayList<Integer>(0);
+		return new ArrayList<>(0);
 	}
 	@Override
 	public boolean isRepeating() {
