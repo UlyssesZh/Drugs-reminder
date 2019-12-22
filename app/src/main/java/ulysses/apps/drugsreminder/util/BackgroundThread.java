@@ -71,6 +71,8 @@ public final class BackgroundThread {
 						LOCK.wait(timeout > 0 ? timeout : 1);
 						// restore the backed up data
 						startTimeMillis = backup;
+						LogUtils.d("BackgroundThread",
+								"startTimeMillis is " + startTimeMillis);
 						// get the current thread and do some judges
 						Thread currentThread = Thread.currentThread();
 						if (currentThread.getId() == currentThreadId) {
